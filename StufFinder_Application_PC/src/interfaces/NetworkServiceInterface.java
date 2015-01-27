@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import data.Account;
-import data.Profil;
+import data.Profile;
 import data.Tag;
 
 /**
@@ -83,47 +83,49 @@ public interface NetworkServiceInterface
 	
 	/**
 	 * 
-	 * @param profilName
+	 * @param profileName
 	 * @return
 	 */
-	public Profil createProfil(String profilName);
+	public Profile createProfile(String profileName);
 	
 	
 	/**
-	 * @param profil
+	 * @param profile
 	 * @param tag
 	 * @return
 	 */
-	public Profil addTagToProfil(Profil profil, Tag tag);
+	public Profile addTagToProfile(Profile profile, Tag tag);
+	
 	/**
-	 * @param profil
+	 * @param profile
 	 * @param tag
 	 * @return
 	 */
-	public Profil removeTagFromProfil(Profil profil, Tag tag);
+	public Profile removeTagFromProfile(Profile profile, Tag tag);
+	
 	/**
-	 * @param profil
+	 * @param profile
 	 * @return
 	 */
-	public Profil removeAllFromProfil(Profil profil);
+	public Profile removeAllFromProfile(Profile profile);
+	
+	/**
+	 * @param profile
+	 * @param tagList
+	 * @return
+	 */
+	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList);
 	
 	/**
 	 * @param profil
 	 * @param tagList
 	 * @return
 	 */
-	public Profil replaceTagListOfProfil(Profil profil, List<Tag> tagList);
-	
-	/**
-	 * @param profil
-	 * @param tagList
-	 * @return
-	 */
-	public Profil replaceTagListOfProfil(Profil profil, Tag[] tagList);
+	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList);
 	
 	/**
 	 * @param profilName
 	 * @return
 	 */
-	public Profil getProfil(String profilName);
+	public Profile getProfile(String profileName);
 }

@@ -13,7 +13,7 @@ public class Account
 	private String mailAddress;
 	
 	private List<Tag> tags;
-	private List<Profil> profils;
+	private List<Profile> profils;
 	
 	public Account()
 	{
@@ -26,7 +26,7 @@ public class Account
 		return tags;
 	}
 
-	public List<Profil> getProfils()
+	public List<Profile> getProfils()
 	{
 		return profils;
 	}
