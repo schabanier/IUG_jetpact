@@ -1,6 +1,9 @@
 package stuffinder;
 
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,7 +16,9 @@ import javax.swing.JTextField;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class AccountCreation extends JDialog {
+public class AccountCreation extends JDialog
+                             implements ActionListener
+{
 	
 	private JDialog dialog1;
 	private JLabel label8;
@@ -30,12 +35,13 @@ public class AccountCreation extends JDialog {
 	private JPasswordField passwordField3;
 	private JButton button3;
 	private JButton button4;
+
 	
-	private void initComponents() {
+	public AccountCreation(Identification identificationParent) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 				// Generated using JFormDesigner Evaluation license - SolÃ¨ne Chabanier
-			
-				dialog1 = new JDialog();
+			    super(identificationParent);
+				dialog1 = this;
 				label8 = new JLabel();
 				textField2 = new JTextField();
 				label9 = new JLabel();
@@ -56,6 +62,10 @@ public class AccountCreation extends JDialog {
 				{
 					dialog1.setTitle("Cr\u00e9er compte Stuffinder");
 					dialog1.setResizable(false);
+					dialog1.setAlwaysOnTop(true);
+					dialog1.setBackground(new Color(0, 153, 153));
+					dialog1.setLocationRelativeTo(null);
+					dialog1.setVisible(true);
 					Container dialog1ContentPane = dialog1.getContentPane();
 					dialog1ContentPane.setLayout(new FormLayout(
 						"8*(default, $lcgap), default",
@@ -103,6 +113,12 @@ public class AccountCreation extends JDialog {
 				}
 				// JFormDesigner - End of component initialization  //GEN-END:initComponents
 			}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

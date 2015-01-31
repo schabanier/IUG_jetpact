@@ -33,28 +33,29 @@ public class Identification extends JFrame
 
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 	
-	private void initComponent()
+	public Identification()
 	{
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 				// Generated using JFormDesigner Evaluation license - SolÃ¨ne Chabanier
-				frame1 = new JFrame();
+				frame1 = this;
 				panel1 = new JPanel();
 				label3 = new JLabel();
 				textField1 = new JTextField();
 				label4 = new JLabel();
 				passwordField1 = new JPasswordField();
-				button1 = new BoutonCreerCompte();
-				button2 = new BoutonConnexion();
+				button1 = new JButton();
+				button2 = new JButton();
+			
 				
 
 				//======== frame1 ========
 				{
 					frame1.setTitle("Authentification");
 					frame1.setAlwaysOnTop(true);
-					frame1.setBackground(new Color(102, 0, 255));
 					frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame1.setLocationRelativeTo(null);
 					frame1.setVisible(true);
+					frame1.setResizable(false);
 					Container frame1ContentPane = frame1.getContentPane();
 					frame1ContentPane.setLayout(new FormLayout(
 						"9*(default, $lcgap), default",
@@ -114,8 +115,9 @@ public class Identification extends JFrame
 		if (e.getSource() ==button1)
 		{// action à faire si clic BoutonCreerCompte//  
 			
-			AccountCreation accountCreationFenetre = new AccountCreation();
+			AccountCreation accountCreationFenetre = new AccountCreation(this);
 			accountCreationFenetre.setVisible(true);
+			
 			
 		}	
 		if (e.getSource()== button2)
