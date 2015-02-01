@@ -67,9 +67,9 @@ public class MainFrame extends JFrame
 		
 		
 		
-		centerPanel.add(ProfilesPanel, Constants.MainFrame.profilesPanelName);
-		centerPanel.add(TagsPanel, Constants.MainFrame.tagsPanelName);
-		centerPanel.add(userInformationsPanel, Constants.MainFrame.userInformationsPanelName);
+		centerPanel.add(ProfilesPanel, Constants.MainFrame.PROFILES_PANEL_NAME);
+		centerPanel.add(TagsPanel, Constants.MainFrame.TAGS_PANEL_NAME);
+		centerPanel.add(userInformationsPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
 		
 	}
 }
