@@ -20,4 +20,9 @@ public class IllegalFieldException extends IllegalArgumentException
 		super(message);
 		this.fieldId = fieldId;
 	}
+	
+	public int getFieldId()
+	{
+		return fieldId;
+	}
 }

@@ -153,7 +153,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 	
-	public NetworkServiceEmulator getInstance()
+	public static NetworkServiceEmulator getInstance()
 	{
 		return emulator;
 	}
