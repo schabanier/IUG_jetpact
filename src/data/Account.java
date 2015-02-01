@@ -10,13 +10,23 @@ public class Account
 	private String firstName;
 	private String lastName;
 	private Date birthDate;
-	private String mailAddress;
+	private String emailAddress;
 	
 	private List<Tag> tags;
 	private List<Profile> profils;
 	
-	public Account()
+	public Account(String pseudo, String firstName, String lastName, Date birthDate, String emailAddress)
 	{
+		if(pseudo == null)
+			throw new NullPointerException();
+		
+		this.pseudo = pseudo;
+		
+		setBirthDate(birthDate);
+		setFirstName(firstName);
+		setLastName(lastName);
+		setMailAddress(emailAddress);
+		
 		tags = new ArrayList<>();
 		profils = new ArrayList<>();
 	}
@@ -31,7 +41,7 @@ public class Account
 		return profils;
 	}
 
-	String getPseudo()
+	public String getPseudo()
 	{
 		return pseudo;
 	}
@@ -74,14 +84,14 @@ public class Account
 
 	public String getMailAddress()
 	{
-		return mailAddress;
+		return emailAddress;
 	}
 
-	public void setMailAddress(String mailAddress)
+	public void setMailAddress(String emailAddress)
 	{
-		if(mailAddress == null)
+		if(emailAddress == null)
 			throw new NullPointerException();
 		
-		this.mailAddress = mailAddress;
+		this.emailAddress = emailAddress;
 	}
 }

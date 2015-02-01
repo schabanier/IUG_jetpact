@@ -6,6 +6,7 @@ import java.util.List;
 import data.Account;
 import data.Profile;
 import data.Tag;
+import exceptions.AccountNotFoundException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
@@ -31,17 +32,17 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException
 	 * @throws NetworkServiceException if there is a network failure.
 	 */
-	public void createAccount(Account newAccount) throws IllegalFieldException, NetworkServiceException;
+	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * 
-	 * @param login
+	 * @param pseudo
 	 * @param password
 	 * @return
 	 * @throws IllegalFieldException
 	 * @throws NetworkServiceException
 	 */
-	public Account authenticate(String login, String password) throws IllegalFieldException, NetworkServiceException;
+	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
 	
 	public void logOut();
 	
