@@ -6,6 +6,9 @@ public class MainTest {
 	{
 		Identification identificationfenetre = new Identification();
 		identificationfenetre.setVisible(true);
+		
+	
+		
 	}
 
 }

@@ -37,10 +37,10 @@ public class AccountCreation extends JDialog
 	private JButton button4;
 
 	
-	public AccountCreation(Identification identificationParent) {
+	public AccountCreation(Identification identificationParent, String title) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 				// Generated using JFormDesigner Evaluation license - SolÃ¨ne Chabanier
-			    super(identificationParent);
+			    super(identificationParent, title, true);
 				dialog1 = this;
 				label8 = new JLabel();
 				textField2 = new JTextField();
@@ -60,8 +60,8 @@ public class AccountCreation extends JDialog
 				
 				//======== dialog1 ========
 				{
-					dialog1.setTitle("Cr\u00e9er compte Stuffinder");
-					dialog1.setResizable(false);
+				
+				
 					dialog1.setAlwaysOnTop(true);
 					dialog1.setBackground(new Color(0, 153, 153));
 					dialog1.setLocationRelativeTo(null);
@@ -104,12 +104,22 @@ public class AccountCreation extends JDialog
 					//---- button3 ----
 					button3.setText("Annuler");
 					dialog1ContentPane.add(button3, CC.xy(3, 13));
+					
+					button3.addActionListener(this);
 
 					//---- button4 ----
 					button4.setText("Cr\u00e9er");
+					button4.addActionListener(this);
+					
+					
+					
+					
+					
 					dialog1ContentPane.add(button4, CC.xy(11, 13));
 					dialog1.pack();
 					dialog1.setLocationRelativeTo(dialog1.getOwner());
+					
+					
 				}
 				// JFormDesigner - End of component initialization  //GEN-END:initComponents
 			}
@@ -118,6 +128,14 @@ public class AccountCreation extends JDialog
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+		if(e.getSource()==button3)
+		{
+			//action si clic sur bouton "annuler"
+		}
+		if (e.getSource()==button4)
+		{
+			//action si clic sur bouton "ok"
+		}
 	}
 
 

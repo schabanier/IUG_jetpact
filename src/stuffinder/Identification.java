@@ -17,7 +17,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class Identification extends JFrame
-                            implements ActionListener
+                           implements ActionListener
 {
 	
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
@@ -56,13 +56,13 @@ public class Identification extends JFrame
 					frame1.setLocationRelativeTo(null);
 					frame1.setVisible(true);
 					frame1.setResizable(false);
+					frame1.setBackground(new Color(0,153,153));
 					Container frame1ContentPane = frame1.getContentPane();
 					frame1ContentPane.setLayout(new FormLayout(
 						"9*(default, $lcgap), default",
 						"9*(default, $lgap), default"));
 					
-					button1.addActionListener(this);
-					button2.addActionListener(this);
+					
 
 					//======== panel1 ========
 					{
@@ -95,10 +95,14 @@ public class Identification extends JFrame
 						//---- button1 ----
 						button1.setText("Cr\u00e9er un compte");
 						panel1.add(button1, CC.xy(3, 15));
+						
+						button1.addActionListener(this);
 
 						//---- button2 ----
 						button2.setText("Connexion");
 						panel1.add(button2, CC.xy(9, 15));
+						
+						button2.addActionListener(this);
 					}
 					frame1ContentPane.add(panel1, CC.xy(1, 1, CC.DEFAULT, CC.TOP));
 					frame1.pack();
@@ -108,26 +112,24 @@ public class Identification extends JFrame
 				
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-		if (e.getSource() ==button1)
-		{// action à faire si clic BoutonCreerCompte//  
-			
-			AccountCreation accountCreationFenetre = new AccountCreation(this);
-			accountCreationFenetre.setVisible(true);
-			
-			
-		}	
-		if (e.getSource()== button2)
-		{// action à faire si clic BoutonConnexion  
-			
-			
-		}
-		
-	}
+@Override
+public void actionPerformed(ActionEvent e) {
+	// TODO Auto-generated method stub
+	 if(e.getSource()==button1)
+	 {
+		 // action si clic sur bouton "creer compte"
+		 AccountCreation accountCreationFenetre = new AccountCreation(this, "Creer compte");
+	     accountCreationFenetre.setVisible(true);
+	     
 	
+     }
+ 	if (e.getSource()==button2) {
+ 		//action si clic sur bouton "connexion
 }
+
+}	
+
+}
+
 
 		
