@@ -11,11 +11,12 @@ public class Account
 	private String lastName;
 	private Date birthDate;
 	private String emailAddress;
+	private String password;
 	
 	private List<Tag> tags;
 	private List<Profile> profils;
 	
-	public Account(String pseudo, String firstName, String lastName, Date birthDate, String emailAddress)
+	public Account(String pseudo, String firstName, String lastName, Date birthDate, String emailAddress, String password)
 	{
 		if(pseudo == null)
 			throw new NullPointerException();
@@ -26,9 +27,18 @@ public class Account
 		setFirstName(firstName);
 		setLastName(lastName);
 		setMailAddress(emailAddress);
+		setPassword(password);
 		
 		tags = new ArrayList<>();
 		profils = new ArrayList<>();
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public List<Tag> getTags()
