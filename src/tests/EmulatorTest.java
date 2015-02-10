@@ -1,7 +1,5 @@
 package tests;
 
-import java.util.Date;
-
 import data.Account;
 import engine.NetworkServiceProvider;
 import exceptions.AccountNotFoundException;
@@ -10,14 +8,13 @@ import exceptions.NetworkServiceException;
 
 public class EmulatorTest
 {
-	@SuppressWarnings("deprecation")
 	public static void main(String[] args)
 	{
 		NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
 		
 		Account account;
 		try {
-			account = new Account("nth", "Nicolas", "Thierce", new Date(1993, 10, 20), "nth@gmail.com");
+			account = new Account("nth", "Nicolas", "Thierce", "nth@gmail.com");
 			try {
 				NetworkServiceProvider.getNetworkService().createAccount(account, "notOk");
 				System.out.println("account created.");
