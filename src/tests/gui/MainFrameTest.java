@@ -1,5 +1,6 @@
-package tests;
+package tests.gui;
 
+import tests.NetworkServiceEmulator;
 import engine.NetworkServiceProvider;
 import gui.MainFrame;
 

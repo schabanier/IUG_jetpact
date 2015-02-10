@@ -1,4 +1,4 @@
-package gui;
+package gui.tagsmanagement;
 
 import java.awt.Frame;
 import java.awt.GridLayout;

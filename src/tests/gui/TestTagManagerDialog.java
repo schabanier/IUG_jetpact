@@ -2,7 +2,7 @@ package tests.gui;
 
 import javax.swing.JFrame;
 
-import gui.TagManagerDialog;
+import gui.tagsmanagement.TagManagerDialog;
 
 public class TestTagManagerDialog
 {
