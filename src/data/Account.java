@@ -1,7 +1,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Account
@@ -9,14 +8,22 @@ public class Account
 	private String pseudo;
 	private String firstName;
 	private String lastName;
-	private Date birthDate;
-	private String mailAddress;
+	private String emailAddress;
 	
 	private List<Tag> tags;
 	private List<Profile> profils;
 	
-	public Account()
+	public Account(String pseudo, String firstName, String lastName, String emailAddress)
 	{
+		if(pseudo == null)
+			throw new NullPointerException();
+		
+		this.pseudo = pseudo;
+		
+		setFirstName(firstName);
+		setLastName(lastName);
+		setMailAddress(emailAddress);
+		
 		tags = new ArrayList<>();
 		profils = new ArrayList<>();
 	}
@@ -31,7 +38,7 @@ public class Account
 		return profils;
 	}
 
-	String getPseudo()
+	public String getPseudo()
 	{
 		return pseudo;
 	}
@@ -60,28 +67,16 @@ public class Account
 		this.lastName = lastName;
 	}
 
-	public Date getBirthDate()
-	{
-		return birthDate;
-	}
-
-	public void setBirthDate(Date birthDate)
-	{
-		if(birthDate == null)
-			throw new NullPointerException();
-		this.birthDate = birthDate;
-	}
-
 	public String getMailAddress()
 	{
-		return mailAddress;
+		return emailAddress;
 	}
 
-	public void setMailAddress(String mailAddress)
+	public void setMailAddress(String emailAddress)
 	{
-		if(mailAddress == null)
+		if(emailAddress == null)
 			throw new NullPointerException();
 		
-		this.mailAddress = mailAddress;
+		this.emailAddress = emailAddress;
 	}
 }

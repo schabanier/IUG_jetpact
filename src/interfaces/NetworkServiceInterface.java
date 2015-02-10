@@ -6,6 +6,10 @@ import java.util.List;
 import data.Account;
 import data.Profile;
 import data.Tag;
+import exceptions.AccountNotFoundException;
+import exceptions.IllegalFieldException;
+import exceptions.NetworkServiceException;
+import exceptions.NotAuthenticatedException;
 
 /**
  * This interface makes the link between the network service (in this case, this is the client web service) and the engine of the application.
@@ -15,24 +19,30 @@ import data.Tag;
  */
 public interface NetworkServiceInterface
 {
+	
 	/**
 	 * Initialize this service to rend it available for network communications.
+	 * @throws NetworkServiceException
 	 */
-	public void initNetworkService();
+	public void initNetworkService() throws NetworkServiceException;
+	
 	
 	/**
-	 * Creates a new account on server.
-	 * @param newAccount the account to be created.
+	 * @param newAccount
+	 * @throws IllegalFieldException
+	 * @throws NetworkServiceException if there is a network failure.
 	 */
-	public void createAccount(Account newAccount);
-	
+	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException;
+
 	/**
-	 * authenticate 
+	 * 
 	 * @param pseudo
 	 * @param password
-	 * @return the account matching with the login/password
+	 * @return
+	 * @throws IllegalFieldException
+	 * @throws NetworkServiceException
 	 */
-	public Account authenticate(String login, String password);
+	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
 	
 	public void logOut();
 	
@@ -40,7 +50,7 @@ public interface NetworkServiceInterface
 	 * to get the current accohnt of the session.
 	 * @return the current account if the authentication is done, null otherwise.
 	 */
-	public Account getCurrentAccount();
+	public Account getCurrentAccount() throws NotAuthenticatedException;
 
 	/**
 	 * Modify the field birthDate of the current Account.
