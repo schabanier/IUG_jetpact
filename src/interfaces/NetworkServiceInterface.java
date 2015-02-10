@@ -39,7 +39,7 @@ public interface NetworkServiceInterface
 	 * @param pseudo
 	 * @param password
 	 * @return
-	 * @throws IllegalFieldException
+	 * @throws AccountNotFoundException
 	 * @throws NetworkServiceException
 	 */
 	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
