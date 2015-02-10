@@ -24,9 +24,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	
 	private NetworkServiceEmulator()
 	{
-		@SuppressWarnings("deprecation")
-		Date date = new Date(1965, 2, 24);
-		Account testAccount = new Account("jdupon", "Jean", "Dupont", date, "jean.dupont@gmail.com");
+		Account testAccount = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
 		
 		accounts = new ArrayList<>();
 		accounts.add(testAccount);
