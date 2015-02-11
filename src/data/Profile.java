@@ -14,7 +14,7 @@ public class Profile
 		tags = new ArrayList<>();
 	}
 	
-	String getName()
+	public String getName()
 	{
 		return name;
 	}
