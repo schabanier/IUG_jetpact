@@ -30,29 +30,32 @@ public class Tag
 	}
 	
 	
-	String getUid()
+	public String getUid()
 	{
 		return uid;
 	}
 	
 	
-	String getObjectName()
+	public String getObjectName()
 	{
 		return objectName;
 	}
 	
-	void setObjectName(String objectName)
+	public void setObjectName(String objectName)
 	{
+		if(objectName == null)
+			throw new NullPointerException();
+		
 		this.objectName = objectName;
 	}
 	
 	
-	Image getObjectImage()
+	public Image getObjectImage()
 	{
 		return objectImage;
 	}
 
-	void setObjectImage(Image objectImage)
+	public void setObjectImage(Image objectImage)
 	{
 		this.objectImage = objectImage;
 	}
