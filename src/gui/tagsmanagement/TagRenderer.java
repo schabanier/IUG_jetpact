@@ -1,6 +1,8 @@
 package gui.tagsmanagement;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,11 +23,12 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 	private JButton editButton;
 	private JButton deleteButton;
 	
-	private Tag currentTag = null;;
+	private Tag currentTag = null;
 	
 	public TagRenderer()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		setBorder(new EmptyBorder(3, 3, 3, 3));
 		
 		tagLabel = new JLabel();
 		tagLabel.setDoubleBuffered(true);
@@ -48,9 +51,22 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 	
 	public Component getListCellRendererComponent(JList<? extends Tag> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
 	{
-		
+		currentTag = value;
 		
 		return this;
 	}
 	
+	class ActionEditTag implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+		}
+	}
+	
+	class ActionRemoveTag implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+		}
+	}
 }

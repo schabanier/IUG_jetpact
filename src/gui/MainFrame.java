@@ -26,6 +26,7 @@ import engine.NetworkServiceProvider;
 public class MainFrame extends JFrame
 {
 	private static final long serialVersionUID = -8026416994513756565L;
+	private static MainFrame instance;
 
 	private JPanel centerPanel;
 	private JPanel userInformationsPanel;
@@ -42,6 +43,8 @@ public class MainFrame extends JFrame
 	{
 		super("StufFinder");
 		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		instance = this;
 		
 		authenticationPanel = new JPanel(); // will be replaced by the real authentication panel.
 		authenticationPanel.setLayout(new FlowLayout());
@@ -144,5 +147,10 @@ public class MainFrame extends JFrame
 		{
 			((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
 		}
+	}
+	
+	public static MainFrame getInstance()
+	{
+		return instance;
 	}
 }
