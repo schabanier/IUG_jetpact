@@ -1,6 +1,6 @@
-package webservice;
+package webservicePC;
 
-import java.net.URL;
+import java.net.*;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +18,10 @@ import interfaces.NetworkServiceInterface;
 
 public class NetworkService implements NetworkServiceInterface {
 
+	public NetworkService() {
+		
+	}
+	
 	@Override
 	public void initNetworkService() throws NetworkServiceException {
 		/* variables à initialiser (paramètres serveur...*/
@@ -26,11 +30,13 @@ public class NetworkService implements NetworkServiceInterface {
 
 	@Override
 	public void createAccount(Account newAccount, String newPassword)
-			throws IllegalFieldException, NetworkServiceException {
+			throws IllegalFieldException, NetworkServiceException, MalformedURLException {
 		
-		String adressHost;
-		//voir avec Philippe construction URL//
-		URL registerURL = new URL("http://"+adressHost+"/doregister?name="+name+"&username="+username+"&password="+password);
+		/*  adapter au serveur choisi */
+		String adressHost = "local:8080/InterfacePC";
+		URL registerURL = new URL("http://"+adressHost+"/register/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&firstname="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
+		// Query parameters are parameters: http://localhost/<appln-folder-name>/register/doregister?pseudo=pqrs&password=abc&firstname=xyz&last_name=cdf&email=hij
+
 		
 		String reponse = HTTPLoader.getTextFile(registerURL);
 
@@ -45,11 +51,13 @@ public class NetworkService implements NetworkServiceInterface {
 
 	@Override
 	public Account authenticate(String pseudo, String password)
-			throws AccountNotFoundException, NetworkServiceException {
+			throws AccountNotFoundException, NetworkServiceException, MalformedURLException {
 
-		String adressHost;
-		//voir avec Philippe construction URL//
-		URL loginURL = new URL("http://"+adressHost+"/doregister?name="+name+"&username="+username+"&password="+password);
+		String adressHost = "local:8080"; //pour tests : localhost:xxxx (pour Henri 8080)
+
+		URL loginURL = new URL("http://"+adressHost+"/login/dologin?username="+pseudo+"&password="+password);
+		// Query parameters are parameters: http://localhost/<appln-folder-name>/login/dologin?username=abc&password=xyz
+
 		
 		String reponse = HTTPLoader.getTextFile(loginURL);
 

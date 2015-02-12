@@ -15,7 +15,7 @@ public class Account
 	private List<Tag> tags;
 	private List<Profile> profils;
 	
-	public Account(String pseudo, String firstName, String lastName, Date birthDate, String emailAddress, String password)
+	public Account(String pseudo, String firstName, String lastName, Date birthDate, String emailAddress)
 	{
 		if(pseudo == null)
 			throw new NullPointerException();

@@ -1,4 +1,4 @@
-package webservice;
+package webservicePC;
 
 import java.io.BufferedReader;
 import java.io.IOException;

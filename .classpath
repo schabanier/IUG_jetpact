@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Henri Le Page/Desktop/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/useraccount/lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

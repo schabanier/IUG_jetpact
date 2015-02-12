@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
 
@@ -31,8 +32,9 @@ public interface NetworkServiceInterface
 	 * @param newAccount
 	 * @throws IllegalFieldException
 	 * @throws NetworkServiceException if there is a network failure.
+	 * @throws MalformedURLException 
 	 */
-	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException;
+	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException, MalformedURLException;
 
 	/**
 	 * 
@@ -41,8 +43,9 @@ public interface NetworkServiceInterface
 	 * @return
 	 * @throws AccountNotFoundException
 	 * @throws NetworkServiceException
+	 * @throws MalformedURLException 
 	 */
-	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
+	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException, MalformedURLException;
 	
 	public void logOut();
 	
