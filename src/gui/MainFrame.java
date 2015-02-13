@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import engine.NetworkServiceProvider;
+import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
 {
@@ -55,6 +56,8 @@ public class MainFrame extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				setContentPane(managementPanel);
+				panelList.setSelectedIndex(0);
+				((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
 				pack();
 			}
 		});
@@ -91,6 +94,7 @@ public class MainFrame extends JFrame
 		
 		panelList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panelList.setDoubleBuffered(true);
+		panelList.setSelectedIndex(0);
 		panelList.addListSelectionListener(new PanelsListSelectionListener());
 		
 		JScrollPane scrollPane = new JScrollPane(panelList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -133,7 +137,7 @@ public class MainFrame extends JFrame
 		
 		
 		centerPanel.add(profilesPanel, Constants.MainFrame.PROFILES_PANEL_NAME);
-		centerPanel.add(tagsPanel, Constants.MainFrame.TAGS_PANEL_NAME);
+		centerPanel.add(new TagsManagementPanel(), Constants.MainFrame.TAGS_PANEL_NAME);
 		centerPanel.add(userInformationsPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
 		
 		((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);

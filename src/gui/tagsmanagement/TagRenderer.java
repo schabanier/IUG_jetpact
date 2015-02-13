@@ -1,17 +1,26 @@
 package gui.tagsmanagement;
 
+import gui.IconsProvider;
+
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import data.Tag;
 
@@ -21,7 +30,7 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 	
 	private JLabel tagLabel;
 	private JButton editButton;
-	private JButton deleteButton;
+	private JButton removeButton;
 	
 	private Tag currentTag = null;
 	
@@ -32,12 +41,17 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 		
 		tagLabel = new JLabel();
 		tagLabel.setDoubleBuffered(true);
+		tagLabel.setIconTextGap(10);
 
-		editButton = new JButton();
+		editButton = new JButton(IconsProvider.iconEditElement);
 		editButton.setDoubleBuffered(true);
+		editButton.addActionListener(new ActionEditTag());
+		editButton.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
 		
-		deleteButton = new JButton();
-		deleteButton.setDoubleBuffered(true);
+		removeButton = new JButton(IconsProvider.iconDeleteElement);
+		removeButton.setDoubleBuffered(true);
+		removeButton.addActionListener(new ActionRemoveTag());
+		removeButton.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
 		
 		setBorder(new EmptyBorder(4, 4, 4, 4));
 		
@@ -45,13 +59,32 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 		add(Box.createHorizontalStrut(10));
 		add(editButton);
 		add(Box.createHorizontalStrut(10));
-		add(deleteButton);
+		add(removeButton);
 		
 	}
 	
 	public Component getListCellRendererComponent(JList<? extends Tag> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
 	{
 		currentTag = value;
+		
+		tagLabel.setText(currentTag.getObjectName());
+		
+		if(currentTag.getObjectImage() != null)
+			tagLabel.setIcon(new ImageIcon(currentTag.getObjectImage().getScaledInstance(20, 20, Image.SCALE_FAST)));
+		else
+			tagLabel.setIcon(new ImageIcon()); // to remove the current icon.
+		
+		if(isSelected)
+		{
+			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED), new EmptyBorder(3, 3, 3, 3)));
+			setOpaque(true);
+			setBackground(Color.CYAN);
+		}
+		else
+		{
+			setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(3, 3, 3, 3)));
+			setOpaque(false);
+		}
 		
 		return this;
 	}
