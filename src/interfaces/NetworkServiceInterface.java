@@ -1,6 +1,5 @@
 package interfaces;
 
-import java.util.Date;
 import java.util.List;
 
 import data.Account;
@@ -10,6 +9,8 @@ import exceptions.AccountNotFoundException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
+import exceptions.TagAlreadyUsedException;
+import exceptions.TagNotFoundException;
 
 /**
  * This interface makes the link between the network service (in this case, this is the client web service) and the engine of the application.
@@ -52,43 +53,36 @@ public interface NetworkServiceInterface
 	 */
 	public Account getCurrentAccount() throws NotAuthenticatedException;
 
-	/**
-	 * Modify the field birthDate of the current Account.
-	 * @param birthDate the new birth date.
-	 * @return the account modified (maybe the same object).
-	 */
-	public Account modifyBirthDate(Date birthDate);
 	
 	/**
 	 * Modify the e-mail of the current account.
 	 * @param mailAddress the new e-mail.
 	 * @return the account modified (maybe the same object).
 	 */
-	public Account modifyMailAddress(String mailAddress);
+	public void modifyEMailAddress(String emailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 	/**
 	 * modify the password of the current account.
 	 * @param newPassword
 	 */
-	public void modifyPassword(String newPassword);
+	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 	/**
 	 * Add a tag to the current account. 
 	 * @param tag
 	 */
-	public void addTag(Tag tag);
+	public void addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagAlreadyUsedException, NetworkServiceException;
 	
-	/**
-	 * Modify the tag which has the uid contained in the object tag.
-	 * @param tag
-	 */
-	public void modifyTag(Tag tag);
+
+	public void modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException;
+
+	public void modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException;
 	
 	/**
 	 * 
 	 * @param tag
 	 */
-	public void removeTag(Tag tag);
+	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException;
 	
 	
 	/**
@@ -96,7 +90,7 @@ public interface NetworkServiceInterface
 	 * @param profileName
 	 * @return
 	 */
-	public Profile createProfile(String profileName);
+	public Profile createProfile(String profileName) throws NotAuthenticatedException;
 	
 	
 	/**
@@ -104,38 +98,38 @@ public interface NetworkServiceInterface
 	 * @param tag
 	 * @return
 	 */
-	public Profile addTagToProfile(Profile profile, Tag tag);
+	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException;
 	
 	/**
 	 * @param profile
 	 * @param tag
 	 * @return
 	 */
-	public Profile removeTagFromProfile(Profile profile, Tag tag);
+	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException;
 	
 	/**
 	 * @param profile
 	 * @return
 	 */
-	public Profile removeAllFromProfile(Profile profile);
+	public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException;
 	
 	/**
 	 * @param profile
 	 * @param tagList
 	 * @return
 	 */
-	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList);
+	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException;
 	
 	/**
 	 * @param profil
 	 * @param tagList
 	 * @return
 	 */
-	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList);
+	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) throws NotAuthenticatedException;
 	
 	/**
 	 * @param profilName
 	 * @return
 	 */
-	public Profile getProfile(String profileName);
+	public Profile getProfile(String profileName) throws NotAuthenticatedException;
 }
