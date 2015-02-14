@@ -7,7 +7,10 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -69,10 +72,17 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 		
 		tagLabel.setText(currentTag.getObjectName());
 		
-		if(currentTag.getObjectImage() != null)
-			tagLabel.setIcon(new ImageIcon(currentTag.getObjectImage().getScaledInstance(20, 20, Image.SCALE_FAST)));
+		if(currentTag.getObjectImageName() != null)
+		{
+			
+			try {
+				tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(20, 20, Image.SCALE_FAST)));
+			} catch (IOException e) { // an error occured while reading the image file. the default object image will be displayed.
+				tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
+			}
+		}
 		else
-			tagLabel.setIcon(new ImageIcon()); // to remove the current icon.
+			tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
 		
 		if(isSelected)
 		{

@@ -40,4 +40,11 @@ public class Profile
 	{
 		tags.clear();
 	}
+
+
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Profile)) ? false : 
+					name.equals(((Profile) obj).getName());
+	}
 }

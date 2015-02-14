@@ -67,7 +67,7 @@ public class Account
 		this.lastName = lastName;
 	}
 
-	public String getMailAddress()
+	public String getEMailAddress()
 	{
 		return emailAddress;
 	}
@@ -78,5 +78,11 @@ public class Account
 			throw new NullPointerException();
 		
 		this.emailAddress = emailAddress;
+	}
+
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Account)) ? false : 
+					pseudo.equals(((Account) obj).getPseudo());
 	}
 }
