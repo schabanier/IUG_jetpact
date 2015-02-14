@@ -1,5 +1,9 @@
 package gui.profils;
 
+import gui.profils.CreerProfil.ButtonAnnulerListener;
+import gui.profils.CreerProfil.ButtonCreerListener;
+import gui.profils.CreerProfil.MonList1SelectionListener;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -19,14 +22,15 @@ import javax.swing.event.ListSelectionListener;
 
 import data.Tag;
 
-public class CreerProfil extends JDialog {
+public class ModificationProfil extends JDialog {
+
 	
 	
 	private JPanel panelPrincipal, panel1, panel2;
     private JDialog dialog1;
 	private JLabel labelAjout, labelDispo, labelNom ;
 	private JTextField nomTextField;
-	private JButton buttonCreer, buttonAnnuler, buttonGauche, buttonDroite ;
+	private JButton buttonModifier, buttonAnnuler, buttonGauche, buttonDroite ;
 	private JList list1, list2;
 	private Tag[] listPuces1, listPuces2 ;
 	
@@ -34,7 +38,7 @@ public class CreerProfil extends JDialog {
 	
 	
 	
-	public CreerProfil(JFrame gestionProfilParent, String title) {
+	public ModificationProfil(JFrame gestionProfilParent, String title) {
 		
 		
 		super(gestionProfilParent, title);
@@ -47,7 +51,7 @@ public class CreerProfil extends JDialog {
 		labelDispo = new JLabel();
 		labelNom = new JLabel();
 		nomTextField = new JTextField();
-		buttonCreer = new JButton();
+		buttonModifier = new JButton();
 		buttonAnnuler = new JButton();
 		buttonGauche = new JButton();
 		buttonDroite = new JButton();
@@ -98,16 +102,11 @@ public class CreerProfil extends JDialog {
 			
             JScrollPane spList2 = new JScrollPane( list2); // ˆ ajouter dans un panel !!
 			
-        	list2.setVisibleRowCount( 10 );
+			list2.setVisibleRowCount( 10 );
 			list2.setFixedCellHeight( 2 );
 			list2.setFixedCellWidth(8);
-			list2.addListSelectionListener( new MonList1SelectionListener());
+			list2.addListSelectionListener( new MonList2SelectionListener());
 			list2.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			list2.setLayoutOrientation(VERTICAL);
-			list2.setSelectionForeground(new Color(0,255,255));
-			list2.setDragEnabled(true);
-			
-
 			
 			
 			
@@ -125,8 +124,8 @@ public class CreerProfil extends JDialog {
 		buttonAnnuler.addActionListener(new ButtonAnnulerListener());
 		
 		
-		buttonCreer.setText("Creer Compte");
-		buttonCreer.addActionListener( new ButtonCreerListener()) ;
+		buttonModifier.setText("Creer Compte");
+		buttonModifier.addActionListener( new ButtonCreerListener()) ;
 	
 		
 			
@@ -152,7 +151,7 @@ public class CreerProfil extends JDialog {
 			// action si clic bouton annuler
 			
 			
-			CreerProfil.this.setVisible(false);
+			ModificationProfil.this.setVisible(false);
 			
 		}
 		
@@ -180,7 +179,7 @@ public class CreerProfil extends JDialog {
 			
 				
 				
-			Tag[] tab1 = new Tag[20];	
+			Tag[] tab1= new Tag[20];	
 		    tab1 = (Tag[]) list1.getSelectedValues();
 		    
 		    Tag[] tab2= new Tag[20];	
@@ -257,3 +256,5 @@ public class CreerProfil extends JDialog {
 	
 	
 }
+
+

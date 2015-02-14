@@ -45,7 +45,7 @@ public class InfoPerso extends JPanel {
 		labelNombreDeProfils.setText("Nombre de profils");
 		labelPseudoInfo.setText("Thomas35");
 		labelMailInfo.setText("thomas.roger@gmail.fr");
-		labelNombreDePucesInfo.setText("4");
+		labelNombreDePucesInfo.setText("5");
 		labelNombreDeProfilsInfo.setText("2");
 		
 		
