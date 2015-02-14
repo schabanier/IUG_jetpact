@@ -22,6 +22,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import engine.NetworkServiceProvider;
+import exceptions.AccountNotFoundException;
+import exceptions.NetworkServiceException;
+import exceptions.NotAuthenticatedException;
 import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
@@ -31,7 +34,7 @@ public class MainFrame extends JFrame
 
 	private JPanel centerPanel;
 	private JPanel userInformationsPanel;
-	private JPanel tagsPanel;
+	private TagsManagementPanel tagsPanel;
 	private JPanel profilesPanel;
 
 	private JList<String> panelList;
@@ -55,10 +58,24 @@ public class MainFrame extends JFrame
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				setContentPane(managementPanel);
-				panelList.setSelectedIndex(0);
-				((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
-				pack();
+				try {
+					NetworkServiceProvider.getNetworkService().authenticate("jdupon", "123456");
+
+					try {
+						tagsPanel.reloadTagsList();
+					} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is done successful.
+						e1.printStackTrace();
+					}
+					setContentPane(managementPanel);
+					panelList.setSelectedIndex(0);
+					
+					((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
+					pack();
+				} catch (AccountNotFoundException e1) { // corresponds to an abnormal failure. 
+					e1.printStackTrace();
+				} catch (NetworkServiceException e1) { // corresponds to an abnormal failure.
+					e1.printStackTrace();
+				}
 			}
 		});
 		authenticationPanel.add(login);
@@ -129,15 +146,14 @@ public class MainFrame extends JFrame
 		userInformationsPanel = new JPanel(true);
 		userInformationsPanel.setBorder(new TitledBorder("user informations"));
 		
-		tagsPanel = new JPanel(true);
-		tagsPanel.setBorder(new TitledBorder("tags panel"));
+		tagsPanel = new TagsManagementPanel();
 		
 		profilesPanel = new JPanel(true);
 		profilesPanel.setBorder(new TitledBorder("profiles panel"));
 		
 		
 		centerPanel.add(profilesPanel, Constants.MainFrame.PROFILES_PANEL_NAME);
-		centerPanel.add(new TagsManagementPanel(), Constants.MainFrame.TAGS_PANEL_NAME);
+		centerPanel.add(tagsPanel, Constants.MainFrame.TAGS_PANEL_NAME);
 		centerPanel.add(userInformationsPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
 		
 		((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
