@@ -1,6 +1,7 @@
 package gui.tagsmanagement;
 
 import gui.Constants;
+import gui.MainFrame;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -20,6 +21,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.CompoundBorder;
@@ -29,7 +31,10 @@ import javax.swing.border.TitledBorder;
 
 import data.Tag;
 import engine.NetworkServiceProvider;
+import exceptions.IllegalFieldException;
+import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
+import exceptions.TagNotFoundException;
 
 public class TagsManagementPanel extends JPanel
 {
@@ -39,8 +44,7 @@ public class TagsManagementPanel extends JPanel
 	private JLabel tagsListLabel;
 //	private DefaultListModel<Tag> tagsListModel;
 	private JPanel tagsListPanel;
-	private List<TagRenderer> tagRendererComponents;
-	private int selectedTagIndex;
+	private TagRenderer selectedTag;
 	
 	// right panel elements
 	private JLabel objectImage;
@@ -73,8 +77,8 @@ public class TagsManagementPanel extends JPanel
 //		tagsList.setDoubleBuffered(true);
 //		tagsList.setCellRenderer(new TagRenderer());
 		
-		tagRendererComponents = new ArrayList<>();
-		selectedTagIndex = -1;
+		new ArrayList<>();
+		selectedTag = null;
 		
 		tagsListPanel = new JPanel(true);
 		tagsListPanel.setLayout(new BoxLayout(tagsListPanel, BoxLayout.Y_AXIS));
@@ -176,11 +180,10 @@ public class TagsManagementPanel extends JPanel
 	
 	private void addTag(Tag tag)
 	{
-		int index = tagRendererComponents.size();
-		TagRenderer renderer = new TagRenderer(tag, index);
+		TagRenderer renderer = new TagRenderer(tag, this);
 		
 		tagsListPanel.add(renderer);
-		tagRendererComponents.add(renderer);
+//		tagRendererComponents.add(renderer);
 	}
 	
 	class tagsListMouseListener extends MouseAdapter implements MouseListener
@@ -193,14 +196,14 @@ public class TagsManagementPanel extends JPanel
 			{
 				TagRenderer renderer = (TagRenderer) component;
 				
-				if(selectedTagIndex != renderer.getTagIndex()) // if the selection has changed.
+				if(renderer != selectedTag)
 				{
 					renderer.setSelected(true);
 					
-					if(selectedTagIndex >= 0) // becasue negative value if no tag selected.
-						tagRendererComponents.get(selectedTagIndex).setSelected(false);
+					if(selectedTag != null)
+						selectedTag.setSelected(false);
 					
-					selectedTagIndex = renderer.getTagIndex();
+					selectedTag = renderer;
 				}
 			}
 		}
@@ -213,4 +216,35 @@ public class TagsManagementPanel extends JPanel
 		}
 	}
 
+	
+	public void removeTag(TagRenderer renderer)
+	{
+		if(renderer == null)
+			throw new NullPointerException();
+		
+		try {
+			NetworkServiceProvider.getNetworkService().removeTag(renderer.getTag());
+
+			if(selectedTag == renderer)
+				selectedTag = null;
+			
+			tagsListPanel.remove(renderer);
+			tagsListPanel.repaint();
+		} catch (IllegalFieldException e) { // abnormal exception in this case. Will not occur.
+			e.printStackTrace();
+		} catch (NotAuthenticatedException e) { // abnormal exception in this case. Will not occur.
+			e.printStackTrace();
+		} catch (TagNotFoundException e) { // can occur if the tag is removed on another computer or on a smartphone after the tags list was loaded.
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "The selected tag semms to be already removed from your account.", "Error", JOptionPane.ERROR_MESSAGE);
+			
+			if(selectedTag == renderer)
+				selectedTag = null;
+			
+			tagsListPanel.remove(renderer);
+			tagsListPanel.repaint();
+		} catch (NetworkServiceException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }

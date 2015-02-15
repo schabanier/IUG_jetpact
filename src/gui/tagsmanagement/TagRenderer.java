@@ -1,9 +1,9 @@
 package gui.tagsmanagement;
 
 import gui.IconsProvider;
+import gui.MainFrame;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -18,9 +18,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -28,7 +27,7 @@ import javax.swing.border.LineBorder;
 
 import data.Tag;
 
-public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
+public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 {
 	private static final long serialVersionUID = 5689628426198840798L;
 	
@@ -38,18 +37,20 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 	
 	private Tag currentTag = null;
 	
-	private int tagIndex;
-	
 	private boolean isSelected;
+	TagsManagementPanel managementPanel;
 	
-	public TagRenderer(Tag tag, int tagIndex)
+	public TagRenderer(Tag tag, TagsManagementPanel managementPanel)
 	{
 		if(tag == null)
 			throw new NullPointerException("tag value can't be null.");
 		
-		this.tagIndex = tagIndex;
-		isSelected = false;
+		if(managementPanel == null)
+			throw new NullPointerException();
 		
+		
+		isSelected = false;
+		this.managementPanel = managementPanel;
 		currentTag = tag;
 		
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -57,7 +58,6 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 		
 		tagLabel = new JLabel();
 		tagLabel.setDoubleBuffered(true);
-		tagLabel.setIconTextGap(10);
 
 		editButton = new JButton(IconsProvider.iconEditElement);
 		editButton.setDoubleBuffered(true);
@@ -97,56 +97,39 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 		setMaximumSize(new Dimension(getMaximumSize().width, 35));
 	}
 	
-	public Component getListCellRendererComponent(JList<? extends Tag> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
-	{
-		currentTag = value;
-		
-		tagLabel.setText(currentTag.getObjectName());
-		
-		if(currentTag.getObjectImageName() != null)
-		{
-			
-			try {
-				tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(25, 25, Image.SCALE_FAST)));
-			} catch (IOException e) { // an error occured while reading the image file. the default object image will be displayed.
-				tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
-			}
-		}
-		else
-			tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
-		
-		if(isSelected)
-		{
-			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED), new EmptyBorder(3, 3, 3, 3)));
-			setOpaque(true);
-			setBackground(Color.CYAN);
-		}
-		else
-		{
-			setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(3, 3, 3, 3)));
-			setOpaque(false);
-		}
-		
-		return this;
-	}
+//	public Component getListCellRendererComponent(JList<? extends Tag> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
+//	{
+//		currentTag = value;
+//		
+//		tagLabel.setText(currentTag.getObjectName());
+//		
+//		if(currentTag.getObjectImageName() != null)
+//		{
+//			
+//			try {
+//				tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(25, 25, Image.SCALE_FAST)));
+//			} catch (IOException e) { // an error occured while reading the image file. the default object image will be displayed.
+//				tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
+//			}
+//		}
+//		else
+//			tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
+//		
+//		if(isSelected)
+//		{
+//			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED), new EmptyBorder(3, 3, 3, 3)));
+//			setOpaque(true);
+//			setBackground(Color.CYAN);
+//		}
+//		else
+//		{
+//			setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(3, 3, 3, 3)));
+//			setOpaque(false);
+//		}
+//		
+//		return this;
+//	}
 	
-	public boolean isSelected()
-	{
-		return isSelected;
-	}
-	
-	public int getTagIndex()
-	{
-		return tagIndex;
-	}
-	
-	public void setTagIndex(int newTagIndex)
-	{
-		if(newTagIndex < 0)
-			throw new IllegalArgumentException();
-		
-		tagIndex = newTagIndex;
-	}
 	
 	class ActionEditTag implements ActionListener
 	{
@@ -159,7 +142,28 @@ public class TagRenderer extends JPanel implements ListCellRenderer<Tag>
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED), new EmptyBorder(2, 2, 2, 2)));
+			setOpaque(true);
+			setBackground(Color.RED);
+			int returnValue = JOptionPane.showConfirmDialog(MainFrame.getInstance(), "Do you really want to remove the selected tag ?", "Remove confirmation", JOptionPane.YES_NO_OPTION);
+			
+			setSelected(isSelected);
+			if(returnValue == JOptionPane.YES_OPTION)
+			{
+				managementPanel.removeTag(TagRenderer.this);
+			}
 		}
+	}
+	
+	
+	public Tag getTag()
+	{
+		return currentTag;
+	}
+
+	public boolean isSelected()
+	{
+		return isSelected;
 	}
 	
 	public void setSelected(boolean selected)
