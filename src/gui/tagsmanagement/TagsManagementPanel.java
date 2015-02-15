@@ -16,7 +16,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -52,6 +51,7 @@ public class TagsManagementPanel extends JPanel
 //	private DefaultListModel<Tag> tagsListModel;
 	private JPanel tagsListPanel;
 	private TagRenderer selectedTag;
+	private int tagsNumber;
 	
 	// right panel elements
 	private JLabel objectImage;
@@ -60,6 +60,8 @@ public class TagsManagementPanel extends JPanel
 	private DefaultListModel<String> profilesListModel;
 	
 	
+	private TagManagerDialog tagManagerDialog;
+	
 	public TagsManagementPanel()
 	{
 		super(true);
@@ -67,6 +69,8 @@ public class TagsManagementPanel extends JPanel
 		
 		add(createTagsListPanel());
 		add(createTagInformationsPanel());
+		
+		tagManagerDialog = new TagManagerDialog(MainFrame.getInstance());
 	}
 
 	private JPanel createTagsListPanel()
@@ -85,8 +89,8 @@ public class TagsManagementPanel extends JPanel
 //		tagsList.setDoubleBuffered(true);
 //		tagsList.setCellRenderer(new TagRenderer());
 		
-		new ArrayList<>();
 		selectedTag = null;
+		tagsNumber = 0;
 		
 		tagsListPanel = new JPanel(true);
 		tagsListPanel.setLayout(new BoxLayout(tagsListPanel, BoxLayout.Y_AXIS));
@@ -182,7 +186,6 @@ public class TagsManagementPanel extends JPanel
 			throw e;
 		}
 		
-		tagsListLabel.setText(list.size() + " tags");
 		
 		// reinitialize the right panel.
 		objectImage.setIcon(null);
@@ -194,8 +197,11 @@ public class TagsManagementPanel extends JPanel
 	{
 		TagRenderer renderer = new TagRenderer(tag, this);
 		
-		tagsListPanel.add(renderer);
-//		tagRendererComponents.add(renderer);
+		tagsListPanel.add(renderer, tagsNumber);
+		tagsListPanel.repaint();
+		
+		tagsNumber++;
+		tagsListLabel.setText(tagsNumber + " tags");
 	}
 	
 	class tagsListMouseListener extends MouseAdapter implements MouseListener
@@ -273,9 +279,25 @@ public class TagsManagementPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			Tag tag = tagManagerDialog.addTag();
+			
+			if(tag != null)
+			{
+				addTag(tag);
+				tagsListPanel.repaint(); // to refresh the tags list panel.
+			}
 		}
 	}
 
+	
+	public Tag runTagEditor(TagRenderer tagRenderer)
+	{
+		Tag tag = tagManagerDialog.modifyTag(tagRenderer.getTag());
+		if(tag != null && tagRenderer.isSelected())
+			this.displayTagDetails(tag);
+		
+		return tag;
+	}
 	
 	public void removeTag(TagRenderer renderer)
 	{
@@ -292,12 +314,15 @@ public class TagsManagementPanel extends JPanel
 			}
 			
 			tagsListPanel.remove(renderer);
-			tagsListPanel.repaint();
-		} catch (IllegalFieldException e) { // abnormal exception in this case. Will not occur.
+			tagsNumber--;
+
+			tagsListLabel.setText(tagsNumber + " tags");
+			tagsListPanel.repaint(); // To refresh the graphical interface.
+		} catch (IllegalFieldException e) { // Abnormal exception in this case. Will not occur.
 			e.printStackTrace();
-		} catch (NotAuthenticatedException e) { // abnormal exception in this case. Will not occur.
+		} catch (NotAuthenticatedException e) { // Abnormal exception in this case. Will not occur.
 			e.printStackTrace();
-		} catch (TagNotFoundException e) { // can occur if the tag is removed on another computer or on a smartphone after the tags list was loaded.
+		} catch (TagNotFoundException e) { // Can occur if the tag is removed on another computer or on a smartphone after the tags list was loaded.
 			JOptionPane.showMessageDialog(MainFrame.getInstance(), "The selected tag semms to be already removed from your account.", "Error", JOptionPane.ERROR_MESSAGE);
 			
 			if(selectedTag == renderer)

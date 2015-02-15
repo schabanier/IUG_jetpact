@@ -135,6 +135,25 @@ public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			Tag ret = managementPanel.runTagEditor(TagRenderer.this);
+			
+			if(ret != null)
+			{
+				currentTag = ret;
+				tagLabel.setText(currentTag.getObjectName());
+
+				if(currentTag.getObjectImageName() != null)
+				{
+					
+					try {
+						tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(IconsProvider.OBJECT_LITTLE_IMAGE_WIDTH, IconsProvider.OBJECT_LITTLE_IMAGE_HEIGHT, Image.SCALE_FAST)));
+					} catch (IOException e1) { // an error occured while reading the image file. the default object image will be displayed.
+						tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
+					}
+				}
+				else
+					tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
+			}
 		}
 	}
 	
