@@ -4,7 +4,8 @@ public class IllegalFieldException extends IllegalArgumentException
 {
 	private static final long serialVersionUID = 6349027407947995384L;
 	
-	public final int fieldId;
+	private final int fieldId;
+	private final int reason;
 
 	public static final int PSEUDO = 0;
 	public static final int FIRSTNAME = 1;
@@ -18,9 +19,27 @@ public class IllegalFieldException extends IllegalArgumentException
 	public static final int TAG_OBJECT_IMAGE = 12;
 	
 
+	
+	public static final int REASON_VALUE_INCORRECT = 0;
+	public static final int REASON_VALUE_ALREADY_USED = 1;
+
+	
+	// This constructor will be removed.
 	public IllegalFieldException(int fieldId, String message)
 	{
+		this(fieldId, REASON_VALUE_INCORRECT, message);
+	}
+
+	public IllegalFieldException(int fieldId, int reason)
+	{
+		this(fieldId, reason, "");
+	}
+	
+	
+	public IllegalFieldException(int fieldId, int reason, String message)
+	{
 		super(message);
+		this.reason = reason;
 		this.fieldId = fieldId;
 	}
 	
@@ -28,4 +47,10 @@ public class IllegalFieldException extends IllegalArgumentException
 	{
 		return fieldId;
 	}
+
+	public int getReason()
+	{
+		return reason;
+	}
+	
 }
