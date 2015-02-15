@@ -34,7 +34,7 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException if there is a network failure.
 	 * @throws MalformedURLException 
 	 */
-	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException, MalformedURLException;
+	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * 

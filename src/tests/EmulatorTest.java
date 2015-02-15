@@ -1,5 +1,6 @@
 package tests;
 
+import java.net.MalformedURLException;
 import java.util.Date;
 
 import data.Account;
@@ -50,7 +51,12 @@ public class EmulatorTest
 		}
 
 		try {
-			NetworkServiceProvider.getNetworkService().authenticate("invalid", "invalid");
+			try {
+				NetworkServiceProvider.getNetworkService().authenticate("invalid", "invalid");
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Authentication 1 done.");
 			NetworkServiceProvider.getNetworkService().logOut();
 		} catch (AccountNotFoundException e) {
@@ -65,6 +71,9 @@ public class EmulatorTest
 		} catch (AccountNotFoundException e) {
 			System.out.println("account not found.");
 		} catch (NetworkServiceException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

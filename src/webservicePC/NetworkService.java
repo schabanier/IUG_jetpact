@@ -30,11 +30,14 @@ public class NetworkService implements NetworkServiceInterface {
 
 	@Override
 	public void createAccount(Account newAccount, String newPassword)
-			throws IllegalFieldException, NetworkServiceException, MalformedURLException {
+			throws IllegalFieldException, NetworkServiceException {
 		
 		/*  adapter au serveur choisi */
 		String adressHost = "local:8080/InterfacePC";
-		URL registerURL = new URL("http://"+adressHost+"/register/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&firstname="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
+		URL registerURL;
+		try {
+			registerURL = new URL("http://"+adressHost+"/register/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&firstname="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
+		
 		// Query parameters are parameters: http://localhost/<appln-folder-name>/register/doregister?pseudo=pqrs&password=abc&firstname=xyz&last_name=cdf&email=hij
 
 		
@@ -46,7 +49,10 @@ public class NetworkService implements NetworkServiceInterface {
 		System.out.println("tag : " + obj.get("tag"));
 		System.out.println("status : " + obj.get("status"));
 		System.out.println("error_msg : " + obj.get("error_msg"));
-
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
