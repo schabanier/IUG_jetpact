@@ -1,23 +1,30 @@
 package gui.tagsmanagement;
 
 import gui.Constants;
+import gui.IconsProvider;
 import gui.MainFrame;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -51,6 +58,7 @@ public class TagsManagementPanel extends JPanel
 	private JLabel objectLabel;
 	private JLabel tagIdLabel;
 	private DefaultListModel<String> profilesListModel;
+	
 	
 	public TagsManagementPanel()
 	{
@@ -112,13 +120,16 @@ public class TagsManagementPanel extends JPanel
 		
 		objectImage = new JLabel();
 		objectImage.setBorder(new LineBorder(Color.BLACK, 1));
+		objectImage.setAlignmentX(CENTER_ALIGNMENT);
 		objectImage.setDoubleBuffered(true);
 
 		objectLabel = new JLabel();
+		objectLabel.setAlignmentX(CENTER_ALIGNMENT);
 		objectLabel.setDoubleBuffered(true);
 
 		tagIdLabel = new JLabel();
 		tagIdLabel.setDoubleBuffered(true);
+		tagIdLabel.setAlignmentX(CENTER_ALIGNMENT);
 		tagIdLabel.setToolTipText("Tag identifier.");
 		
 		JList<String> profilesList = new JList<>();
@@ -155,6 +166,7 @@ public class TagsManagementPanel extends JPanel
 	{
 		// remove all from the graphical tags list and reloads it from the account.
 		tagsListPanel.removeAll();
+		removeTagDetails();
 		
 		List<Tag> list;
 		
@@ -204,9 +216,57 @@ public class TagsManagementPanel extends JPanel
 						selectedTag.setSelected(false);
 					
 					selectedTag = renderer;
+					displayTagDetails(selectedTag.getTag());
 				}
 			}
 		}
+	}
+	
+	private void displayTagDetails(Tag tag)
+	{
+		Image image = null;
+		
+		// get the associated image or the default image if there is no one.
+		if(tag.getObjectImageName() != null)
+		{
+			int width, height;
+			try {
+				BufferedImage bufImage = ImageIO.read(new File(tag.getObjectImageName()));
+				width = bufImage.getWidth();
+				height = bufImage.getHeight();
+
+				// resize image to fill the ocjectImage label.
+				if(width < height)
+				{
+					image = bufImage.getScaledInstance(IconsProvider.OBJECT_BIG_IMAGE_WIDTH * width / height, IconsProvider.OBJECT_BIG_IMAGE_HEIGHT, Image.SCALE_FAST);
+				}
+				else
+				{
+					image = bufImage.getScaledInstance(IconsProvider.OBJECT_BIG_IMAGE_WIDTH, IconsProvider.OBJECT_BIG_IMAGE_HEIGHT * height / width, Image.SCALE_FAST);
+				}
+			} catch (IOException e) { // an error occured while reading the image file. the default object image will be displayed.
+				image = IconsProvider.defaultObjectImageBig;
+			}
+		}
+		else
+			image = IconsProvider.defaultObjectImageBig;
+		
+		objectImage.setIcon(new ImageIcon(image));
+		
+		
+		objectLabel.setText(tag.getObjectName());
+		tagIdLabel.setText(tag.getUid());
+		
+		// profile list processing will be implemented later.
+	}
+	
+	private void removeTagDetails()
+	{
+		objectImage.setIcon(null);
+		objectLabel.setText("");
+		tagIdLabel.setText("");
+		
+		profilesListModel.clear();
 	}
 	
 	class ActionAddNewTag implements ActionListener
@@ -226,7 +286,10 @@ public class TagsManagementPanel extends JPanel
 			NetworkServiceProvider.getNetworkService().removeTag(renderer.getTag());
 
 			if(selectedTag == renderer)
+			{
 				selectedTag = null;
+				removeTagDetails();
+			}
 			
 			tagsListPanel.remove(renderer);
 			tagsListPanel.repaint();
