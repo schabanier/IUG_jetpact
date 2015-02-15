@@ -119,7 +119,7 @@ public class TagsManagementPanel extends JPanel
 	private JPanel createTagInformationsPanel()
 	{
 		JPanel tagInformationsPanel = new JPanel(true);
-		tagInformationsPanel.setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(4, 2, 6, 2)));
+		tagInformationsPanel.setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(12, 2, 9, 2)));
 		tagInformationsPanel.setLayout(new BoxLayout(tagInformationsPanel, BoxLayout.Y_AXIS));
 		
 		objectImage = new JLabel();

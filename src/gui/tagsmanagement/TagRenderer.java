@@ -57,6 +57,7 @@ public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 		setBorder(new EmptyBorder(3, 3, 3, 3));
 		
 		tagLabel = new JLabel();
+		tagLabel.setOpaque(false);
 		tagLabel.setDoubleBuffered(true);
 
 		editButton = new JButton(IconsProvider.iconEditElement);
