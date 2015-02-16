@@ -1,6 +1,5 @@
 package data;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class Tag
 	
 	private String objectName;
 
-	private Image objectImage;
+	private String objectImageName;
 	
 	private List<Position> lastPositions;
 	
@@ -20,44 +19,50 @@ public class Tag
 		this(uid, objectName, null);
 	}
 	
-	public Tag(String uid, String objectName, Image objectImage)
+	public Tag(String uid, String objectName, String objectImageName)
 	{
+		if(uid == null || uid.length() == 0)
+			throw new NullPointerException();
+		
 		this.uid = uid;
-		this.objectName = objectName;
-		this.objectImage = objectImage;
+		
+		setObjectName(objectName);
+		setObjectImageName(objectImageName);
 		
 		lastPositions = new ArrayList<>();
 	}
 	
 	
-	String getUid()
+	public String getUid()
 	{
 		return uid;
 	}
 	
 	
-	String getObjectName()
+	public String getObjectName()
 	{
 		return objectName;
 	}
 	
-	void setObjectName(String objectName)
+	public void setObjectName(String objectName)
 	{
+		if(objectName == null)
+			throw new NullPointerException();
+		
 		this.objectName = objectName;
 	}
 	
 	
-	Image getObjectImage()
+	public String getObjectImageName()
 	{
-		return objectImage;
+		return objectImageName;
 	}
 
-	void setObjectImage(Image objectImage)
+	public void setObjectImageName(String objectImageName)
 	{
-		this.objectImage = objectImage;
+		this.objectImageName = objectImageName;
 	}
-	
-	
+
 	public void addLastPosition(Position p)
 	{
 		lastPositions.add(p);
@@ -66,5 +71,17 @@ public class Tag
 	public List<Position> getLastPositions()
 	{
 		return lastPositions;
+	}
+
+
+	public int hashCode()
+	{
+		return uid.hashCode();
+	}
+
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Tag)) ? false : 
+					uid.equals(((Tag) obj).getUid());
 	}
 }
