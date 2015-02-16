@@ -1,9 +1,11 @@
 package gui.profils;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -29,8 +31,8 @@ public class CreerProfil extends JDialog {
 	private JLabel labelAjout, labelDispo, labelNom ;
 	private JTextField nomTextField;
 	private JButton buttonCreer, buttonAnnuler, buttonGauche, buttonDroite ;
-	private JList list1, list2;
-	private Tag[] listPuces1, listPuces2 ;
+	private JList listAdd, listAvailable;
+	private DefaultListModel listModelAdd, listModelAvailable;
 	
 	
 	
@@ -55,10 +57,11 @@ public class CreerProfil extends JDialog {
 		buttonDroite = new JButton();
 		
 		
-		listPuces1 = new Tag[25];
-	    listPuces2 = new Tag[25];
-		list1 = new JList (listPuces1);
-		list2 = new JList(listPuces2);
+		
+		listAdd = new JList (listModelAdd);
+		listAvailable = new JList(listModelAvailable);
+		listModelAdd = new DefaultListModel();
+		listModelAvailable = new DefaultListModel();
 		
 		
 		
@@ -86,28 +89,30 @@ public class CreerProfil extends JDialog {
 		//====listes=====
 			
 			
-			JScrollPane spList1 = new JScrollPane( list1); // � ajouter dans un panel !!
+			JScrollPane spListAdd = new JScrollPane( listAdd); // � ajouter dans un panel !!
+			spListAdd.setPreferredSize(new Dimension(250, 80));
 			
-			list1.setVisibleRowCount( 10 );
-			list1.setFixedCellHeight( 2 );
-			list1.setFixedCellWidth(8);
-			list1.addListSelectionListener( new MonList1SelectionListener());
-			list1.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			list1.setLayoutOrientation(VERTICAL);
-			list1.setSelectionForeground(new Color(0,255,255));
-			list1.setDragEnabled(true);
+			listAdd.setVisibleRowCount( 10 );
+			listAdd.setFixedCellHeight( 2 );
+			listAdd.setFixedCellWidth(8);
+			listAdd.addListSelectionListener( new MonList1SelectionListener());
+			listAdd.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			listAdd.setLayoutOrientation(JList.VERTICAL);
+			listAdd.setSelectionForeground(new Color(0,255,255));
+			listAdd.setDragEnabled(true);
 			
 			
-            JScrollPane spList2 = new JScrollPane( list2); // � ajouter dans un panel !!
+            JScrollPane spListAvailable = new JScrollPane( listAvailable); // � ajouter dans un panel !!
+            spListAvailable.setPreferredSize(new Dimension(250, 80));
 			
-        	list2.setVisibleRowCount( 10 );
-			list2.setFixedCellHeight( 2 );
-			list2.setFixedCellWidth(8);
-			list2.addListSelectionListener( new MonList1SelectionListener());
-			list2.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			list2.setLayoutOrientation(VERTICAL);
-			list2.setSelectionForeground(new Color(0,255,255));
-			list2.setDragEnabled(true);
+        	listAvailable.setVisibleRowCount( 10 );
+			listAvailable.setFixedCellHeight( 2 );
+			listAvailable.setFixedCellWidth(8);
+			listAvailable.addListSelectionListener( new MonList1SelectionListener());
+			listAvailable.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			listAvailable.setLayoutOrientation(JList.VERTICAL);
+			listAvailable.setSelectionForeground(new Color(0,255,255));
+			listAvailable.setDragEnabled(true);
 			
 
 			
@@ -188,27 +193,25 @@ public class CreerProfil extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			
+			int size = listModelAdd.getSize();
+			int i = 0;
 			
+		for(i=0; i < size ; i++)
+		{
+			//enleve element de listAdd si il est selectionné et l'ajoute a listAvailable
 			
-				
-				
-			Tag[] tab1 = new Tag[20];	
-		    tab1 = (Tag[]) list1.getSelectedValues();
-		    
-		    Tag[] tab2= new Tag[20];	
-		    tab2 = listPuces2.concanate(tab1); // methode concataner tableaux
+			if(listAdd.isSelectedIndex(i))
+			{
+				listModelAvailable.addElement(listAdd.getComponent(i));
+				listModelAdd.remove(i);
+			}
 			
-		    Tag[] tab3= new Tag[20];
-		    tab3 = //listePuces1 - tab1 ;
-		    
-			list1.setListData(tab3);
-			list2.setListData(tab1);
-			
-			list1.clearSelection();
+		}
+		
 			
 			// faire des exceptions
 			
-		}
+		} 
 		
 		
 	}
@@ -217,21 +220,22 @@ public class CreerProfil extends JDialog {
 		
 		public void actionPerformed(ActionEvent e) {
 			
-			Tag[] tab1= new Tag[20];	
-		    tab1 = (Tag[]) list2.getSelectedValues();
-		    
-		    Tag[] tab2= new Tag[20];	
-		    tab2 = listPuces1.concanate(tab1); //methode concataner tableaux
+			int size = listModelAvailable.getSize();
+			int i = 0;
 			
-		    Tag[] tab3= new Tag[20];
-		    tab3 = //listePuces2 - tab1 ;
-		    
-			list2.setListData(tab3);
-			list1.setListData(tab1);
+		for(i=0; i < size ; i++)
+		{
+			//enleve element de listAdd si il est selectionné et l'ajoute a listAvailable
 			
-			list2.clearSelection();
+			if(listAvailable.isSelectedIndex(i))
+			{
+				listModelAdd.addElement(listAvailable.getComponent(i));
+				listModelAvailable.remove(i);
+			}
 			
-			//faire des exceptions
+		}
+			
+		
 			
 		}
 	}
@@ -243,7 +247,7 @@ public class CreerProfil extends JDialog {
 			// stocke les puces � enlever du profil
 			
 			Tag[] tab1 = new Tag[25];
-			tab1 = (Tag[]) list1.getSelectedValues();
+			tab1 = (Tag[]) listAdd.getSelectedValues();
 		}
 
 		
@@ -259,7 +263,7 @@ public class CreerProfil extends JDialog {
 			//stocker les puces � ajouter au profil
 			
 			Tag[] tab2 = new Tag[25];
-			tab2 = (Tag[]) list2.getSelectedValues();
+			tab2 = (Tag[]) listAvailable.getSelectedValues();
 			
 		}	
 	}
