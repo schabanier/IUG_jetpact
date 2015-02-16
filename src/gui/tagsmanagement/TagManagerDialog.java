@@ -158,10 +158,16 @@ public class TagManagerDialog extends JDialog
 				switch(e.getFieldId())
 				{
 					case IllegalFieldException.TAG_UID :
-						JOptionPane.showMessageDialog(this, "The tag id is incorrect : " + e.getMessage(), "Error on field ", JOptionPane.ERROR_MESSAGE);
+						if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+							JOptionPane.showMessageDialog(this, "The tag which has id \"" + id + "\" is already used.", "Error on field id", JOptionPane.ERROR_MESSAGE);
+						else
+							JOptionPane.showMessageDialog(this, "The tag id \"" + id + "\" is incorrect : " + e.getMessage(), "Error on field id", JOptionPane.ERROR_MESSAGE);
 					break;
 					case IllegalFieldException.TAG_OBJECT_NAME :
-						JOptionPane.showMessageDialog(this, "The object name is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
+						if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+							JOptionPane.showMessageDialog(this, "The  object name \"" + objectName + "\" is already used for another tag.", "Error on field object name", JOptionPane.ERROR_MESSAGE);
+						else
+							JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
 					break;
 					case IllegalFieldException.TAG_OBJECT_IMAGE :
 						JOptionPane.showMessageDialog(this, "The image filename is incorrect : " + e.getMessage(), "Error on field image filename", JOptionPane.ERROR_MESSAGE);
@@ -189,7 +195,7 @@ public class TagManagerDialog extends JDialog
 			JOptionPane.showMessageDialog(this, "The field object name can't be empty", "Error on field object name", JOptionPane.WARNING_MESSAGE);
 		else
 		{
-			if(! objectName.equals(currentTag.getObjectName()))
+			if(! objectName.equals(currentTag.getObjectName())) // the object name is modified.
 			{
 				try {
 					NetworkServiceProvider.getNetworkService().modifyObjectName(currentTag, objectName);
@@ -197,10 +203,10 @@ public class TagManagerDialog extends JDialog
 					switch(e.getFieldId())
 					{
 						case IllegalFieldException.TAG_OBJECT_NAME :
-							JOptionPane.showMessageDialog(this, "The object name is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
-						break;
-						case IllegalFieldException.TAG_OBJECT_IMAGE :
-							JOptionPane.showMessageDialog(this, "The image filename is incorrect : " + e.getMessage(), "Error on field image filename", JOptionPane.ERROR_MESSAGE);
+							if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+								JOptionPane.showMessageDialog(this, "The  object name \"" + objectName + "\" is already used for another tag.", "Error on field object name", JOptionPane.ERROR_MESSAGE);
+							else
+								JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
 						break;
 						default:
 							JOptionPane.showMessageDialog(this, "Unknown error has occured", "Unknown error", JOptionPane.ERROR_MESSAGE);
@@ -228,9 +234,6 @@ public class TagManagerDialog extends JDialog
 				} catch (IllegalFieldException e) {
 					switch(e.getFieldId())
 					{
-						case IllegalFieldException.TAG_OBJECT_NAME :
-							JOptionPane.showMessageDialog(this, "The object name is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
-						break;
 						case IllegalFieldException.TAG_OBJECT_IMAGE :
 							JOptionPane.showMessageDialog(this, "The image filename is incorrect : " + e.getMessage(), "Error on field image filename", JOptionPane.ERROR_MESSAGE);
 						break;

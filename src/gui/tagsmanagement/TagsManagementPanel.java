@@ -319,9 +319,9 @@ public class TagsManagementPanel extends JPanel
 			tagsListLabel.setText(tagsNumber + " tags");
 			tagsListPanel.repaint(); // To refresh the graphical interface.
 		} catch (IllegalFieldException e) { // Abnormal exception in this case. Will not occur.
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please relaunch the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 		} catch (NotAuthenticatedException e) { // Abnormal exception in this case. Will not occur.
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please relaunch the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 		} catch (TagNotFoundException e) { // Can occur if the tag is removed on another computer or on a smartphone after the tags list was loaded.
 			JOptionPane.showMessageDialog(MainFrame.getInstance(), "The selected tag semms to be already removed from your account.", "Error", JOptionPane.ERROR_MESSAGE);
 			
