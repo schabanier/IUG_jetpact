@@ -62,9 +62,8 @@ public class IllegalFieldException extends IllegalArgumentException
 	public static final int REASON_VALUE_ALREADY_USED = 1;
 
 	
-	@Deprecated
 	/**
-	 * Will be removed. Use another constructor.
+	 * Is equivalent to <code>new IllegalFieldException(fieldId, IllegalFieldException.REASON_VALUE_INCORRECT, "");</code>
 	 * @param fieldId
 	 * @param message
 	 */
@@ -74,7 +73,7 @@ public class IllegalFieldException extends IllegalArgumentException
 	}
 
 	/**
-	 * is equivalent to <code>new IllegalFieldException(fieldId, reason, "");</code>
+	 * Is equivalent to <code>new IllegalFieldException(fieldId, reason, "");</code>
 	 * @param fieldId
 	 * @param reason
 	 * @see IllegalFieldException#IllegalFieldException(int, int, String) IllegalFieldException(int fieldId, int reason, String message)
