@@ -155,7 +155,7 @@ public class TagManagerDialog extends JDialog
 				tagAdded = tag;
 				setVisible(false);
 			} catch (IllegalFieldException e) {
-				switch(e.fieldId)
+				switch(e.getFieldId())
 				{
 					case IllegalFieldException.TAG_UID :
 						JOptionPane.showMessageDialog(this, "The tag id is incorrect : " + e.getMessage(), "Error on field ", JOptionPane.ERROR_MESSAGE);
@@ -194,7 +194,7 @@ public class TagManagerDialog extends JDialog
 				try {
 					NetworkServiceProvider.getNetworkService().modifyObjectName(currentTag, objectName);
 				} catch (IllegalFieldException e) {
-					switch(e.fieldId)
+					switch(e.getFieldId())
 					{
 						case IllegalFieldException.TAG_OBJECT_NAME :
 							JOptionPane.showMessageDialog(this, "The object name is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
@@ -226,7 +226,7 @@ public class TagManagerDialog extends JDialog
 					isTagModified = true;
 					setVisible(false);
 				} catch (IllegalFieldException e) {
-					switch(e.fieldId)
+					switch(e.getFieldId())
 					{
 						case IllegalFieldException.TAG_OBJECT_NAME :
 							JOptionPane.showMessageDialog(this, "The object name is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
