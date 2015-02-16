@@ -18,6 +18,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import data.Tag;
+import engine.NetworkServiceProvider;
+import exceptions.NotAuthenticatedException;
 
 public class CreerProfil extends JDialog {
 	
@@ -84,7 +86,7 @@ public class CreerProfil extends JDialog {
 		//====listes=====
 			
 			
-			JScrollPane spList1 = new JScrollPane( list1); // ˆ ajouter dans un panel !!
+			JScrollPane spList1 = new JScrollPane( list1); // ï¿½ ajouter dans un panel !!
 			
 			list1.setVisibleRowCount( 10 );
 			list1.setFixedCellHeight( 2 );
@@ -96,7 +98,7 @@ public class CreerProfil extends JDialog {
 			list1.setDragEnabled(true);
 			
 			
-            JScrollPane spList2 = new JScrollPane( list2); // ˆ ajouter dans un panel !!
+            JScrollPane spList2 = new JScrollPane( list2); // ï¿½ ajouter dans un panel !!
 			
         	list2.setVisibleRowCount( 10 );
 			list2.setFixedCellHeight( 2 );
@@ -114,7 +116,7 @@ public class CreerProfil extends JDialog {
 			
 		//=====label=====
 			
-			labelAjout.setText("Puces ajoutŽe");
+			labelAjout.setText("Puces ajoutï¿½e");
 			labelDispo.setText("Puces disponibles");
 			labelNom.setText("Nom du profil");
 			
@@ -165,6 +167,16 @@ public class CreerProfil extends JDialog {
 			// TODO Auto-generated method stub
 			// action si clic ok
 			
+			 try {
+				NetworkServiceProvider.getNetworkService().createProfile(nomTextField.getText());
+				
+				//addTagFromProfile
+			} catch (NotAuthenticatedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			 
+			
 		}
 		
 	}
@@ -184,7 +196,7 @@ public class CreerProfil extends JDialog {
 		    tab1 = (Tag[]) list1.getSelectedValues();
 		    
 		    Tag[] tab2= new Tag[20];	
-		    tab2 = listPuces2.concanate(tab1); //mŽthode concataner tableaux
+		    tab2 = listPuces2.concanate(tab1); // methode concataner tableaux
 			
 		    Tag[] tab3= new Tag[20];
 		    tab3 = //listePuces1 - tab1 ;
@@ -194,7 +206,7 @@ public class CreerProfil extends JDialog {
 			
 			list1.clearSelection();
 			
-			//faire des exceptions
+			// faire des exceptions
 			
 		}
 		
@@ -209,7 +221,7 @@ public class CreerProfil extends JDialog {
 		    tab1 = (Tag[]) list2.getSelectedValues();
 		    
 		    Tag[] tab2= new Tag[20];	
-		    tab2 = listPuces1.concanate(tab1); //mŽthode concataner tableaux
+		    tab2 = listPuces1.concanate(tab1); //methode concataner tableaux
 			
 		    Tag[] tab3= new Tag[20];
 		    tab3 = //listePuces2 - tab1 ;
@@ -228,7 +240,7 @@ public class CreerProfil extends JDialog {
 	{
 		public void valueChanged(ListSelectionEvent e)
 		{
-			// stocke les puces ˆ enlever du profil
+			// stocke les puces ï¿½ enlever du profil
 			
 			Tag[] tab1 = new Tag[25];
 			tab1 = (Tag[]) list1.getSelectedValues();
@@ -244,7 +256,7 @@ public class CreerProfil extends JDialog {
 		public void valueChanged(ListSelectionEvent e)
 		{
 			
-			//stocker les puces ˆ ajouter au profil
+			//stocker les puces ï¿½ ajouter au profil
 			
 			Tag[] tab2 = new Tag[25];
 			tab2 = (Tag[]) list2.getSelectedValues();

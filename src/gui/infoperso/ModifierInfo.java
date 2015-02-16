@@ -115,6 +115,8 @@ public class ModifierInfo extends JDialog {
 				
 			else	{
 				
+				
+				
 				ModifierInfo.this.setVisible(false);
 			}
 			

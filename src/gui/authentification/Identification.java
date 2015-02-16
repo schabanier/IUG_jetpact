@@ -1,5 +1,7 @@
 package gui.authentification;
 
+import interfaces.NetworkServiceInterface;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -17,6 +20,10 @@ import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+
+import engine.NetworkServiceProvider;
+import exceptions.AccountNotFoundException;
+import exceptions.NetworkServiceException;
 
 public class Identification extends JPanel
                            
@@ -33,7 +40,8 @@ public class Identification extends JPanel
 	private JButton buttonCreerCompte;
 	private JButton buttonConnexion;
 	private JFrame frameContainer;
-
+	
+	
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 	
 	public Identification(JFrame frameContainer)
@@ -50,7 +58,7 @@ public class Identification extends JPanel
 				passwordField1 = new JPasswordField();
 				buttonCreerCompte = new JButton();
 				buttonConnexion = new JButton();
-			
+			 
 			
 					//======== panel1 ========
 					{
@@ -106,6 +114,7 @@ public void actionPerformed(ActionEvent e) {
 
 	 
 		 // action si clic sur bouton "creer compte"
+	
 		 AccountCreation accountCreationFenetre = new AccountCreation(frameContainer, "Creer compte");
 	     accountCreationFenetre.setVisible(true);
 	     
@@ -121,6 +130,21 @@ public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
 		//action si clic sur bouton connexion
+		  try {
+			NetworkServiceProvider.getNetworkService().authenticate("jdupon", "123456");
+		} catch (AccountNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Ce compte n'existe pas", "Erreur", JOptionPane.ERROR_MESSAGE);
+			
+			
+			
+			
+			
+		} catch (NetworkServiceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 	}
 	  

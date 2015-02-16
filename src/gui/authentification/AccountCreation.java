@@ -19,6 +19,12 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
+import data.Account;
+
+import engine.NetworkServiceProvider;
+import exceptions.IllegalFieldException;
+import exceptions.NetworkServiceException;
+
 public class AccountCreation extends JDialog
                             
 {
@@ -188,9 +194,26 @@ public class AccountCreation extends JDialog
 			else if (!(new String(passwordField3.getPassword()).equals(new String(passwordField2.getPassword())))) // les mdp ne sont pas identiques
 				JOptionPane.showMessageDialog(null, "Les mots de passes ne sont pas identiques", "Erreur", JOptionPane.ERROR_MESSAGE);
 				
-			else	{
+			else	{ //creation du compte
 				
-				AccountCreation.this.setVisible(false);
+				Account account = new Account(textFieldPseudo.getText(), textFieldPrenom.getText(),textFieldNom.getText(), textFieldMail.getText());
+				 
+				try {
+					
+					String passwordString = new String (passwordField2.getPassword());
+					NetworkServiceProvider.getNetworkService().createAccount(account,passwordString); 
+					
+				} catch (IllegalFieldException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					e1.getMessage();
+					
+				} catch (NetworkServiceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
+				
+				AccountCreation.this.setVisible(false); //ferme la fenetre
 			}
 			
 			
