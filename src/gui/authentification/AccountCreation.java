@@ -206,11 +206,12 @@ public class AccountCreation extends JDialog
 				} catch (IllegalFieldException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-					e1.getMessage();
+					JOptionPane.showMessageDialog(null, "Ce pseudo est déjà utilisé", "Erreur", JOptionPane.ERROR_MESSAGE);
 					
 				} catch (NetworkServiceException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Erreur réseau", "Erreur", JOptionPane.ERROR_MESSAGE);
 				} 
 				
 				AccountCreation.this.setVisible(false); //ferme la fenetre

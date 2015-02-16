@@ -204,6 +204,9 @@ public class CreerProfil extends JDialog {
 			{
 				listModelAvailable.addElement(listAdd.getComponent(i));
 				listModelAdd.remove(i);
+				
+				 NetworkServiceProvider.getNetworkService().removeTagFromProfile(nomTextField.getText(), listAdd.getComponent(i));
+				 
 			}
 			
 		}
@@ -231,6 +234,8 @@ public class CreerProfil extends JDialog {
 			{
 				listModelAdd.addElement(listAvailable.getComponent(i));
 				listModelAvailable.remove(i);
+				
+				 NetworkServiceProvider.getNetworkService().addTagToProfile(nomTextField.getText(),listAvailable.getComponent(i));
 			}
 			
 		}
@@ -246,9 +251,7 @@ public class CreerProfil extends JDialog {
 		{
 			// stocke les puces � enlever du profil
 			
-			Tag[] tab1 = new Tag[25];
-			tab1 = (Tag[]) listAdd.getSelectedValues();
-		}
+			
 
 		
 	}
@@ -262,8 +265,6 @@ public class CreerProfil extends JDialog {
 			
 			//stocker les puces � ajouter au profil
 			
-			Tag[] tab2 = new Tag[25];
-			tab2 = (Tag[]) listAvailable.getSelectedValues();
 			
 		}	
 	}
@@ -272,4 +273,5 @@ public class CreerProfil extends JDialog {
 	
 	
 	
+}
 }

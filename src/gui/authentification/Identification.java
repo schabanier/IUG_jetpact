@@ -144,6 +144,7 @@ public void actionPerformed(ActionEvent e) {
 		} catch (NetworkServiceException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erreur réseau", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
