@@ -148,7 +148,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	
 	
 
-	public void addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagAlreadyUsedException, NetworkServiceException
+	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagAlreadyUsedException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -162,13 +162,19 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(tag.getObjectImageName()) == false)
 			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, "Image filename is incorrect");
 		
-		if(! tags.add(tag))
-			throw new TagAlreadyUsedException(tag.getUid());
-		else
-			authenticatedAccount.getTags().add(tag);
+		for(Tag tmp : authenticatedAccount.getTags())
+			if(tmp.getObjectName().equals(tag.getObjectName()))
+				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, "this name is already used for another tag.");
+
+		if(! tags.add(tag)) // because the method add() returns true if this operation is successful, false if there is already a tag with the specifed tag UID. 
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_ALREADY_USED, "this name is already used for another tag.");
+		
+		authenticatedAccount.getTags().add(tag);
+		return tag;
+		
 	}
 
-	public void modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -179,6 +185,10 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		if(! FieldVerifier.verifyTagName(newObjectName))
 			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, "Tag name is incorrect");
+
+		for(Tag tmp : authenticatedAccount.getTags())
+			if(tmp.getObjectName().equals(newObjectName) && ! tmp.getUid().equals(tag.getUid()))
+				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, "this name is already used for another tag.");
 		
 		
 		int index = authenticatedAccount.getTags().indexOf(tag);
@@ -186,10 +196,13 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(index < 0)
 			throw new TagNotFoundException(tag.getUid());
 		else
+		{
 			authenticatedAccount.getTags().get(index).setObjectName(newObjectName);
+			return authenticatedAccount.getTags().get(index);
+		}
 	}
 
-	public void modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -207,7 +220,10 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(index < 0)
 			throw new TagNotFoundException(tag.getUid());
 		else
+		{
 			authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName);
+			return authenticatedAccount.getTags().get(index);
+		}
 	}
 	
 	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
