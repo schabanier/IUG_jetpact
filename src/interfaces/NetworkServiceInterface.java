@@ -92,7 +92,13 @@ public interface NetworkServiceInterface
 	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 	
-	
+	/**
+	 * To get the tags list of the current account.
+	 * @return the tags list if the authentication is already done successfully.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws NetworkServiceException If a network service error has occurred.
+	 */
+	public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException;
 	
 	/**
 	 * Add a new tag to the current account.
@@ -159,39 +165,71 @@ public interface NetworkServiceInterface
 	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException;
 	
 	
+
 	/**
-	 * SPECIFICATION NOT FINISHED.
+	 * To create a new profile empty.
+	 * @param profileName The name of the new profile.
+	 * @return the created profile if this operation succeeds.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If the field {@link IllegalFieldException#PROFILE_NAME profile name} is incorrect. The reason can be {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} or {@link IllegalFieldException#REASON_VALUE_ALREADY_USED value already used}.
+	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
-	public Profile createProfile(String profileName) throws NotAuthenticatedException;
+	public Profile createProfile(String profileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 
 	/**
-	 * SPECIFICATION NOT FINISHED.
+	 * To add a tag to a profile.
+	 * @param profile The profile to be modified.
+	 * @param tag The tag to be added.
+	 * @return The profile modified if this operation succeeds.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException
+	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
-	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException;
+	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	
+
+	/**
+	 * 
+	 * @param profile
+	 * @param tags
+	 * @return
+	 * @throws NotAuthenticatedException
+	 * @throws IllegalFieldException
+	 * @throws NetworkServiceException
+	 */
+	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * SPECIFICATION NOT FINISHED.
 	 */
-	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException;
+	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * SPECIFICATION NOT FINISHED.
 	 */
-	public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException;
+	public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * SPECIFICATION NOT FINISHED.
 	 */
-	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException;
+	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * SPECIFICATION NOT FINISHED.
 	 */
-	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) throws NotAuthenticatedException;
+	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * SPECIFICATION NOT FINISHED.
 	 */
 	public Profile getProfile(String profileName) throws NotAuthenticatedException;
+
+	/**
+	 * To get the profiles of the current account.
+	 * @return The profiles list if the authentication is already done successfully.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws NetworkServiceException If a network service error has occurred.
+	 */
+	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException;
 }
