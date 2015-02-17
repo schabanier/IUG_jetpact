@@ -20,8 +20,6 @@ import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import exceptions.TagAlreadyUsedException;
-import exceptions.TagNotFoundException;
 
 public class TagManagerDialog extends JDialog
 {
@@ -178,8 +176,6 @@ public class TagManagerDialog extends JDialog
 				}
 			} catch (NotAuthenticatedException e) { // abnormal error.
 				JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-			} catch (TagAlreadyUsedException e) {
-				JOptionPane.showMessageDialog(this, "The tag id \"" + id + "\" is already used.", "Tag id already used", JOptionPane.ERROR_MESSAGE);
 			} catch (NetworkServiceException e) {
 				JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -202,6 +198,12 @@ public class TagManagerDialog extends JDialog
 				} catch (IllegalFieldException e) {
 					switch(e.getFieldId())
 					{
+						case IllegalFieldException.TAG_UID :
+							if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+								JOptionPane.showMessageDialog(this, "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
+							else
+								JOptionPane.showMessageDialog(this, "A abnormal error has occured. Please restart the application to try to solve this problem.", "Error", JOptionPane.ERROR_MESSAGE);
+						break;
 						case IllegalFieldException.TAG_OBJECT_NAME :
 							if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
 								JOptionPane.showMessageDialog(this, "The  object name \"" + objectName + "\" is already used for another tag.", "Error on field object name", JOptionPane.ERROR_MESSAGE);
@@ -215,9 +217,6 @@ public class TagManagerDialog extends JDialog
 					return;
 				} catch (NotAuthenticatedException e) {// abnormal error.
 					JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-					return;
-				} catch (TagNotFoundException e) {
-					JOptionPane.showMessageDialog(this, "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				} catch (NetworkServiceException e) {
 					JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
@@ -234,6 +233,12 @@ public class TagManagerDialog extends JDialog
 				} catch (IllegalFieldException e) {
 					switch(e.getFieldId())
 					{
+						case IllegalFieldException.TAG_UID :
+							if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+								JOptionPane.showMessageDialog(this, "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
+							else // tag uid is incorrect.
+								JOptionPane.showMessageDialog(this, "A abnormal error has occured. Please restart the application to try to solve this problem.", "Error", JOptionPane.ERROR_MESSAGE);
+						break;
 						case IllegalFieldException.TAG_OBJECT_IMAGE :
 							JOptionPane.showMessageDialog(this, "The image filename is incorrect : " + e.getMessage(), "Error on field image filename", JOptionPane.ERROR_MESSAGE);
 						break;
@@ -243,8 +248,6 @@ public class TagManagerDialog extends JDialog
 					}
 				} catch (NotAuthenticatedException e) {// abnormal error.
 					JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-				} catch (TagNotFoundException e) {
-					JOptionPane.showMessageDialog(this, "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
 				} catch (NetworkServiceException e) {
 					JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
 				}

@@ -40,7 +40,6 @@ import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import exceptions.TagNotFoundException;
 
 public class TagsManagementPanel extends JPanel
 {
@@ -319,17 +318,12 @@ public class TagsManagementPanel extends JPanel
 			tagsListLabel.setText(tagsNumber + " tags");
 			tagsListPanel.repaint(); // To refresh the graphical interface.
 		} catch (IllegalFieldException e) { // Abnormal exception in this case. Will not occur.
-			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please relaunch the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+			if(e.getFieldId() == IllegalFieldException.TAG_UID && e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+				JOptionPane.showMessageDialog(MainFrame.getInstance(), "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please restart the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 		} catch (NotAuthenticatedException e) { // Abnormal exception in this case. Will not occur.
-			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please relaunch the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-		} catch (TagNotFoundException e) { // Can occur if the tag is removed on another computer or on a smartphone after the tags list was loaded.
-			JOptionPane.showMessageDialog(MainFrame.getInstance(), "The selected tag semms to be already removed from your account.", "Error", JOptionPane.ERROR_MESSAGE);
-			
-			if(selectedTag == renderer)
-				selectedTag = null;
-			
-			tagsListPanel.remove(renderer);
-			tagsListPanel.repaint();
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please restart the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 		} catch (NetworkServiceException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
