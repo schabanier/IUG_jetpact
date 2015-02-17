@@ -13,8 +13,6 @@ import exceptions.AccountNotFoundException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import exceptions.TagAlreadyUsedException;
-import exceptions.TagNotFoundException;
 import interfaces.NetworkServiceInterface;
 
 public class NetworkServiceEmulator implements NetworkServiceInterface
@@ -156,7 +154,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return authenticatedAccount.getTags();
 	}
 
-	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagAlreadyUsedException, NetworkServiceException
+	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -182,7 +180,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 	}
 
-	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -210,7 +208,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		}
 	}
 
-	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -234,7 +232,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		}
 	}
 	
-	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();

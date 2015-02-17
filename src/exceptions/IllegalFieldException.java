@@ -8,7 +8,7 @@ import interfaces.NetworkServiceInterface;
  * To get the reason why this field is illegal, get the reason code (an integer)  by using the method <code> {@link #getReason()}</code> and compare with the different constants (prefixed by <code>REASON_</code> ) of this class.<br/>
  * To get the field value which is illegal, use the method <code>{@link #getFieldValue()}</code>.<br/>
  * If the field is incorrect, there can be an additional message. To get it, use the method {@link #getMessage()}<br/><br/>
- * For example, if an exception of this type is thrown during a call to the method {@link NetworkServiceInterface#addTag(data.Tag) addTag(Tag tag)}, the code inside the catch clause can be : <br/>
+ * For example, if an exception of this type is thrown during a call to the method {@link NetworkServiceInterface#addTag(data.Tag) addTag(Tag tag)} of the interface {@link NetworkServiceInterface}, the code inside the catch clause can be : <br/>
  * <code><pre>
  * catch (IllegalFieldException e) {
  * 		switch(e.fieldId)
@@ -65,10 +65,10 @@ public class IllegalFieldException extends IllegalArgumentException
 	public static final int REASON_VALUE_ALREADY_USED = 1;
 	public static final int REASON_VALUE_NOT_FOUND = 2;
 	
-	/**
-	 * Used only for the tag uid; For example, if the tag which has the Id "0ef35ca2b89a" is added into the account of the user 1, and the user 2 wants to add this tag to one of his profile, there will be an exception thrown with this reason.
-	 */
-	public static final int REASON_ACCESS_FORBIDDEN = 3;    
+//	/**
+//	 * Used only for the tag uid; For example, if the tag which has the Id "0ef35ca2b89a" is added into the account of the user 1, and the user 2 wants to add this tag to one of his profile, there will be an exception thrown with this reason.
+//	 */
+//	public static final int REASON_ACCESS_FORBIDDEN = 3;    
 
 	/**
 	 * Use the constructor {@link IllegalFieldException#IllegalFieldException(int, int, String, String) IllegalFieldException(int fieldId, int reason, String fieldValue, String message)
