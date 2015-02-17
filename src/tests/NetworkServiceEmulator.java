@@ -254,7 +254,24 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	}
 	
 	
-	
+
+
+	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return authenticatedAccount.getProfils();
+	}
+
+	public Profile getProfile(String profileName) throws NotAuthenticatedException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return null;
+	}
+
 
 	public Profile createProfile(String profileName) throws NotAuthenticatedException
 	{
@@ -264,6 +281,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
+	
 	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException
 	{
 		if(authenticatedAccount == null)
@@ -272,6 +290,15 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
+	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return null;
+	}
+
+	
 	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException
 	{
 		if(authenticatedAccount == null)
@@ -288,6 +315,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
+	
 	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException
 	{
 		if(authenticatedAccount == null)
@@ -304,27 +332,9 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
-	public Profile getProfile(String profileName) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
 	public static NetworkServiceEmulator getInstance()
 	{
 		return emulator;
 	}
 
-
-	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
-	{
-		return null;
-	}
-
-	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException
-	{
-		return null;
-	}
 }
