@@ -169,6 +169,7 @@ public class TagsManagementPanel extends JPanel
 	{
 		// remove all from the graphical tags list and reloads it from the account.
 		tagsListPanel.removeAll();
+		tagsNumber = 0;
 		removeTagDetails();
 		
 		List<Tag> list;

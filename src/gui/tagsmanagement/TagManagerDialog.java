@@ -1,19 +1,23 @@
 package gui.tagsmanagement;
 
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import data.Tag;
 import engine.NetworkServiceProvider;
@@ -45,6 +49,8 @@ public class TagManagerDialog extends JDialog
 
 	private JButton validateButton;
 
+	private JFileChooser fileChooser;
+
 
 	public TagManagerDialog(Frame owner)
 	{
@@ -52,20 +58,26 @@ public class TagManagerDialog extends JDialog
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		JPanel contentPane = new JPanel(true);
-		contentPane.setBorder(new EmptyBorder(4, 4, 4, 4));
+		contentPane.setBorder(new EmptyBorder(12, 7, 12, 7));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 		setContentPane(contentPane);
 		
-		JPanel fieldsPanel = new JPanel(new GridLayout(0, 2), true);
+		JPanel fieldsPanel = new JPanel(true);
+		fieldsPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+		GroupLayout layout = new GroupLayout(fieldsPanel);
+		fieldsPanel.setLayout(layout);
 		
+//		layout.setAutoCreateContainerGaps(true);
+		layout.setAutoCreateGaps(true);
 		
 		JLabel idTagLabel = new JLabel("Tag id");
 		idTagLabel.setDoubleBuffered(true);
 		idTagTextField = new JTextField();
 		idTagTextField.setDoubleBuffered(true);
 
-		fieldsPanel.add(idTagLabel);
-		fieldsPanel.add(idTagTextField);
+//		fieldsPanel.add(idTagLabel);
+//		fieldsPanel.add(idTagTextField);
 		
 		
 		JLabel objectNameLabel = new JLabel("Object name");
@@ -73,18 +85,63 @@ public class TagManagerDialog extends JDialog
 		objectNameTextField = new JTextField();
 		objectNameTextField.setDoubleBuffered(true);
 
-		fieldsPanel.add(objectNameLabel);
-		fieldsPanel.add(objectNameTextField);
+//		fieldsPanel.add(objectNameLabel);
+//		fieldsPanel.add(objectNameTextField);
 		
 		
 		JLabel ObjectPictureLabel = new JLabel("Object image");
 		ObjectPictureLabel.setDoubleBuffered(true);
 		objectPictureTextField = new JTextField();
 		objectPictureTextField.setDoubleBuffered(true);
-
-		fieldsPanel.add(ObjectPictureLabel);
-		fieldsPanel.add(objectPictureTextField);
 		
+		fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setDialogTitle("Image file selection");
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
+		fileChooser.setFileFilter(new FileNameExtensionFilter("jpeg, png, tiff", "jpeg", "JPEG", "jpg", "JPG", "png", "tiff"));
+		JButton fileChooserButton = new JButton("...");
+		fileChooserButton.setDoubleBuffered(true);
+		fileChooserButton.addActionListener(new ActionChooseImageFile());
+
+//		fieldsPanel.add(ObjectPictureLabel);
+//		fieldsPanel.add(objectPictureTextField);
+		
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(idTagLabel)
+						.addComponent(idTagTextField)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(objectNameLabel)
+						.addComponent(objectNameTextField)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(ObjectPictureLabel)
+						.addComponent(objectPictureTextField)
+						.addComponent(fileChooserButton)
+						)
+				);
+		
+		layout.linkSize(SwingConstants.VERTICAL, idTagTextField, objectNameTextField, objectPictureTextField, fileChooserButton);
+		
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addGroup(
+						layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(idTagLabel)
+						.addComponent(objectNameLabel)
+						.addComponent(ObjectPictureLabel)
+						)
+				.addGroup(
+						layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(idTagTextField)
+						.addComponent(objectNameTextField)
+						.addComponent(objectPictureTextField)
+						)
+				.addComponent(fileChooserButton)
+				);
 		
 		getContentPane().add(fieldsPanel);
 		
@@ -108,11 +165,26 @@ public class TagManagerDialog extends JDialog
 		buttonsPanel.add(validateButton);
 		buttonsPanel.add(Box.createHorizontalGlue());
 		
-		getContentPane().add(Box.createVerticalStrut(15));
+		getContentPane().add(Box.createVerticalStrut(10));
 		getContentPane().add(buttonsPanel);
 		
-		setSize(300, 200);
+		setSize(350, 220);
 		setResizable(false);
+	}
+	
+	class ActionChooseImageFile implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			int option = fileChooser.showDialog(TagManagerDialog.this, "Validate");
+			
+			if(option == JFileChooser.APPROVE_OPTION)
+				try {
+					objectPictureTextField.setText(fileChooser.getSelectedFile().getCanonicalPath());
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(TagManagerDialog.this, "The specified image file doesn't exist.", "Error on specified image file", JOptionPane.ERROR_MESSAGE);
+				}
+		}
 	}
 	
 	class ActionCancel implements ActionListener
@@ -271,7 +343,7 @@ public class TagManagerDialog extends JDialog
 		idTagTextField.setText("");
 		idTagTextField.setEditable(true);
 		
-		validateButton.setText("Add this tag");
+		validateButton.setText("Add");
 		
 		setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
 		// repositionnement de la fenêtre si elle sort de l'écran en haut ou à gauche.
