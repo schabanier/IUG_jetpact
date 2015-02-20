@@ -13,8 +13,6 @@ import exceptions.AccountNotFoundException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import exceptions.TagAlreadyUsedException;
-import exceptions.TagNotFoundException;
 import interfaces.NetworkServiceInterface;
 
 public class NetworkServiceEmulator implements NetworkServiceInterface
@@ -73,14 +71,14 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 			throw new IllegalArgumentException("parameter newPassword can't be null.");
 		
 		if(! FieldVerifier.verifyPassword(newPassword))
-			throw new IllegalFieldException(IllegalFieldException.PASSWORD, "Password must contain 6 characters or more.");
+			throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword, "Password must contain 6 characters or more.");
 		
 		if(! FieldVerifier.verifyEMailAddress(newAccount.getEMailAddress()))
-			throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, "Email is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getEMailAddress());
 		
 		for(Account tmp : accounts)
 			if(tmp.getPseudo().equals(newAccount.getPseudo()))
-				throw new IllegalFieldException(IllegalFieldException.PSEUDO, "pseudo already used.");
+				throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_ALREADY_USED, newAccount.getPseudo());
 		
 		accounts.add(newAccount);
 		passwords.add(newPassword);
@@ -130,7 +128,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 			throw new NotAuthenticatedException();
 		
 		if(! FieldVerifier.verifyEMailAddress(emailAddress))
-			throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, "Email is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, emailAddress);
 		
 		authenticatedAccount.setMailAddress(emailAddress);
 	}
@@ -141,60 +139,68 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 			throw new NotAuthenticatedException();
 
 		if(! FieldVerifier.verifyPassword(newPassword))
-			throw new IllegalFieldException(IllegalFieldException.PASSWORD, "Password must contain 6 characters or more.");
+			throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword, "Password must contain 6 characters or more.");
 		
 		passwords.set(authenticatedAccountIndex, newPassword);
 	}
 	
 	
 
-	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagAlreadyUsedException, NetworkServiceException
+	public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return authenticatedAccount.getTags();
+	}
+
+	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 		
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, "Tag uid is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 		
 		if(! FieldVerifier.verifyTagName(tag.getObjectName()))
-			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, "Tag name is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectName());
 		
 		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(tag.getObjectImageName()) == false)
-			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, "Image filename is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectImageName());
 		
 		for(Tag tmp : authenticatedAccount.getTags())
 			if(tmp.getObjectName().equals(tag.getObjectName()))
-				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, "this name is already used for another tag.");
+				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, tag.getObjectName());
 
 		if(! tags.add(tag)) // because the method add() returns true if this operation is successful, false if there is already a tag with the specifed tag UID. 
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_ALREADY_USED, "this name is already used for another tag.");
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_ALREADY_USED, tag.getUid());
 		
 		authenticatedAccount.getTags().add(tag);
 		return tag;
 		
 	}
 
-	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 		
 
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, "Tag uid is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 		
 		if(! FieldVerifier.verifyTagName(newObjectName))
-			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, "Tag name is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, newObjectName);
 
 		for(Tag tmp : authenticatedAccount.getTags())
 			if(tmp.getObjectName().equals(newObjectName) && ! tmp.getUid().equals(tag.getUid()))
-				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, "this name is already used for another tag.");
+				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, newObjectName, "this name is already used for another tag.");
 		
 		
 		int index = authenticatedAccount.getTags().indexOf(tag);
 		
 		if(index < 0)
-			throw new TagNotFoundException(tag.getUid());
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
 		else
 		{
 			authenticatedAccount.getTags().get(index).setObjectName(newObjectName);
@@ -202,23 +208,23 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		}
 	}
 
-	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 		
 
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, "Tag uid is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 
 		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(newImageFileName) == false)
-			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, "Image filename is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
 		
 		
 		int index = authenticatedAccount.getTags().indexOf(tag);
 		
 		if(index < 0)
-			throw new TagNotFoundException(tag.getUid());
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
 		else
 		{
 			authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName);
@@ -226,20 +232,20 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		}
 	}
 	
-	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, TagNotFoundException, NetworkServiceException
+	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
 
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, "Tag uid is incorrect");
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 		
 
 		int index = authenticatedAccount.getTags().indexOf(tag);
 		
 		if(index < 0)
-			throw new TagNotFoundException(tag.getUid());
+			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
 		else
 		{
 			authenticatedAccount.getTags().remove(index);
@@ -248,7 +254,24 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	}
 	
 	
-	
+
+
+	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return authenticatedAccount.getProfils();
+	}
+
+	public Profile getProfile(String profileName) throws NotAuthenticatedException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return null;
+	}
+
 
 	public Profile createProfile(String profileName) throws NotAuthenticatedException
 	{
@@ -258,6 +281,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
+	
 	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException
 	{
 		if(authenticatedAccount == null)
@@ -266,6 +290,15 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
+	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		return null;
+	}
+
+	
 	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException
 	{
 		if(authenticatedAccount == null)
@@ -282,6 +315,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
+	
 	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException
 	{
 		if(authenticatedAccount == null)
@@ -298,16 +332,9 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return null;
 	}
 
-	public Profile getProfile(String profileName) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
 	public static NetworkServiceEmulator getInstance()
 	{
 		return emulator;
 	}
+
 }
