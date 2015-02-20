@@ -1,5 +1,8 @@
 package gui.infoperso;
 
+import engine.NetworkServiceProvider;
+import exceptions.IllegalFieldException;
+import exceptions.NotAuthenticatedException;
 import gui.authentification.AccountCreation;
 
 import java.awt.Color;
@@ -115,7 +118,27 @@ public class ModifierInfo extends JDialog {
 				
 			else	{
 				
+				try {
+				String newPassword = new String (password1.getPassword());				
+			   NetworkServiceProvider.getNetworkService().modifyPassword(newPassword);
+				} catch (NotAuthenticatedException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+				} catch (IllegalFieldException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Le mot de passe rentré est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
 				
+				
+				try {
+			   NetworkServiceProvider.getNetworkService().modifyEMailAddress(textFieldMail.getText());
+				} catch (NotAuthenticatedException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+				} catch (IllegalFieldException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Le mot de passe rentré est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
 				
 				ModifierInfo.this.setVisible(false);
 			}

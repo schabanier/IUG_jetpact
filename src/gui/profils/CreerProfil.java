@@ -11,6 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -21,7 +22,9 @@ import javax.swing.event.ListSelectionListener;
 
 import data.Tag;
 import engine.NetworkServiceProvider;
+import exceptions.IllegalFieldException;
 import exceptions.NotAuthenticatedException;
+import gui.infoperso.ModifierInfo;
 
 public class CreerProfil extends JDialog {
 	
@@ -134,6 +137,10 @@ public class CreerProfil extends JDialog {
 		
 		buttonCreer.setText("Creer Compte");
 		buttonCreer.addActionListener( new ButtonCreerListener()) ;
+		
+		buttonDroite.addActionListener( new ButtonDroiteListener(listAdd,listAvailable, listModelAdd, listModelAvailable, nomTextField));
+		
+		buttonGauche.addActionListener( new ButtonGaucheListener(listAdd, listAvailable, listModelAdd, listModelAvailable, nomTextField));
 	
 		
 			
@@ -141,15 +148,6 @@ public class CreerProfil extends JDialog {
 }
 	
 	
-	public void setList1(Tag[] listModif)
-	{
-		//modification de la list1
-	}
-	
-	public void setList2(Tag[] listModif)
-	{
-		//modification de la list2
-	}
 	
 	
 	class ButtonAnnulerListener implements ActionListener {
@@ -178,7 +176,9 @@ public class CreerProfil extends JDialog {
 				//addTagFromProfile
 			} catch (NotAuthenticatedException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
+			 
 			}
 			 
 			
@@ -189,6 +189,19 @@ public class CreerProfil extends JDialog {
 	
 		
 	class ButtonDroiteListener implements ActionListener {
+		
+		private DefaultListModel listModelAdd, listModelAvailable;
+		private JList listAdd, listAvailable;
+		private JTextField nomTextField;
+		
+		public ButtonDroiteListener(JList listAdd, JList listAvailable, DefaultListModel listModelAdd, DefaultListModel listModelAvailable, JTextField nomTextField) 
+		{
+			this.listAdd= listAdd ;
+			this.listAvailable = listAvailable;
+			this.listModelAdd = listModelAdd;
+			this.listModelAvailable = listModelAvailable;
+			this.nomTextField = nomTextField;
+		}
 
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -205,14 +218,20 @@ public class CreerProfil extends JDialog {
 				listModelAvailable.addElement(listAdd.getComponent(i));
 				listModelAdd.remove(i);
 				
+				try {
+					
 				 NetworkServiceProvider.getNetworkService().removeTagFromProfile(nomTextField.getText(), listAdd.getComponent(i));
+				}catch(NotAuthenticatedException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+			
+				}
 				 
 			}
 			
 		}
 		
 			
-			// faire des exceptions
 			
 		} 
 		
@@ -220,6 +239,20 @@ public class CreerProfil extends JDialog {
 	}
 	
 	class ButtonGaucheListener implements ActionListener {
+		
+		private JList listAdd, listAvailable;
+		private DefaultListModel listModelAdd, listModelAvailable;
+		private JTextField nomTextField;
+		
+		public ButtonGaucheListener(JList listAdd, JList listAvailable, DefaultListModel listModelAdd, DefaultListModel listModelAvailable, JTextField nomTextField)
+		{
+			this.listAdd = listAdd;
+			this.listAvailable = listAvailable ;
+			this.listModelAdd = listModelAdd;
+			this.listModelAvailable = listModelAvailable;
+			this.nomTextField = nomTextField;
+			
+		}
 		
 		public void actionPerformed(ActionEvent e) {
 			
@@ -235,7 +268,14 @@ public class CreerProfil extends JDialog {
 				listModelAdd.addElement(listAvailable.getComponent(i));
 				listModelAvailable.remove(i);
 				
+				try {
+					
 				 NetworkServiceProvider.getNetworkService().addTagToProfile(nomTextField.getText(),listAvailable.getComponent(i));
+				} catch(NotAuthenticatedException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+			
+				}
 			}
 			
 		}
@@ -273,5 +313,5 @@ public class CreerProfil extends JDialog {
 	
 	
 	
-}
+
 }

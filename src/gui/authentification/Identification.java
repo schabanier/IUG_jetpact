@@ -126,7 +126,7 @@ public void actionPerformed(ActionEvent e) {
   class Button2Listener implements ActionListener {
 
 	
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)  {
 		// TODO Auto-generated method stub
 		
 		//action si clic sur bouton connexion
@@ -134,16 +134,13 @@ public void actionPerformed(ActionEvent e) {
 			NetworkServiceProvider.getNetworkService().authenticate("jdupon", "123456");
 		} catch (AccountNotFoundException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			
 			JOptionPane.showMessageDialog(null, "Ce compte n'existe pas", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
-			
-			
 			
 			
 		} catch (NetworkServiceException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			
 			JOptionPane.showMessageDialog(null, "Erreur réseau", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 		

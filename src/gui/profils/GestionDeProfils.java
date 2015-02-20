@@ -1,5 +1,7 @@
 package gui.profils;
 
+import gui.infoperso.ModifierInfo;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,7 +15,7 @@ public class GestionDeProfils extends JPanel
 {
 	private JPanel principalPanel;
 	private JPanel panel1, panel2;
-	private JList<String> profilsList ;
+	
 	private JButton buttonAjouterProfil ;
 	private JFrame frameContainer;
 	
@@ -30,7 +32,7 @@ public class GestionDeProfils extends JPanel
 		principalPanel = new JPanel();
 		panel1 = new JPanel() ;
 		panel2 = new JPanel();
-		profilsList = new JList();
+		
 		
 		buttonAjouterProfil = new JButton() ;
 		
@@ -65,10 +67,11 @@ public class GestionDeProfils extends JPanel
 
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			// action si clic bouton ajouter profil
 			
+			CreerProfil creerProfilFenetre = new CreerProfil(frameContainer, "Créer un profil");
+		     creerProfilFenetre.setVisible(true);
 			
-			
+		
 			
 			
 		}
