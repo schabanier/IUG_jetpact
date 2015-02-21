@@ -69,7 +69,7 @@ public class MainFrame extends JFrame
 					((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
 					pack();
 				} catch (AccountNotFoundException e1) { // corresponds to an abnormal failure. 
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 				} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is successful. thrown by the method reloadTagsList().
 					JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 				} catch (NetworkServiceException e1) {
