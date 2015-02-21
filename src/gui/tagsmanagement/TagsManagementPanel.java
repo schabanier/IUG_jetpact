@@ -165,7 +165,7 @@ public class TagsManagementPanel extends JPanel
 		return tagInformationsPanel;
 	}
 	
-	public void reloadTagsList() throws NotAuthenticatedException
+	public void reloadTagsList() throws NotAuthenticatedException, NetworkServiceException
 	{
 		// remove all from the graphical tags list and reloads it from the account.
 		tagsListPanel.removeAll();
@@ -175,12 +175,16 @@ public class TagsManagementPanel extends JPanel
 		List<Tag> list;
 		
 		try {
-			list = NetworkServiceProvider.getNetworkService().getCurrentAccount().getTags();
+			list = NetworkServiceProvider.getNetworkService().getTags();
 			for(Tag tag : list)
 				addTag(tag);
 			
 			tagsListPanel.add(Box.createVerticalGlue());
 		} catch (NotAuthenticatedException e) {
+			tagsListPanel.removeAll();
+			tagsListLabel.setText("");
+			throw e;
+		} catch (NetworkServiceException e) {
 			tagsListPanel.removeAll();
 			tagsListLabel.setText("");
 			throw e;

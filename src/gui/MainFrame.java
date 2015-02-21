@@ -13,6 +13,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -59,13 +60,9 @@ public class MainFrame extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				try {
-					NetworkServiceProvider.getNetworkService().authenticate("jdupon", "123456");
+					NetworkServiceProvider.getNetworkService().authenticate("jdupon", "123456"); // will be removed.
 
-					try {
-						tagsPanel.reloadTagsList();
-					} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is done successful.
-						e1.printStackTrace();
-					}
+					tagsPanel.reloadTagsList();
 					setContentPane(managementPanel);
 					panelList.setSelectedIndex(0);
 					
@@ -73,8 +70,10 @@ public class MainFrame extends JFrame
 					pack();
 				} catch (AccountNotFoundException e1) { // corresponds to an abnormal failure. 
 					e1.printStackTrace();
-				} catch (NetworkServiceException e1) { // corresponds to an abnormal failure.
-					e1.printStackTrace();
+				} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is successful. thrown by the method reloadTagsList().
+					JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+				} catch (NetworkServiceException e1) {
+					JOptionPane.showMessageDialog(getInstance(), "A network error has occured. Maybe you're not connected to internet.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
