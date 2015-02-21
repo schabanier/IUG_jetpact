@@ -25,6 +25,7 @@ import engine.NetworkServiceProvider;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.authentification.Identification;
+import gui.infoperso.InfoPerso;
 import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
@@ -33,7 +34,7 @@ public class MainFrame extends JFrame
 	private static MainFrame instance;
 
 	private JPanel centerPanel;
-	private JPanel userInformationsPanel;
+	private InfoPerso userInformationsPanel;
 	private TagsManagementPanel tagsPanel;
 	private JPanel profilesPanel;
 
@@ -117,8 +118,7 @@ public class MainFrame extends JFrame
 		centerPanel.setLayout(new CardLayout());
 		
 
-		userInformationsPanel = new JPanel(true);
-		userInformationsPanel.setBorder(new TitledBorder("user informations"));
+		userInformationsPanel = new InfoPerso(this);
 		
 		tagsPanel = new TagsManagementPanel();
 		
@@ -154,7 +154,9 @@ public class MainFrame extends JFrame
 	public void authenticationDone()
 	{
 		try {
-			tagsPanel.reloadTagsList();
+			tagsPanel.reloadTagsList(); // to load the tag list.
+			userInformationsPanel.reloadDisplayedInformations();
+			
 			
 			setResizable(true);
 			setContentPane(managementPanel);
