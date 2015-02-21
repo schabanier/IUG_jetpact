@@ -1,7 +1,6 @@
 package gui.authentification;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,9 +24,14 @@ import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 
+
 public class AccountCreation extends JDialog
                             
 {
+	/**
+	 * Generated serial version UID.
+	 */
+	private static final long serialVersionUID = 3159383612353771662L;
 	
 	private JDialog dialog1;
 	private JLabel labelNom;
@@ -50,6 +54,7 @@ public class AccountCreation extends JDialog
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 				// Generated using JFormDesigner Evaluation license - SolÃ¨ne Chabanier
 			    super(identificationParent, title, true);
+			    
 				dialog1 = this;
 				labelNom = new JLabel();
 				textFieldNom = new JTextField();
@@ -75,7 +80,7 @@ public class AccountCreation extends JDialog
 					
 					dialog1.setResizable(false);
 					
-					dialog1.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+					dialog1.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					
 					
 					
@@ -201,20 +206,41 @@ public class AccountCreation extends JDialog
 				try {
 					
 					String passwordString = new String (passwordField2.getPassword());
-					NetworkServiceProvider.getNetworkService().createAccount(account,passwordString); 
+					NetworkServiceProvider.getNetworkService().createAccount(account,passwordString);
+
+					AccountCreation.this.setVisible(false); //ferme la fenetre
 					
 				} catch (IllegalFieldException e1) {
-					// TODO Auto-generated catch block
 					
-					JOptionPane.showMessageDialog(null, "Ce pseudo est déjà utilisé", "Erreur", JOptionPane.ERROR_MESSAGE);
+					switch(e1.getFieldId())
+					{
+						case IllegalFieldException.PSEUDO :
+							if(e1.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+								JOptionPane.showMessageDialog(AccountCreation.this, "The pseudo \"" + account.getPseudo() + "\" is already used.", "Error on field pseudo", JOptionPane.ERROR_MESSAGE);
+							else
+								JOptionPane.showMessageDialog(AccountCreation.this, "The pseudo is incorrect.", "Error on field ", JOptionPane.ERROR_MESSAGE);
+						break;
+						case IllegalFieldException.FIRSTNAME :
+							JOptionPane.showMessageDialog(AccountCreation.this, "The firstname is incorrect.", "Error on field firstname", JOptionPane.ERROR_MESSAGE);
+						break;
+						case IllegalFieldException.LASTNAME :
+							JOptionPane.showMessageDialog(AccountCreation.this, "The lastname is incorrect.", "Error on field lastname", JOptionPane.ERROR_MESSAGE);
+						break;
+						case IllegalFieldException.EMAIL_ADDRESS :
+							JOptionPane.showMessageDialog(AccountCreation.this, "The email address is incorrect.", "Error on field email address", JOptionPane.ERROR_MESSAGE);
+						break;
+						case IllegalFieldException.PASSWORD :
+							JOptionPane.showMessageDialog(AccountCreation.this, "The password is incorrect. It must contains 6 characters or more.", "Error on field password", JOptionPane.ERROR_MESSAGE);
+						break;
+					}
+					
 					
 				} catch (NetworkServiceException e1) {
 					// TODO Auto-generated catch block
 			
-					JOptionPane.showMessageDialog(null, "Erreur réseau", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "A network error has occured. The account is not created.", "Network error.", JOptionPane.ERROR_MESSAGE);
 				} 
 				
-				AccountCreation.this.setVisible(false); //ferme la fenetre
 			}
 			
 			
