@@ -71,7 +71,7 @@ public class IllegalFieldException extends IllegalArgumentException
 //	public static final int REASON_ACCESS_FORBIDDEN = 3;    
 
 	/**
-	 * Use the constructor {@link IllegalFieldException#IllegalFieldException(int, int, String, String) IllegalFieldException(int fieldId, int reason, String fieldValue, String message)
+	 * Use the constructor {@link IllegalFieldException#IllegalFieldException(int, int, String, String) IllegalFieldException(int fieldId, int reason, String fieldValue, String message)}
 	 * @param fieldId
 	 * @param message
 	 * @see IllegalFieldException#IllegalFieldException(int, int, String) IllegalFieldException(int fieldId, int reason, String message)
@@ -83,7 +83,7 @@ public class IllegalFieldException extends IllegalArgumentException
 	}
 
 	/**
-	 * Use the constructor {@link IllegalFieldException#IllegalFieldException(int, int, String) IllegalFieldException(int fieldId, int reason, String fieldValue)
+	 * Use the constructor {@link IllegalFieldException#IllegalFieldException(int, int, String) IllegalFieldException(int fieldId, int reason, String fieldValue)}
 	 * @param fieldId
 	 * @param reason
 	 * @see IllegalFieldException#IllegalFieldException(int, int, String) IllegalFieldException(int fieldId, int reason, String message)
@@ -124,7 +124,7 @@ public class IllegalFieldException extends IllegalArgumentException
 	
 	/**
 	 * To get the id of the illegal field. One of the constants defined in this class
-	 * @return
+	 * @return The field id.
 	 */
 	public int getFieldId()
 	{
@@ -133,7 +133,7 @@ public class IllegalFieldException extends IllegalArgumentException
 
 	/**
 	 * To get the reason why the field is illegal. One of the constants (prefixed by REASON_) defined in this class.
-	 * @return
+	 * @return The constant value associated with the reason.
 	 */
 	public int getReason()
 	{
