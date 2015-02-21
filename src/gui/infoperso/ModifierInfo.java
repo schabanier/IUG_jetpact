@@ -1,9 +1,11 @@
 package gui.infoperso;
 
+import data.Account;
 import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
+import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import gui.authentification.AccountCreation;
+import gui.MainFrame;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -17,82 +19,136 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 
 public class ModifierInfo extends JDialog {
 	
+	/**
+	 * Generated serial version UID.
+	 */
+	private static final long serialVersionUID = 6872079205376815700L;
 	
-	private JPanel panel1;
-    private JDialog dialog1;
-	private JLabel labelPseudo, labelMail, labelAncienMdp, labelMdp, labelConfirmerMdp ;
-	private JLabel labelPseudoInfo;
+	private JDialog dialog1;
+	private JLabel labelNom;
+	private JTextField textFieldNom;
+	private JLabel labelPrenom;
+	private JTextField textFieldPrenom;
+	private JLabel labelMail;
 	private JTextField textFieldMail;
-	private JPasswordField password1, password2, ancienPassword;
-	private JButton buttonConfirmer, buttonAnnuler ;
-	
+	private JLabel labelPseudo;
+	private JTextField textFieldPseudo;
+	private JLabel labelPassword1;
+	private JPasswordField passwordField2;
+	private JLabel labelPassword2;
+	private JPasswordField passwordField3;
+	private JButton button3Annuler;
+	private JButton button4Ok;
 	
 	
 	public ModifierInfo(JFrame infoPersoParent, String title) {
-		
-		
-		super(infoPersoParent, title);
-		
-		panel1 = new JPanel();
-		dialog1 = new JDialog();
-		labelPseudo = new JLabel();
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		// Generated using JFormDesigner Evaluation license - SolÃ¨ne Chabanier
+	    super(infoPersoParent, title, true);
+	    
+		dialog1 = this;
+		labelNom = new JLabel();
+		textFieldNom = new JTextField();
+		labelPrenom = new JLabel();
+		textFieldPrenom = new JTextField();
 		labelMail = new JLabel();
-		labelAncienMdp = new JLabel();
-		labelMdp = new JLabel();
-		labelConfirmerMdp= new JLabel() ;
-		labelPseudoInfo = new JLabel();
 		textFieldMail = new JTextField();
-		ancienPassword = new JPasswordField();
-		password1 = new JPasswordField ();
-		password2 = new JPasswordField();
-		buttonConfirmer = new JButton();
-		buttonAnnuler = new JButton();
-		
+		labelPseudo = new JLabel();
+		textFieldPseudo = new JTextField();
+		labelPassword1 = new JLabel();
+		passwordField2 = new JPasswordField();
+		labelPassword2 = new JLabel();
+		passwordField3 = new JPasswordField();
+		button3Annuler = new JButton();
+		button4Ok = new JButton();
 		
 		
 		//======== dialog1 ========
-		
+		{
 		
 			dialog1.setBackground(new Color(0, 153, 153));
 			dialog1.setLocationRelativeTo(null);
+			
 			dialog1.setResizable(false);
 			
-			dialog1.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-			
-			
-		//====panel=========
+			dialog1.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			
 			
 			
-		//=====label=====
-			
-			labelPseudo.setText("Pseudo");
-			labelMail.setText("E-mail");
-			labelPseudoInfo.setText("Thomas35");
-			labelAncienMdp.setText("Votre ancien mot de passe");
-			labelMdp.setText("Tapez votre nouveau mot de passe");
-			labelConfirmerMdp.setText("Confirmer votre mot de passe");
+			//====== panel =========
 			
 			
+			JPanel panelDialog = new JPanel();
+			dialog1.setContentPane(panelDialog);
+			
+			panelDialog.setLayout(new FormLayout(
+				"8*(default, $lcgap), default",
+				"8*(default, $lgap), default"));
+		
+			panelDialog.setBorder(new EmptyBorder(5,15,5,5));
+
+			//---- label8 ----
+			labelNom.setText("Nom:");
+			panelDialog.add(labelNom, CC.xy(3, 1));
+			textFieldNom.setEditable(false);
+			panelDialog.add(textFieldNom, CC.xywh(7, 1, 7, 1));
+
+			//---- label9 ----
+			labelPrenom.setText("Pr\u00e9nom:");
+			panelDialog.add(labelPrenom, CC.xy(3, 3));
+			textFieldPrenom.setEditable(false);
+			panelDialog.add(textFieldPrenom, CC.xywh(7, 3, 7, 1));
+
+			//---- label10 ----
+			labelMail.setText("Adresse mail:");
+			panelDialog.add(labelMail, CC.xy(3, 5));
+			panelDialog.add(textFieldMail, CC.xywh(7, 5, 7, 1));
+
+			//---- label5 ----
+			labelPseudo.setText("Pseudo:");
+			panelDialog.add(labelPseudo, CC.xy(3, 7));
+			textFieldPseudo.setEditable(false);
+			panelDialog.add(textFieldPseudo, CC.xywh(7, 7, 7, 1));
+
+			//---- label6 ----
+			labelPassword1.setText("Mot de passe:");
+			panelDialog.add(labelPassword1, CC.xy(3, 9));
+			panelDialog.add(passwordField2, CC.xywh(7, 9, 7, 1));
+
+			//---- label7 ----
+			labelPassword2.setText("Confirmer:");
+			panelDialog.add(labelPassword2, CC.xy(3, 11));
+			panelDialog.add(passwordField3, CC.xywh(7, 11, 7, 1));
+
+			//---- button3 ----
+			button3Annuler.setText("Annuler");
+			panelDialog.add(button3Annuler, CC.xy(3, 13));
+			
+			button3Annuler.addActionListener(new ButtonAnnulerListener());
+
+			//---- button4 ----
+			button4Ok.setText("Valider");
+			button4Ok.addActionListener(new ButtonConfirmerListener());
 			
 			
 			
-		//====bouton ====
-			
-			buttonConfirmer.setText("Confirmer");
-			buttonAnnuler.setText("Annuler");
-			
-			buttonConfirmer.addActionListener(new ButtonConfirmerListener());
-			buttonAnnuler.addActionListener(new ButtonAnnulerListener());
 			
 			
+			panelDialog.add(button4Ok, CC.xy(11, 13));
+			dialog1.pack();
+			dialog1.setLocationRelativeTo(dialog1.getOwner());
 			
 			
-			
+		}
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 			
 	}
 	
@@ -105,40 +161,46 @@ public class ModifierInfo extends JDialog {
 			// action si clic bouton Confirmer
 			
 			
-			if(password1.getPassword().length == 0)	//il manque mdp1
-				JOptionPane.showMessageDialog(null, "Veuillez rentrer un mot de passe", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
-			
-			else if (password2.getPassword().length == 0) //il manque mdp2
-				JOptionPane.showMessageDialog(null, "Veuillez confirmer votre mot de passe", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
-			
-			else if (!(new String(password1.getPassword()).equals(new String(password2.getPassword())))) // les mdp ne sont pas identiques
+			if (!(new String(passwordField2.getPassword()).equals(new String(passwordField3.getPassword())))) // les mdp ne sont pas identiques
 				JOptionPane.showMessageDialog(null, "Les mots de passes ne sont pas identiques", "Erreur", JOptionPane.ERROR_MESSAGE);
 				
+			else if(textFieldMail.getText().length() == 0)
+				JOptionPane.showMessageDialog(null, "Veuillez spécifier une adresse mail", "Erreur", JOptionPane.ERROR_MESSAGE);
+				
 			else	{
-				
-				try {
-				String newPassword = new String (password1.getPassword());				
-			   NetworkServiceProvider.getNetworkService().modifyPassword(newPassword);
-				} catch (NotAuthenticatedException e1)
+
+				String newPassword = new String (passwordField2.getPassword());		
+				if(newPassword.length() > 0)
 				{
-					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
-				} catch (IllegalFieldException e1)
-				{
-					JOptionPane.showMessageDialog(null, "Le mot de passe rentré est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
+					try {		
+						   NetworkServiceProvider.getNetworkService().modifyPassword(newPassword);
+					} catch (NotAuthenticatedException e1)
+					{
+						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Vous n'êtes pas correctement authentifié.", "Erreur", JOptionPane.ERROR_MESSAGE);
+					} catch (IllegalFieldException e1)
+					{
+						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Le mot de passe rentré est incorrect.", "Erreur", JOptionPane.ERROR_MESSAGE);
+					} catch (NetworkServiceException e1) {
+						JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				
 				
-				try {
-			   NetworkServiceProvider.getNetworkService().modifyEMailAddress(textFieldMail.getText());
-				} catch (NotAuthenticatedException e1)
+				if(textFieldMail.getText().length() > 0)
 				{
-					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
-				} catch (IllegalFieldException e1)
-				{
-					JOptionPane.showMessageDialog(null, "Le mot de passe rentré est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
+					try {
+						NetworkServiceProvider.getNetworkService().modifyEMailAddress(textFieldMail.getText());
+					} catch (NotAuthenticatedException e1)
+					{
+						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+					} catch (IllegalFieldException e1)
+					{
+						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Le mot de passe rentré est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
+					} catch (NetworkServiceException e1) {
+						JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
+				
 				
 				ModifierInfo.this.setVisible(false);
 			}
@@ -163,13 +225,19 @@ public class ModifierInfo extends JDialog {
 		
 		
 	}
-			
+	
+	public void showEditor() throws NotAuthenticatedException
+	{
+		Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
 		
-			
-			
-			
-		
-		
-	}
+		textFieldPseudo.setText(account.getPseudo());
+		textFieldPrenom.setText(account.getFirstName());
+		textFieldNom.setText(account.getLastName());
+		textFieldMail.setText(account.getEMailAddress());
 
+		passwordField2.setText("");
+		passwordField3.setText("");
+		
+		setVisible(true);
+	}
 }

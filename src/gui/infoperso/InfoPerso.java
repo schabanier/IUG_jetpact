@@ -10,12 +10,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import data.Account;
 import engine.NetworkServiceProvider;
+import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 
 
@@ -58,6 +60,8 @@ public class InfoPerso extends JPanel {
 		//==== label======
 		
 		labelPseudo.setText("Pseudo");
+		labelPrenom.setText("Prenom");
+		labelNom.setText("Nom");
 		labelMail.setText("Mail");
 		labelMdp.setText("Mot de passe");
 		labelNombreDePuces.setText("Nombre de puces");
@@ -184,13 +188,20 @@ public class InfoPerso extends JPanel {
 		  //action si on clic sur bouton modifier 
 
 			 ModifierInfo modifierInfoFenetre = new ModifierInfo(frameContainer, "Modifier Informations Personnelles");
-		     modifierInfoFenetre.setVisible(true);
+		     try {
+				modifierInfoFenetre.showEditor();
+				reloadDisplayedInformations();
+			} catch (NotAuthenticatedException e1) {
+				JOptionPane.showMessageDialog(frameContainer, "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+			} catch (NetworkServiceException e1) {
+				JOptionPane.showMessageDialog(frameContainer, "An network error has occured. Please restart the application to try to solve the problem.", "Network error", JOptionPane.ERROR_MESSAGE);
+			}
 			
 	        }
 
   }
   
-  public void reloadDisplayedInformations() throws NotAuthenticatedException
+  public void reloadDisplayedInformations() throws NotAuthenticatedException, NetworkServiceException
   {
 	  textfieldPseudo.setText("");
 	  textfieldPrenom.setText("");
@@ -199,12 +210,19 @@ public class InfoPerso extends JPanel {
 	  textfieldMdp.setText("");
 	  
 	  Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
-
+	  int tagsNumber = NetworkServiceProvider.getNetworkService().getTags().size();
+	  int profilesNumber = NetworkServiceProvider.getNetworkService().getProfiles().size();
+	  
+	  
 	  textfieldPseudo.setText(account.getPseudo());
 	  textfieldPrenom.setText(account.getFirstName());
 	  textfieldNom.setText(account.getLastName());
 	  textfieldMail.setText(account.getEMailAddress());
 	  textfieldMdp.setText("********");
+	  
+	  labelNombreDePucesInfo.setText("" + tagsNumber);
+	  labelNombreDeProfilsInfo.setText("" + profilesNumber);
+	  
   }
   
 }  
