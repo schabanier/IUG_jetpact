@@ -37,7 +37,7 @@ public class NetworkService implements NetworkServiceInterface {
 		
 		if (FieldVerifier.verifyPassword(newPassword)){
 			params.put("password", newPassword);}
-		else { throw new IllegalFieldException(IllegalFieldException.PSEUDO, null);}
+		else { throw new IllegalFieldException(IllegalFieldException.PASSWORD, null);}
 		
 		if (FieldVerifier.verifyName(newAccount.getFirstName())){
 			params.put("first_name", newAccount.getFirstName());}
@@ -52,7 +52,7 @@ public class NetworkService implements NetworkServiceInterface {
 		else { throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, null);}
 		
 				
-		client.get("http://www.localhost:8080/ns/dologin", params, new AsyncHttpResponseHandler() {	
+		client.get("http://www.localhost:8080/ns/doregister", params, new AsyncHttpResponseHandler() {	
 
 			// When the response returned by REST has Http response code '200'
             @Override
@@ -114,8 +114,78 @@ public class NetworkService implements NetworkServiceInterface {
 
 	@Override
 	public Account authenticate(String pseudo, String password)
-			throws AccountNotFoundException, NetworkServiceException {
-		// TODO Auto-generated method stub
+		throws AccountNotFoundException, NetworkServiceException 
+			{
+				// We first check the validity of the arguments to create the parameters
+					RequestParams params = new RequestParams();
+					if (FieldVerifier.verifyName(pseudo)){
+						params.put("pseudo", pseudo);}
+					else { throw new IllegalFieldException(IllegalFieldException.PSEUDO, null);}
+					
+					if (FieldVerifier.verifyPassword(password)){
+						params.put("password",password);}
+					else { throw new IllegalFieldException(IllegalFieldException.PASSWORD, null);}
+					
+					
+					client.get("http://www.localhost:8080/ns/dologin", params, new AsyncHttpResponseHandler() {	
+
+						// When the response returned by REST has Http response code '200'
+			            @Override
+			            public void onSuccess(String response) {
+			                try {
+			                         // JSON Object
+			                        JSONObject obj = new JSONObject(response);
+			                        // When the JSON response has status boolean value assigned with true
+			                        if(obj.getBoolean("status")){
+			                            //
+			                        } 
+			                        // Else display error message
+			                        else{
+			                           //
+			                        }
+			                } catch (JSONException e) {
+			                    // TODO Auto-generated catch block
+			                    // "Error Occured [Server's JSON response might be invalid]!"
+			                    e.printStackTrace();
+
+			                }
+			            }
+
+					 // When the response returned by REST has Http response code other than '200'
+			            @Override
+			            public void onFailure(int statusCode, Throwable error,
+			                String content) {             
+			                // When Http response code is '404'
+			                if(statusCode == 404){
+			                  try {
+								throw new NetworkServiceException("Requested resource not found");
+							} catch (NetworkServiceException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			                } 
+			                // When Http response code is '500'
+			                else if(statusCode == 500){
+			                   try {
+								throw new NetworkServiceException("Something went wrong at server end");
+							} catch (NetworkServiceException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			                } 
+			                // When Http response code other than 404, 500
+			                else{
+			                 try {
+								throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+							} catch (NetworkServiceException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			                }
+			            }
+					    			
+					});	
+					
 		return null;
 	}
 
