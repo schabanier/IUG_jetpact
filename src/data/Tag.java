@@ -36,7 +36,7 @@ public class Tag
 	}
 	
 	
-	String getObjectName()
+	public String getObjectName()
 	{
 		return objectName;
 	}
@@ -47,7 +47,7 @@ public class Tag
 	}
 	
 	
-	Image getObjectImage()
+	public Image getObjectImage()
 	{
 		return objectImage;
 	}

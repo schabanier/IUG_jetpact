@@ -18,6 +18,10 @@ import interfaces.NetworkServiceInterface;
 
 public class NetworkService implements NetworkServiceInterface {
 
+	private static String adressHost;
+	private static String user_pseudo;
+	private static String user_password;
+	
 	public NetworkService() {
 		
 	}
@@ -25,7 +29,8 @@ public class NetworkService implements NetworkServiceInterface {
 	@Override
 	public void initNetworkService() throws NetworkServiceException {
 		/* variables à initialiser (paramètres serveur...*/
-
+		adressHost = "local:8080"; //pour tests : localhost:xxxx (pour Henri 8080)
+		
 	}
 
 	@Override
@@ -33,19 +38,15 @@ public class NetworkService implements NetworkServiceInterface {
 			throws IllegalFieldException, NetworkServiceException {
 		
 		/*  adapter au serveur choisi */
-		String adressHost = "local:8080/InterfacePC";
 		URL registerURL;
 		try {
-			registerURL = new URL("http://"+adressHost+"/register/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&first_name="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
-		
-		// Query parameters are parameters: http://localhost/<appln-folder-name>/register/doregister?pseudo=pqrs&password=abc&firstname=xyz&last_name=cdf&email=hij
-
+			registerURL = new URL("http://"+adressHost+"/ns/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&first_name="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
+		// http://localhost:8080/app_server/ns/doregister?pseudo=pqrs&password=abc&first_name=xyz&last_name=cdf&email=hij
 		
 		String reponse = HTTPLoader.getTextFile(registerURL);
 
 		JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 		
-		//voir avec philippe retour serveur
 		System.out.println("tag : " + obj.get("tag"));
 		System.out.println("status : " + obj.get("status"));
 		System.out.println("error_msg : " + obj.get("error_msg"));
@@ -59,19 +60,23 @@ public class NetworkService implements NetworkServiceInterface {
 	public Account authenticate(String pseudo, String password)
 			throws AccountNotFoundException, NetworkServiceException, MalformedURLException {
 
-		String adressHost = "local:8080"; //pour tests : localhost:xxxx (pour Henri 8080)
-
-		URL loginURL = new URL("http://"+adressHost+"/login/dologin?username="+pseudo+"&password="+password);
-		// Query parameters are parameters: http://localhost/<appln-folder-name>/login/dologin?username=abc&password=xyz
-
+		URL loginURL = new URL("http://"+adressHost+"/ns/dologin?e="+pseudo+"&password="+password);
+// http://localhost:8080/app_server/ns/dologin?pseudo=abc&password=xyz
 		
 		String reponse = HTTPLoader.getTextFile(loginURL);
-
 		JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 		
-		//voir avec philippe retour serveur
+		if ((boolean) obj.get("status")) {
+			user_pseudo = pseudo;
+			user_password = password;
+		}
 		System.out.println("tag : " + obj.get("tag"));
 		System.out.println("status : " + obj.get("status"));
+		System.out.println("pseudo : " + obj.get("pseudo"));
+		System.out.println("first_name : " + obj.get("first_name"));
+		System.out.println("last_name : " + obj.get("last_name"));
+		System.out.println("email : " + obj.get("email"));
+		
 		System.out.println("error_msg : " + obj.get("error_msg"));
 		
 		return null;
@@ -86,6 +91,7 @@ public class NetworkService implements NetworkServiceInterface {
 	@Override
 	public Account getCurrentAccount() throws NotAuthenticatedException {
 		// TODO Auto-generated method stub
+		//id authenticate
 		return null;
 	}
 
@@ -109,8 +115,21 @@ public class NetworkService implements NetworkServiceInterface {
 
 	@Override
 	public void addTag(Tag tag) {
-		// TODO Auto-generated method stub
 
+		URL addTagURL;
+		try {
+			// http://localhost/<appln-folder-name>/tag/addtag?pseudo=abc&password=abc&object_name=xyz&picture=url				
+			addTagURL = new URL("http://"+adressHost+"/tag/addtag?e="+user_pseudo+"&password="+user_password+"&object_name="+tag.getObjectName()+"&picture="+tag.getObjectImage());
+			String reponse = HTTPLoader.getTextFile(addTagURL);
+			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
+			System.out.println("tag : " + obj.get("tag"));
+			System.out.println("status : " + obj.get("status"));
+			System.out.println("error_msg : " + obj.get("error_msg"));
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}				
 	}
 
 	@Override
@@ -121,8 +140,20 @@ public class NetworkService implements NetworkServiceInterface {
 
 	@Override
 	public void removeTag(Tag tag) {
-		// TODO Auto-generated method stub
-
+		URL deleteTagURL;
+		try {
+			// http://localhost/<appln-folder-name>/tag/deletetag?pseudo=abc&password=abc&object_name=xyz
+			deleteTagURL = new URL("http://"+adressHost+"/tag/deletetag?"+user_pseudo+"&password="+user_password+"&object_name="+tag.getObjectName());
+			String reponse = HTTPLoader.getTextFile(deleteTagURL);
+			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
+			System.out.println("tag : " + obj.get("tag"));
+			System.out.println("status : " + obj.get("status"));
+			System.out.println("error_msg : " + obj.get("error_msg"));
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			
 	}
 
 	@Override
