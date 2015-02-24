@@ -1,4 +1,4 @@
-package webservicePC;
+  package webservice;
 
 import java.net.*;
 import java.util.Date;
@@ -36,7 +36,7 @@ public class NetworkService implements NetworkServiceInterface {
 		String adressHost = "local:8080/InterfacePC";
 		URL registerURL;
 		try {
-			registerURL = new URL("http://"+adressHost+"/register/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&firstname="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
+			registerURL = new URL("http://"+adressHost+"/register/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&first_name="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getMailAddress());
 		
 		// Query parameters are parameters: http://localhost/<appln-folder-name>/register/doregister?pseudo=pqrs&password=abc&firstname=xyz&last_name=cdf&email=hij
 
