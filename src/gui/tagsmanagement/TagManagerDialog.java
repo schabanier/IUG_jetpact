@@ -215,13 +215,13 @@ public class TagManagerDialog extends JDialog
 
 		if(id.length() == 0)
 			JOptionPane.showMessageDialog(this, "The field tag id can't be empty.", "Error on field id", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyTagUID(id))
+		else if(! FieldVerifier.verifyTagUID(id))
 			JOptionPane.showMessageDialog(this, "The tag id \"" + id + "\" is incorrect.", "Error on field id", JOptionPane.WARNING_MESSAGE);
 		else if(objectName.length() == 0)
 			JOptionPane.showMessageDialog(this, "The field object name can't be empty", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyTagName(objectName))
+		else if(! FieldVerifier.verifyTagName(objectName))
 			JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyImageFileName(objectImageFileName))
+		else if(! FieldVerifier.verifyImageFileName(objectImageFileName))
 			JOptionPane.showMessageDialog(this, "The image filename \"" + objectImageFileName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
 		else
 		{
@@ -268,9 +268,9 @@ public class TagManagerDialog extends JDialog
 
 		if(objectName.length() == 0)
 			JOptionPane.showMessageDialog(this, "The field object name can't be empty", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyTagName(objectName))
+		else if(! FieldVerifier.verifyTagName(objectName))
 			JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyImageFileName(objectImageFileName))
+		else if(! FieldVerifier.verifyImageFileName(objectImageFileName))
 			JOptionPane.showMessageDialog(this, "The image filename \"" + objectImageFileName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
 		else
 		{
