@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,9 +22,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import engine.NetworkServiceProvider;
-import exceptions.AccountNotFoundException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
+import gui.authentification.Identification;
+import gui.infoperso.InfoPerso;
 import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
@@ -34,13 +34,13 @@ public class MainFrame extends JFrame
 	private static MainFrame instance;
 
 	private JPanel centerPanel;
-	private JPanel userInformationsPanel;
+	private InfoPerso userInformationsPanel;
 	private TagsManagementPanel tagsPanel;
 	private JPanel profilesPanel;
 
 	private JList<String> panelList;
 
-	private JPanel authenticationPanel;
+	private Identification authenticationPanel;
 	private JPanel managementPanel;
 	
 
@@ -51,39 +51,14 @@ public class MainFrame extends JFrame
 		
 		instance = this;
 		
-		authenticationPanel = new JPanel(); // will be replaced by the real authentication panel.
-		authenticationPanel.setLayout(new FlowLayout());
-		JButton login = new JButton("Log in");
-		login.setDoubleBuffered(true);
-		login.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				try {
-					NetworkServiceProvider.getNetworkService().authenticate("jdupon", "123456"); // will be removed.
-
-					tagsPanel.reloadTagsList();
-					setContentPane(managementPanel);
-					panelList.setSelectedIndex(0);
-					
-					((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
-					pack();
-				} catch (AccountNotFoundException e1) { // corresponds to an abnormal failure. 
-					JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-				} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is successful. thrown by the method reloadTagsList().
-					JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-				} catch (NetworkServiceException e1) {
-					JOptionPane.showMessageDialog(getInstance(), "A network error has occured. Maybe you're not connected to internet.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-		authenticationPanel.add(login);
+		authenticationPanel = new Identification(this);
 		
 		createManagementPanel();
 		
 		
 		setContentPane(authenticationPanel);
 		pack();
+		setResizable(false);
 		setVisible(true);
 	}
 	
@@ -125,6 +100,7 @@ public class MainFrame extends JFrame
 			{
 				NetworkServiceProvider.getNetworkService().logOut();
 				setContentPane(authenticationPanel);
+				setResizable(false);
 				pack();
 			}
 		});
@@ -142,8 +118,7 @@ public class MainFrame extends JFrame
 		centerPanel.setLayout(new CardLayout());
 		
 
-		userInformationsPanel = new JPanel(true);
-		userInformationsPanel.setBorder(new TitledBorder("user informations"));
+		userInformationsPanel = new InfoPerso(this);
 		
 		tagsPanel = new TagsManagementPanel();
 		
@@ -171,5 +146,29 @@ public class MainFrame extends JFrame
 	public static MainFrame getInstance()
 	{
 		return instance;
+	}
+	
+	/**
+	 * Loads the tag list and displays the management panel, with the focus on the personnal informations panel.
+	 */
+	public void authenticationDone()
+	{
+		try {
+			tagsPanel.reloadTagsList(); // to load the tag list.
+			userInformationsPanel.reloadDisplayedInformations();
+			
+			
+			setResizable(true);
+			setContentPane(managementPanel);
+			panelList.setSelectedIndex(0);
+			
+			((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
+			pack();
+			
+		} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is successful. thrown by the method reloadTagsList().
+			JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+		} catch (NetworkServiceException e1) {
+			JOptionPane.showMessageDialog(getInstance(), "A network error has occured. Maybe you're not connected to internet.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

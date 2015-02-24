@@ -215,13 +215,13 @@ public class TagManagerDialog extends JDialog
 
 		if(id.length() == 0)
 			JOptionPane.showMessageDialog(this, "The field tag id can't be empty.", "Error on field id", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyTagUID(id))
+		else if(! FieldVerifier.verifyTagUID(id))
 			JOptionPane.showMessageDialog(this, "The tag id \"" + id + "\" is incorrect.", "Error on field id", JOptionPane.WARNING_MESSAGE);
 		else if(objectName.length() == 0)
 			JOptionPane.showMessageDialog(this, "The field object name can't be empty", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyTagName(objectName))
+		else if(! FieldVerifier.verifyTagName(objectName))
 			JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyImageFileName(objectImageFileName))
+		else if(objectImageFileName!= null && ! FieldVerifier.verifyImageFileName(objectImageFileName))
 			JOptionPane.showMessageDialog(this, "The image filename \"" + objectImageFileName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
 		else
 		{
@@ -263,21 +263,26 @@ public class TagManagerDialog extends JDialog
 	
 	private void actionModifyTag()
 	{
+		boolean fieldToBeModified = false;
+		
 		String objectName = objectNameTextField.getText();
 		String objectImageFileName = objectPictureTextField.getText().length() > 0 ? objectPictureTextField.getText() : null;
 
 		if(objectName.length() == 0)
 			JOptionPane.showMessageDialog(this, "The field object name can't be empty", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyTagName(objectName))
+		else if(! FieldVerifier.verifyTagName(objectName))
 			JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
-		else if(FieldVerifier.verifyImageFileName(objectImageFileName))
+		else if(objectImageFileName != null && ! FieldVerifier.verifyImageFileName(objectImageFileName))
 			JOptionPane.showMessageDialog(this, "The image filename \"" + objectImageFileName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
 		else
 		{
 			if(! objectName.equals(currentTag.getObjectName())) // the object name is modified.
 			{
+				fieldToBeModified = true;
 				try {
-					NetworkServiceProvider.getNetworkService().modifyObjectName(currentTag, objectName);
+					currentTag = NetworkServiceProvider.getNetworkService().modifyObjectName(currentTag, objectName);
+					isTagModified = true;
+					setVisible(false);
 				} catch (IllegalFieldException e) {
 					switch(e.getFieldId())
 					{
@@ -297,22 +302,21 @@ public class TagManagerDialog extends JDialog
 							JOptionPane.showMessageDialog(this, "Unknown error has occured", "Unknown error", JOptionPane.ERROR_MESSAGE);
 						break;
 					}
-					return;
 				} catch (NotAuthenticatedException e) {// abnormal error.
 					JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
-					return;
 				} catch (NetworkServiceException e) {
 					JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
-					return;
 				}
 			}
 			
-			if(objectImageFileName == null || ! objectImageFileName.equals(currentTag.getObjectImageName()))
+			if((objectImageFileName != null && ! objectImageFileName.equals(currentTag.getObjectImageName())) || (objectImageFileName == null && objectImageFileName != currentTag.getObjectImageName()))
 			{
+				fieldToBeModified = true;
 				try {
-					NetworkServiceProvider.getNetworkService().modifyObjectImage(currentTag, objectImageFileName);
+					currentTag = NetworkServiceProvider.getNetworkService().modifyObjectImage(currentTag, objectImageFileName);
 					isTagModified = true;
 					setVisible(false);
+					return;
 				} catch (IllegalFieldException e) {
 					switch(e.getFieldId())
 					{
@@ -335,6 +339,9 @@ public class TagManagerDialog extends JDialog
 					JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			
+			if(fieldToBeModified == false)
+				setVisible(false);
 		}
 	}
 	
