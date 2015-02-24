@@ -14,7 +14,7 @@ public class Profile
 		tags = new ArrayList<>();
 	}
 	
-	String getName()
+	public String getName()
 	{
 		return name;
 	}
@@ -39,5 +39,12 @@ public class Profile
 	public void removeAllTags()
 	{
 		tags.clear();
+	}
+
+
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Profile)) ? false : 
+					name.equals(((Profile) obj).getName());
 	}
 }

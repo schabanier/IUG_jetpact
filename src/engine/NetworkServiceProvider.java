@@ -1,23 +1,24 @@
 package engine;
 
-
-import java.net.URL;
-
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
-import webservice.HTTPLoader;
-import data.Account;
-import exceptions.AccountNotFoundException;
-import exceptions.IllegalFieldException;
-import exceptions.NetworkServiceException;
 import interfaces.NetworkServiceInterface;
 
+/**
+ * This class has the reference to the current network service. <br/>
+ * It must be initialized before to use getNetworkService() by using the method setNetworkService(). <br/>
+ * For example, to initialize with the emulator : <code>setNetworkService(NetworkServiceEmulator.getInstance());</code>
+ * 
+ * @author Nicolas Thierce
+ *@see NetworkServiceInterface
+ */
 public class NetworkServiceProvider
 {
 
 	private static NetworkServiceInterface networkService;
 	
+	/**
+	 * To set the network service to be used. Call this method one time to initialize.
+	 * @param networkService
+	 */
 	public static void setNetworkService(NetworkServiceInterface networkService)
 	{
 		if(networkService == null)
@@ -26,6 +27,11 @@ public class NetworkServiceProvider
 			NetworkServiceProvider.networkService = networkService;
 	}
 	
+	
+	/**
+	 * To get the current network service.
+	 * @return The current network service, or null if there is no one.
+	 */
 	public static NetworkServiceInterface getNetworkService()
 	{
 		return networkService;
