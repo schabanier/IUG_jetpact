@@ -46,7 +46,7 @@ public class MainFrame extends JFrame
 
 	public MainFrame() throws HeadlessException
 	{
-		super("StufFinder");
+		super(Constants.MainFrame.WINDOW_TITLE);
 		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		instance = this;
@@ -122,7 +122,7 @@ public class MainFrame extends JFrame
 		
 		tagsPanel = new TagsManagementPanel();
 		
-		profilesPanel = new JPanel(true);
+		profilesPanel = new JPanel(true); // will be replaced by the real version.
 		profilesPanel.setBorder(new TitledBorder("profiles panel"));
 		
 		
@@ -150,6 +150,7 @@ public class MainFrame extends JFrame
 	
 	/**
 	 * Loads the tag list and displays the management panel, with the focus on the personnal informations panel.
+	 * This method is called after authentication succeeds.
 	 */
 	public void authenticationDone()
 	{
@@ -165,10 +166,10 @@ public class MainFrame extends JFrame
 			((CardLayout) centerPanel.getLayout()).show(centerPanel, Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME);
 			pack();
 			
-		} catch (NotAuthenticatedException e1) { // this error can't occur because authentication is successful. thrown by the method reloadTagsList().
-			JOptionPane.showMessageDialog(getInstance(), "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+		} catch (NotAuthenticatedException e1) { // Normally, this error can't occur because authentication is successful. thrown by the method reloadTagsList().
+			JOptionPane.showMessageDialog(getInstance(), Constants.CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, Constants.CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NetworkServiceException e1) {
-			JOptionPane.showMessageDialog(getInstance(), "A network error has occured. Maybe you're not connected to internet.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(getInstance(), Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
