@@ -37,12 +37,22 @@ public class Constants
 	public static final class UserInformationsManagement
 	{
 		public static final String ACCOUNT_CREATION_WINDOW_TITLE = "Account creation";
-		
+		public static final String ACCOUNT_MODIFICATION_WINDOW_TITLE = "User informations modification";
+
 		public static final String CANCEL_BUTTON_NAME = "Cancel";
+		public static final String MODIFY_BUTTON_NAME = "Modify";
 		public static final String VALIDATE_ACCOUNT_CREATION_BUTTON_NAME = "Create";
+		public static final String VALIDATE_ACCOUNT_MODIFICATION_BUTTON_NAME = "Validate";
 
 		public static final String PSEUDO_ALREADY_USED_MESSAGE = "This pseudo is already used.";
 		public static final String PASSWORD_AND_CONFIRMATION_NOT_EQUAL_MESSAGE = "Please retype correctly your password.";
+
+		public static final String TAGS_NUMBER_LABEL = "Number of tags";
+		public static final String PROFILES_NUMBER_LABEL = "Number of profiles";
+		
+
+		public static final String NEW_PASSWORD_LABEL = "Enter a ew password";
+		public static final String NEW_PASSWORD_CONFIRMATION_LABEL = "Retype the new password";
 	}
 	
 
