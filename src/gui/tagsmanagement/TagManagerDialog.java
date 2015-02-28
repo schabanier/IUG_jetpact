@@ -25,6 +25,9 @@ import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
+import gui.Constants.CommonErrorMessages;
+import gui.Constants.Fields;
+import gui.Constants.TagsManagement;
 
 public class TagManagerDialog extends JDialog
 {
@@ -72,7 +75,7 @@ public class TagManagerDialog extends JDialog
 //		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 		
-		JLabel idTagLabel = new JLabel("Tag id");
+		JLabel idTagLabel = new JLabel(TagsManagement.TAG_UID_LABEL);
 		idTagLabel.setDoubleBuffered(true);
 		idTagTextField = new JTextField();
 		idTagTextField.setDoubleBuffered(true);
@@ -81,7 +84,7 @@ public class TagManagerDialog extends JDialog
 //		fieldsPanel.add(idTagTextField);
 		
 		
-		JLabel objectNameLabel = new JLabel("Object name");
+		JLabel objectNameLabel = new JLabel(TagsManagement.TAG_OBJECT_NAME_LABEL);
 		objectNameLabel.setDoubleBuffered(true);
 		objectNameTextField = new JTextField();
 		objectNameTextField.setDoubleBuffered(true);
@@ -90,18 +93,20 @@ public class TagManagerDialog extends JDialog
 //		fieldsPanel.add(objectNameTextField);
 		
 		
-		JLabel ObjectPictureLabel = new JLabel("Object image");
+		JLabel ObjectPictureLabel = new JLabel(TagsManagement.TAG_OBJECT_IMAGE_FILENAME_LABEL);
 		ObjectPictureLabel.setDoubleBuffered(true);
 		objectPictureTextField = new JTextField();
 		objectPictureTextField.setDoubleBuffered(true);
 		
 		fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setDialogTitle("Image file selection");
+		fileChooser.setDialogTitle(TagsManagement.IMAGE_FILENAME_CHOOSER_WINDOW_TITLE);
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.removeChoosableFileFilter(fileChooser.getFileFilter());
 		fileChooser.setFileFilter(new FileNameExtensionFilter("jpeg, png, tiff", "jpeg", "JPEG", "jpg", "JPG", "png", "tiff"));
+		
 		JButton fileChooserButton = new JButton("...");
+		fileChooserButton.setToolTipText(TagsManagement.IMAGE_FILENAME_CHOOSER_BUTTON_TOOLTIP_TEXT);
 		fileChooserButton.setDoubleBuffered(true);
 		fileChooserButton.addActionListener(new ActionChooseImageFile());
 
@@ -152,11 +157,11 @@ public class TagManagerDialog extends JDialog
 		JPanel buttonsPanel = new JPanel(true);
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
 		
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(TagsManagement.CANCEL_BUTTON_NAME);
 		cancelButton.setDoubleBuffered(true);
 		cancelButton.addActionListener(new ActionCancel());
 		
-		validateButton = new JButton("Validate");
+		validateButton = new JButton(TagsManagement.VALIDATE_TAG_ADDITION_BUTTON_NAME);
 		validateButton.setDoubleBuffered(true);
 		validateButton.addActionListener(new ActionValidate());
 
@@ -183,7 +188,7 @@ public class TagManagerDialog extends JDialog
 				try {
 					objectPictureTextField.setText(fileChooser.getSelectedFile().getCanonicalPath());
 				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(TagManagerDialog.this, "The specified image file doesn't exist.", "Error on specified image file", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(TagManagerDialog.this, TagsManagement.IMAGE_FILE_NOT_FOUND_MESSAGE, TagsManagement.IMAGE_FILE_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 		}
 	}
@@ -214,15 +219,15 @@ public class TagManagerDialog extends JDialog
 		String objectImageFileName = objectPictureTextField.getText().length() > 0 ? objectPictureTextField.getText() : null;
 
 		if(id.length() == 0)
-			JOptionPane.showMessageDialog(this, "The field tag id can't be empty.", "Error on field id", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.TAG_UID), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_UID), JOptionPane.WARNING_MESSAGE);
 		else if(! FieldVerifier.verifyTagUID(id))
-			JOptionPane.showMessageDialog(this, "The tag id \"" + id + "\" is incorrect.", "Error on field id", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_UID), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_UID), JOptionPane.WARNING_MESSAGE);
 		else if(objectName.length() == 0)
-			JOptionPane.showMessageDialog(this, "The field object name can't be empty", "Error on field object name", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.TAG_OBJECT_NAME), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.WARNING_MESSAGE);
 		else if(! FieldVerifier.verifyTagName(objectName))
-			JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_NAME),  CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.WARNING_MESSAGE);
 		else if(objectImageFileName!= null && ! FieldVerifier.verifyImageFileName(objectImageFileName))
-			JOptionPane.showMessageDialog(this, "The image filename \"" + objectImageFileName + "\" is incorrect.", "Error on field object name", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_FILE_NAME),  CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_FILE_NAME), JOptionPane.WARNING_MESSAGE);
 		else
 		{
 			Tag tag = new Tag(id, objectName, objectImageFileName);
@@ -236,30 +241,32 @@ public class TagManagerDialog extends JDialog
 				{
 					case IllegalFieldException.TAG_UID :
 						if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-							JOptionPane.showMessageDialog(this, "The tag which has id \"" + id + "\" is already used.", "Error on field id", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, TagsManagement.getTagUIDAlreadyUsedMessage(id), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_UID), JOptionPane.ERROR_MESSAGE);
 						else
-							JOptionPane.showMessageDialog(this, "The tag id \"" + id + "\" is incorrect : " + e.getMessage(), "Error on field id", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_UID), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_UID), JOptionPane.ERROR_MESSAGE);
 					break;
 					case IllegalFieldException.TAG_OBJECT_NAME :
 						if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-							JOptionPane.showMessageDialog(this, "The  object name \"" + objectName + "\" is already used for another tag.", "Error on field object name", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, TagsManagement.getObjectNameAlreadyUsedMessage(objectName), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.ERROR_MESSAGE);
 						else
-							JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_NAME), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.ERROR_MESSAGE);
 					break;
 					case IllegalFieldException.TAG_OBJECT_IMAGE :
-						JOptionPane.showMessageDialog(this, "The image filename is incorrect : " + e.getMessage(), "Error on field image filename", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_FILE_NAME), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_FILE_NAME), JOptionPane.ERROR_MESSAGE);
 					break;
 					default:
-						JOptionPane.showMessageDialog(this, "Unknown error has occured", "Unknown error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 			} catch (NotAuthenticatedException e) { // abnormal error.
-				JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 			} catch (NetworkServiceException e) {
-				JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+	
+// the texts below this line are not still processed.
 	
 	private void actionModifyTag()
 	{
@@ -288,24 +295,24 @@ public class TagManagerDialog extends JDialog
 					{
 						case IllegalFieldException.TAG_UID :
 							if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
-								JOptionPane.showMessageDialog(this, "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, TagsManagement.TAG_NOT_FOUND_MESSAGE, TagsManagement.TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 							else
-								JOptionPane.showMessageDialog(this, "A abnormal error has occured. Please restart the application to try to solve this problem.", "Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 						break;
 						case IllegalFieldException.TAG_OBJECT_NAME :
 							if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-								JOptionPane.showMessageDialog(this, "The  object name \"" + objectName + "\" is already used for another tag.", "Error on field object name", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, TagsManagement.getObjectNameAlreadyUsedMessage(objectName), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.ERROR_MESSAGE);
 							else
-								JOptionPane.showMessageDialog(this, "The object name \"" + objectName + "\" is incorrect : " + e.getMessage(), "Error on field object name", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_NAME), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.ERROR_MESSAGE);
 						break;
 						default:
-							JOptionPane.showMessageDialog(this, "Unknown error has occured", "Unknown error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 						break;
 					}
 				} catch (NotAuthenticatedException e) {// abnormal error.
-					JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				} catch (NetworkServiceException e) {
-					JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			
@@ -322,21 +329,21 @@ public class TagManagerDialog extends JDialog
 					{
 						case IllegalFieldException.TAG_UID :
 							if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
-								JOptionPane.showMessageDialog(this, "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
-							else // tag uid is incorrect.
-								JOptionPane.showMessageDialog(this, "A abnormal error has occured. Please restart the application to try to solve this problem.", "Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, TagsManagement.TAG_NOT_FOUND_MESSAGE, TagsManagement.TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
+							else
+								JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 						break;
 						case IllegalFieldException.TAG_OBJECT_IMAGE :
-							JOptionPane.showMessageDialog(this, "The image filename is incorrect : " + e.getMessage(), "Error on field image filename", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_FILE_NAME), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_FILE_NAME), JOptionPane.ERROR_MESSAGE);
 						break;
 						default:
-							JOptionPane.showMessageDialog(this, "Unknown error has occured", "Unknown error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 						break;
 					}
 				} catch (NotAuthenticatedException e) {// abnormal error.
-					JOptionPane.showMessageDialog(this, "An abnormal error has occured.\nPlease restart the application to solve this problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				} catch (NetworkServiceException e) {
-					JOptionPane.showMessageDialog(this, "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			
@@ -355,13 +362,13 @@ public class TagManagerDialog extends JDialog
 		AddOrModify = true;
 		tagAdded = null;
 		
-		setTitle("Tag addition");
+		setTitle(TagsManagement.TAG_ADDITION_WINDOW_TITLE);
 		objectNameTextField.setText("");
 		objectPictureTextField.setText("");
 		idTagTextField.setText("");
 		idTagTextField.setEditable(true);
 		
-		validateButton.setText("Add");
+		validateButton.setText(TagsManagement.VALIDATE_TAG_ADDITION_BUTTON_NAME);
 		
 		setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
 		// repositionnement de la fenêtre si elle sort de l'écran en haut ou à gauche.
@@ -389,13 +396,13 @@ public class TagManagerDialog extends JDialog
 		isTagModified = false;
 		AddOrModify = false;
 		
-		setTitle("Tag modification");
+		setTitle(TagsManagement.TAG_MODIFICATION_WINDOW_TITLE);
 		objectNameTextField.setText(tag.getObjectName());
 		objectPictureTextField.setText(tag.getObjectImageName());
 		idTagTextField.setText(tag.getUid());
 		idTagTextField.setEditable(false);
 		
-		validateButton.setText("Modify");
+		validateButton.setText(TagsManagement.VALIDATE_TAG_MODIFICATION_BUTTON_NAME);
 
 		setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
 		// repositionnement de la fenêtre si elle sort de l'écran en haut ou à gauche.

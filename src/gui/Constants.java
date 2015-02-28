@@ -31,6 +31,38 @@ public class Constants
 	public static final class TagsManagement
 	{
 		public static final String NETWORK_SERVICE_OCCURED = "";
+
+		public static final String TAG_ADDITION_WINDOW_TITLE = "Tag addition";
+		public static final String TAG_MODIFICATION_WINDOW_TITLE = "Tag modification";
+		
+		public static final String TAG_UID_LABEL = "tag UID";
+		public static final String TAG_OBJECT_NAME_LABEL = "Object name";
+		public static final String TAG_OBJECT_IMAGE_FILENAME_LABEL = "Object image filename (optionnal)";
+
+		public static final String CANCEL_BUTTON_NAME = "Cancel";
+		public static final String VALIDATE_TAG_ADDITION_BUTTON_NAME = "Add";
+		public static final String VALIDATE_TAG_MODIFICATION_BUTTON_NAME = "Validate";
+		
+		
+		public static final String IMAGE_FILENAME_CHOOSER_BUTTON_TOOLTIP_TEXT = "Select an image";
+		public static final String IMAGE_FILENAME_CHOOSER_WINDOW_TITLE = "Image file selection";
+
+		public static final String IMAGE_FILE_NOT_FOUND_MESSAGE = "The specified image file doesn't exist.";
+		public static final String IMAGE_FILE_NOT_FOUND_TITLE = "Error on field image filename";
+
+		public static final String getTagUIDAlreadyUsedMessage(String uid)
+		{
+			return "The tag which has uid \"" + uid + "\" is already used.";
+		}
+
+		public static final String getObjectNameAlreadyUsedMessage(String objectName)
+		{
+			return "The object name \""+ objectName + "\" is already used for another tag.";
+		}
+		
+		public static final String TAG_NOT_FOUND_MESSAGE = "Unable to modify : this tag has been removed by an user on another application instance.";
+		public static final String TAG_NOT_FOUND_TITLE = "Tag not found";
+		
 	}
 	
 
@@ -68,6 +100,10 @@ public class Constants
 		public static final String PASSWORD_LABEL = "Enter a password";
 		public static final String PASSWORD_CONFIRMATION = "Password confirmation";
 		public static final String PASSWORD_CONFIRMATION_LABEL = "Retype the password";
+
+		public static final String TAG_UID = "tag UID";
+		public static final String TAG_OBJECT_NAME = "object name";
+		public static final String TAG_OBJECT_FILE_NAME = "object filename";
 	}
 	
 	
@@ -79,6 +115,9 @@ public class Constants
 
 		public static final String ABNORMAL_ERROR_TITLE = "Abnormal error";
 		public static final String ABNORMAL_ERROR_MESSAGE = "An abnormal error has occured. Please restart the application to try to solve the problem.";
+
+		public static final String UNKNOWN_ERROR_TITLE = "Unknown error";
+		public static final String UNKNOWN_ERROR_MESSAGE = "Unknown error has occured. Please restart the application to try to solve the problem.";
 		
 		public static final String FIELD_ERROR_TITLE = "ERROR on field ";
 
