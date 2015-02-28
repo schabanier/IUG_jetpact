@@ -295,7 +295,7 @@ public class TagManagerDialog extends JDialog
 					{
 						case IllegalFieldException.TAG_UID :
 							if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
-								JOptionPane.showMessageDialog(this, TagsManagement.TAG_NOT_FOUND_MESSAGE, TagsManagement.TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, TagsManagement.MODIFICATION_TAG_NOT_FOUND_MESSAGE, TagsManagement.MODIFICATION_TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 							else
 								JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 						break;
@@ -329,7 +329,7 @@ public class TagManagerDialog extends JDialog
 					{
 						case IllegalFieldException.TAG_UID :
 							if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
-								JOptionPane.showMessageDialog(this, TagsManagement.TAG_NOT_FOUND_MESSAGE, TagsManagement.TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, TagsManagement.MODIFICATION_TAG_NOT_FOUND_MESSAGE, TagsManagement.MODIFICATION_TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 							else
 								JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 						break;

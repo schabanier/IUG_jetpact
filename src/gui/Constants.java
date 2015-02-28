@@ -59,10 +59,22 @@ public class Constants
 		{
 			return "The object name \""+ objectName + "\" is already used for another tag.";
 		}
+
+		public static final String MODIFICATION_TAG_NOT_FOUND_MESSAGE = "Unable to modify : this tag has been deleted by an user on another application instance.";
+		public static final String MODIFICATION_TAG_NOT_FOUND_TITLE = "Tag not found";
+
+		public static final String DELETION_TAG_NOT_FOUND_MESSAGE = "Unable to delete : this tag has been deleted by an user on another application instance.";
+		public static final String DELETION_TAG_NOT_FOUND_TITLE = "Tag not found";
 		
-		public static final String TAG_NOT_FOUND_MESSAGE = "Unable to modify : this tag has been removed by an user on another application instance.";
-		public static final String TAG_NOT_FOUND_TITLE = "Tag not found";
 		
+		public static final String CONFIRM_TAG_DELETION_MESSAGE = "Are you sure you want to delete this tag ?";
+		public static final String CONFIRM_TAG_DELETION_TITLE = "Delete tag";
+		
+		public static final String getTagsNumberTitle(int tagsNumber)
+		{
+			return tagsNumber + " tags";
+		}
+		public static final String LINKED_PROFILES_LIST_TITLE = "Linked profiles";
 	}
 	
 
@@ -83,7 +95,7 @@ public class Constants
 		public static final String PROFILES_NUMBER_LABEL = "Number of profiles";
 		
 
-		public static final String NEW_PASSWORD_LABEL = "Enter a ew password";
+		public static final String NEW_PASSWORD_LABEL = "Enter a new password";
 		public static final String NEW_PASSWORD_CONFIRMATION_LABEL = "Retype the new password";
 	}
 	
