@@ -72,23 +72,19 @@ public interface NetworkServiceInterface
 
 	
 	/**
-	 * Modify the email address of the current account.
-	 * @param emailAddress The new email address
+	 * Modify the current account and its password.
+	 * @param newPseudo The new pseudo
+	 * @param newPassword The new password
+	 * @param newFirstName The new first name
+	 * @param newLastName The new last name
+	 * @param newEMailAddress The new email address
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If the specified email address is incorrect (field id {@link IllegalFieldException#EMAIL_ADDRESS EMAIL_ADDRESS} and reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT}).
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
-	public void modifyEMailAddress(String emailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	public Account modifyAccount(String newPseudo, String newPassword, String newFirstName, String newLastName, String newEMailAdress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
-	/**
-	 * Modify the password of the current account.
-	 * @param newPassword The new password
-	 * @throws NotAuthenticatedException If the authentication is not done.
-	 * @throws IllegalFieldException If the specified password is syntactically incorrect (field id {@link IllegalFieldException#PASSWORD PASSWORD} and reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT}).
-	 * @throws NetworkServiceException If a network service error has occurred.
-	 */
-	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
+
 	
 	/**
 	 * To get the tags list of the current account.

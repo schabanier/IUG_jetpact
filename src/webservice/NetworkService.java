@@ -108,12 +108,6 @@ public class NetworkService implements NetworkServiceInterface {
 		return userAccount;
 	}
 
-	@Override
-	public void modifyPassword(String newPassword) {
-		// TODO Auto-generated method stub
-
-	}
-
 	//return = argument ?? -> différencier modifyTag et addTag
 	@Override
 	public Tag addTag(Tag tag) {
@@ -198,11 +192,26 @@ public class NetworkService implements NetworkServiceInterface {
 	}
 
 	@Override
-	public void modifyEMailAddress(String emailAddress)
-			throws NotAuthenticatedException, IllegalFieldException,
-			NetworkServiceException {
-		// TODO Auto-generated method stub
+	public Account modifyAccount(String newPseudo, String newPassword, String newFirstName, String newLastName, String newEMailAdress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
 		
+		URL modifyAccountURL;
+		try {
+			// http://localhost:8080/app_server/modifyAccount?pseudo=abc&password=xyz&newPseudo=abc&newPassword&newFirstName=abc&newLastName=abc&newEMailAdress=abc
+			modifyAccountURL = new URL("http://"+adressHost+"/modifyAccount?pseudo="+userAccount.getPseudo()+"&password="+userPassword+"&newPseudo="+newPseudo+"&newPassword="+newPassword+"&newFirstName="+newFirstName+"&newLastName="+newLastName+"&newEMailAdress="+newEMailAdress);
+			String reponse = HTTPLoader.getTextFile(modifyAccountURL);
+			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
+			if ((boolean) obj.get("status")) {
+				userAccount = new Account((String)obj.get("pseudo"), (String)obj.get("first_name"), (String)obj.get("last_name"), (String)obj.get("email"));
+				userPassword=newPassword;
+			}else{
+				System.out.println("Error occured");
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return userAccount;
 	}
 
 	@Override
