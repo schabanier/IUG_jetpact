@@ -19,7 +19,8 @@ import com.loopj.android.http.*;
 public class NetworkService implements NetworkServiceInterface {
 	
 	private static AsyncHttpClient client;
-	
+	private Account currentAccount = null;
+	private String currentPassword = null;
 	@Override
 	public void initNetworkService() throws NetworkServiceException 
 	{
@@ -33,23 +34,23 @@ public class NetworkService implements NetworkServiceInterface {
 		RequestParams params = new RequestParams();
 		if (FieldVerifier.verifyName(newAccount.getPseudo())){
 			params.put("pseudo", newAccount.getPseudo());}
-		else { throw new IllegalFieldException(IllegalFieldException.PSEUDO, null);}
+		else { throw new IllegalFieldException(IllegalFieldException.PSEUDO,IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getPseudo());}
 		
 		if (FieldVerifier.verifyPassword(newPassword)){
 			params.put("password", newPassword);}
-		else { throw new IllegalFieldException(IllegalFieldException.PASSWORD, null);}
+		else { throw new IllegalFieldException(IllegalFieldException.PASSWORD,IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);}
 		
 		if (FieldVerifier.verifyName(newAccount.getFirstName())){
 			params.put("first_name", newAccount.getFirstName());}
-		else { throw new IllegalFieldException(IllegalFieldException.FIRSTNAME, null);}
+		else { throw new IllegalFieldException(IllegalFieldException.FIRSTNAME,IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getFirstName());}
 		
 		if (FieldVerifier.verifyName(newAccount.getLastName())){
 			params.put("last_name", newAccount.getLastName());}
-		else { throw new IllegalFieldException(IllegalFieldException.LASTNAME, null);}
+		else { throw new IllegalFieldException(IllegalFieldException.LASTNAME,IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getLastName());}
 		
 		if (FieldVerifier.verifyEMailAddress(newAccount.getEMailAddress())){
 			params.put("email", newAccount.getEMailAddress());}
-		else { throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, null);}
+		else { throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS,IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getEMailAddress());}
 		
 				
 		client.get("http://www.localhost:8080/ns/doregister", params, new AsyncHttpResponseHandler() {	
@@ -69,7 +70,6 @@ public class NetworkService implements NetworkServiceInterface {
                            //
                         }
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     // "Error Occured [Server's JSON response might be invalid]!"
                     e.printStackTrace();
 
@@ -111,7 +111,8 @@ public class NetworkService implements NetworkServiceInterface {
 		    			
 		});	
 	}
-
+	
+	
 	@Override
 	public Account authenticate(String pseudo, String password)
 		throws AccountNotFoundException, NetworkServiceException 
@@ -120,11 +121,14 @@ public class NetworkService implements NetworkServiceInterface {
 					RequestParams params = new RequestParams();
 					if (FieldVerifier.verifyName(pseudo)){
 						params.put("pseudo", pseudo);}
-					else { throw new IllegalFieldException(IllegalFieldException.PSEUDO, null);}
+					else { throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, pseudo);}
 					
-					if (FieldVerifier.verifyPassword(password)){
-						params.put("password",password);}
-					else { throw new IllegalFieldException(IllegalFieldException.PASSWORD, null);}
+					if (FieldVerifier.verifyPassword(password))
+						{
+							params.put("password",password);
+							currentPassword = password;
+						}
+					else { throw new IllegalFieldException(IllegalFieldException.PASSWORD,IllegalFieldException.REASON_VALUE_INCORRECT, password);}
 					
 					
 					client.get("http://www.localhost:8080/ns/dologin", params, new AsyncHttpResponseHandler() {	
@@ -137,18 +141,19 @@ public class NetworkService implements NetworkServiceInterface {
 			                        JSONObject obj = new JSONObject(response);
 			                        // When the JSON response has status boolean value assigned with true
 			                        if(obj.getBoolean("status")){
-			                            //
+			                            currentAccount = new Account(obj.getString("pseudo"),obj.getString("fist_name"),obj.getString("last_name"),obj.getString("email"));	
+			                            
 			                        } 
 			                        // Else display error message
 			                        else{
-			                           //
-			                        }
+			                        		currentPassword = null;
+			                        	}
 			                } catch (JSONException e) {
 			                    // TODO Auto-generated catch block
 			                    // "Error Occured [Server's JSON response might be invalid]!"
 			                    e.printStackTrace();
 
-			                }
+			                }				              
 			            }
 
 					 // When the response returned by REST has Http response code other than '200'
@@ -186,7 +191,7 @@ public class NetworkService implements NetworkServiceInterface {
 					    			
 					});	
 					
-		return null;
+		return currentAccount;
 	}
 
 	@Override
@@ -198,6 +203,7 @@ public class NetworkService implements NetworkServiceInterface {
 	@Override
 	public Account getCurrentAccount() throws NotAuthenticatedException {
 		// TODO Auto-generated method stub
+		// if account = null on lève une exception sinon on renvoie account.
 		return null;
 	}
 
