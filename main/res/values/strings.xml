@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">StufFinder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_creer_compte">CreerCompteActivity</string>
+    <string name="title_activity_se_connecter">SeConnecterActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_reussite_creation_compte">ReussiteCreationCompteActivity</string>
+    <string name="title_activity_interieur">InterieurActivity</string>
+    <string name="title_activity_test_grid_view">TestGridView</string>
+    <string name="title_activity_exterieur">ExterieurActivity</string>
+    <string name="title_activity_parametres">ParametresActivity</string>
+    <string name="title_activity_configuration">ConfigurationActivity</string>
+    <string name="title_activity_info_perso">InfoPersoActivity</string>
+
+</resources>
