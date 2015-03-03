@@ -9,15 +9,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.stuffinder.R;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
-import com.stuffinder.exceptions.TagAlreadyUsedException;
-
-import com.stuffinder.R;
 
 public class AjoutTagActivity extends Activity {
 
@@ -33,7 +31,6 @@ public class AjoutTagActivity extends Activity {
         EditTextNom = (EditText)findViewById(R.id.editTextNom) ;
         EditTextImage = (EditText)findViewById(R.id.editTextImage) ;
         EditTextId = (EditText)findViewById(R.id.editTextId) ;
-
     }
 
     public void creerTag (View view) {
