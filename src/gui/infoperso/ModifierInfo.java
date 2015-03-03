@@ -5,8 +5,7 @@ import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import gui.MainFrame;
-
+import gui.Constants.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -96,46 +95,46 @@ public class ModifierInfo extends JDialog {
 			panelDialog.setBorder(new EmptyBorder(5,15,5,5));
 
 			//---- label8 ----
-			labelNom.setText("Nom:");
+			labelNom.setText(Fields.LASTNAME);
 			panelDialog.add(labelNom, CC.xy(3, 1));
 			textFieldNom.setEditable(false);
 			panelDialog.add(textFieldNom, CC.xywh(7, 1, 7, 1));
 
 			//---- label9 ----
-			labelPrenom.setText("Pr\u00e9nom:");
+			labelPrenom.setText(Fields.FIRSTNAME);
 			panelDialog.add(labelPrenom, CC.xy(3, 3));
 			textFieldPrenom.setEditable(false);
 			panelDialog.add(textFieldPrenom, CC.xywh(7, 3, 7, 1));
 
 			//---- label10 ----
-			labelMail.setText("Adresse mail:");
+			labelMail.setText(Fields.EMAIL_ADDRESS);
 			panelDialog.add(labelMail, CC.xy(3, 5));
 			panelDialog.add(textFieldMail, CC.xywh(7, 5, 7, 1));
 
 			//---- label5 ----
-			labelPseudo.setText("Pseudo:");
+			labelPseudo.setText(Fields.PSEUDO);
 			panelDialog.add(labelPseudo, CC.xy(3, 7));
 			textFieldPseudo.setEditable(false);
 			panelDialog.add(textFieldPseudo, CC.xywh(7, 7, 7, 1));
 
 			//---- label6 ----
-			labelPassword1.setText("Mot de passe:");
+			labelPassword1.setText(UserInformationsManagement.NEW_PASSWORD_LABEL);
 			panelDialog.add(labelPassword1, CC.xy(3, 9));
 			panelDialog.add(passwordField2, CC.xywh(7, 9, 7, 1));
 
 			//---- label7 ----
-			labelPassword2.setText("Confirmer:");
+			labelPassword2.setText(UserInformationsManagement.NEW_PASSWORD_CONFIRMATION_LABEL);
 			panelDialog.add(labelPassword2, CC.xy(3, 11));
 			panelDialog.add(passwordField3, CC.xywh(7, 11, 7, 1));
 
 			//---- button3 ----
-			button3Annuler.setText("Annuler");
+			button3Annuler.setText(UserInformationsManagement.CANCEL_BUTTON_NAME);
 			panelDialog.add(button3Annuler, CC.xy(3, 13));
 			
 			button3Annuler.addActionListener(new ButtonAnnulerListener());
 
 			//---- button4 ----
-			button4Ok.setText("Valider");
+			button4Ok.setText(UserInformationsManagement.VALIDATE_ACCOUNT_MODIFICATION_BUTTON_NAME);
 			button4Ok.addActionListener(new ButtonConfirmerListener());
 			
 			
@@ -161,13 +160,11 @@ public class ModifierInfo extends JDialog {
 			// action si clic bouton Confirmer
 			
 			
-			if (!(new String(passwordField2.getPassword()).equals(new String(passwordField3.getPassword())))) // les mdp ne sont pas identiques
-				JOptionPane.showMessageDialog(null, "Les mots de passes ne sont pas identiques", "Erreur", JOptionPane.ERROR_MESSAGE);
+			if ((passwordField2.getPassword().length > 0 || passwordField3.getPassword().length > 0) && !(new String(passwordField2.getPassword()).equals(new String(passwordField3.getPassword())))) // les mdp ne sont pas identiques
+				JOptionPane.showMessageDialog(ModifierInfo.this, UserInformationsManagement.PASSWORD_AND_CONFIRMATION_NOT_EQUAL_MESSAGE, CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
 				
-			else if(textFieldMail.getText().length() == 0)
-				JOptionPane.showMessageDialog(null, "Veuillez spécifier une adresse mail", "Erreur", JOptionPane.ERROR_MESSAGE);
-				
-			else	{
+			else
+			{
 
 				String newPassword = new String (passwordField2.getPassword());		
 				if(newPassword.length() > 0)
@@ -176,12 +173,12 @@ public class ModifierInfo extends JDialog {
 						   NetworkServiceProvider.getNetworkService().modifyPassword(newPassword);
 					} catch (NotAuthenticatedException e1)
 					{
-						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Vous n'êtes pas correctement authentifié.", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 					} catch (IllegalFieldException e1)
 					{
-						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Le mot de passe rentré est incorrect.", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PASSWORD), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
 					} catch (NetworkServiceException e1) {
-						JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				
@@ -192,12 +189,12 @@ public class ModifierInfo extends JDialog {
 						NetworkServiceProvider.getNetworkService().modifyEMailAddress(textFieldMail.getText());
 					} catch (NotAuthenticatedException e1)
 					{
-						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 					} catch (IllegalFieldException e1)
 					{
-						JOptionPane.showMessageDialog(MainFrame.getInstance(), "Le mot de passe rentré est incorrect", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.EMAIL_ADDRESS), CommonErrorMessages.getFieldErrorTitle(Fields.EMAIL_ADDRESS), JOptionPane.ERROR_MESSAGE);
 					} catch (NetworkServiceException e1) {
-						JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				

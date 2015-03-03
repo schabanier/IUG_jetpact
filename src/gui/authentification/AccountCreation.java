@@ -14,15 +14,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import data.Account;
-
+import engine.FieldVerifier;
 import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
+import static gui.Constants.*;
 
 
 public class AccountCreation extends JDialog
@@ -97,44 +97,44 @@ public class AccountCreation extends JDialog
 					panelDialog.setBorder(new EmptyBorder(5,15,5,5));
 
 					//---- label8 ----
-					labelNom.setText("Nom:");
+					labelNom.setText(Fields.LASTNAME);
 					panelDialog.add(labelNom, CC.xy(3, 1));
 					panelDialog.add(textFieldNom, CC.xywh(7, 1, 7, 1));
 
 					//---- label9 ----
-					labelPrenom.setText("Pr\u00e9nom:");
+					labelPrenom.setText(Fields.FIRSTNAME);
 					panelDialog.add(labelPrenom, CC.xy(3, 3));
 					
 					panelDialog.add(textFieldPrenom, CC.xywh(7, 3, 7, 1));
 
 					//---- label10 ----
-					labelMail.setText("Adresse mail:");
+					labelMail.setText(Fields.EMAIL_ADDRESS);
 					panelDialog.add(labelMail, CC.xy(3, 5));
 					panelDialog.add(textFieldMail, CC.xywh(7, 5, 7, 1));
 
 					//---- label5 ----
-					labelPseudo.setText("Pseudo:");
+					labelPseudo.setText(Fields.PSEUDO);
 					panelDialog.add(labelPseudo, CC.xy(3, 7));
 					panelDialog.add(textFieldPseudo, CC.xywh(7, 7, 7, 1));
 
 					//---- label6 ----
-					labelPassword1.setText("Mot de passe:");
+					labelPassword1.setText(Fields.PASSWORD_LABEL);
 					panelDialog.add(labelPassword1, CC.xy(3, 9));
 					panelDialog.add(passwordField2, CC.xywh(7, 9, 7, 1));
 
 					//---- label7 ----
-					labelPassword2.setText("Confirmer:");
+					labelPassword2.setText(Fields.PASSWORD_CONFIRMATION_LABEL);
 					panelDialog.add(labelPassword2, CC.xy(3, 11));
 					panelDialog.add(passwordField3, CC.xywh(7, 11, 7, 1));
 
 					//---- button3 ----
-					button3Annuler.setText("Annuler");
+					button3Annuler.setText(UserInformationsManagement.CANCEL_BUTTON_NAME);
 					panelDialog.add(button3Annuler, CC.xy(3, 13));
 					
 					button3Annuler.addActionListener(new Button3Listener());
 
 					//---- button4 ----
-					button4Ok.setText("Cr\u00e9er");
+					button4Ok.setText(UserInformationsManagement.VALIDATE_ACCOUNT_CREATION_BUTTON_NAME);
 					button4Ok.addActionListener(new Button4Listener());
 					
 					
@@ -174,30 +174,37 @@ public class AccountCreation extends JDialog
 			//action si clic sur bouton ok
 			
 			if (textFieldNom.getText().length() == 0 ) // il manque le nom
-			JOptionPane.showMessageDialog(null, "Veuillez spécifier le nom", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.LASTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.LASTNAME), JOptionPane.ERROR_MESSAGE);
+			else if(FieldVerifier.verifyName(textFieldNom.getText()))
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.LASTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.LASTNAME), JOptionPane.ERROR_MESSAGE);
 			
 			else if (textFieldPrenom.getText().length() == 0) //il manque le prenom
-				JOptionPane.showMessageDialog(null, "Veuillez spécifier le prénom", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.FIRSTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.FIRSTNAME), JOptionPane.ERROR_MESSAGE);
+			else if(FieldVerifier.verifyName(textFieldPrenom.getText()))
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.FIRSTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.FIRSTNAME), JOptionPane.ERROR_MESSAGE);
 			
 			
 			else if(textFieldMail.getText().length() == 0) // il manque le mail
-				JOptionPane.showMessageDialog(null, "Veuillez spécifier une adresse mail", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.EMAIL_ADDRESS), CommonErrorMessages.getFieldErrorTitle(Fields.EMAIL_ADDRESS), JOptionPane.ERROR_MESSAGE);
+			else if(FieldVerifier.verifyEMailAddress(textFieldMail.getText()))
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.EMAIL_ADDRESS), CommonErrorMessages.getFieldErrorTitle(Fields.EMAIL_ADDRESS), JOptionPane.ERROR_MESSAGE);
 			
 			else if(textFieldPseudo.getText().length() == 0) // il manque le pseudo
-				JOptionPane.showMessageDialog(null, "Veuillez rentrer un pseudo", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.PSEUDO), CommonErrorMessages.getFieldErrorTitle(Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
+			else if(FieldVerifier.verifyName(textFieldPseudo.getText()))
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PSEUDO), CommonErrorMessages.getFieldErrorTitle(Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
+				
 			
 			else if(passwordField2.getPassword().length == 0)	//il manque mdp1
-				JOptionPane.showMessageDialog(null, "Veuillez rentrer un mot de passe", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.PASSWORD), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
+			else if(FieldVerifier.verifyPassword(new String(passwordField2.getPassword())))
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PASSWORD), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
 			
 			else if (passwordField3.getPassword().length == 0) //il manque mdp2
-				JOptionPane.showMessageDialog(null, "Veuillez confirmer votre mot de passe", "Erreur", JOptionPane.ERROR_MESSAGE);
-			
+				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.PASSWORD_CONFIRMATION), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD_CONFIRMATION), JOptionPane.ERROR_MESSAGE);
 			
 			else if (!(new String(passwordField3.getPassword()).equals(new String(passwordField2.getPassword())))) // les mdp ne sont pas identiques
-				JOptionPane.showMessageDialog(null, "Les mots de passes ne sont pas identiques", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(AccountCreation.this, UserInformationsManagement.PASSWORD_AND_CONFIRMATION_NOT_EQUAL_MESSAGE, CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD_CONFIRMATION), JOptionPane.ERROR_MESSAGE);
 				
 			else	{ //creation du compte
 				
@@ -216,21 +223,21 @@ public class AccountCreation extends JDialog
 					{
 						case IllegalFieldException.PSEUDO :
 							if(e1.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-								JOptionPane.showMessageDialog(AccountCreation.this, "The pseudo \"" + account.getPseudo() + "\" is already used.", "Error on field pseudo", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(AccountCreation.this, UserInformationsManagement.PSEUDO_ALREADY_USED_MESSAGE, CommonErrorMessages.getFieldErrorTitle(Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
 							else
-								JOptionPane.showMessageDialog(AccountCreation.this, "The pseudo is incorrect.", "Error on field ", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PSEUDO), CommonErrorMessages.getFieldErrorTitle(Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
 						break;
 						case IllegalFieldException.FIRSTNAME :
-							JOptionPane.showMessageDialog(AccountCreation.this, "The firstname is incorrect.", "Error on field firstname", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.FIRSTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.FIRSTNAME), JOptionPane.ERROR_MESSAGE);
 						break;
 						case IllegalFieldException.LASTNAME :
-							JOptionPane.showMessageDialog(AccountCreation.this, "The lastname is incorrect.", "Error on field lastname", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.LASTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.LASTNAME), JOptionPane.ERROR_MESSAGE);
 						break;
 						case IllegalFieldException.EMAIL_ADDRESS :
-							JOptionPane.showMessageDialog(AccountCreation.this, "The email address is incorrect.", "Error on field email address", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.EMAIL_ADDRESS), CommonErrorMessages.getFieldErrorTitle(Fields.EMAIL_ADDRESS), JOptionPane.ERROR_MESSAGE);
 						break;
 						case IllegalFieldException.PASSWORD :
-							JOptionPane.showMessageDialog(AccountCreation.this, "The password is incorrect. It must contains 6 characters or more.", "Error on field password", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PASSWORD), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
 						break;
 					}
 					
@@ -238,7 +245,7 @@ public class AccountCreation extends JDialog
 				} catch (NetworkServiceException e1) {
 					// TODO Auto-generated catch block
 			
-					JOptionPane.showMessageDialog(null, "A network error has occured. The account is not created.", "Network error.", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				} 
 				
 			}

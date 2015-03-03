@@ -1,12 +1,19 @@
 package gui.infoperso;
 
+import data.Account;
+import engine.NetworkServiceProvider;
+import exceptions.NetworkServiceException;
+import exceptions.NotAuthenticatedException;
+import gui.Constants.CommonErrorMessages;
+import gui.Constants.Fields;
+import gui.Constants.UserInformationsManagement;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.GroupLayout;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,12 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import data.Account;
-import engine.NetworkServiceProvider;
-import exceptions.NetworkServiceException;
-import exceptions.NotAuthenticatedException;
-
 
 public class InfoPerso extends JPanel {
 	
@@ -59,15 +60,15 @@ public class InfoPerso extends JPanel {
 		
 		//==== label======
 		
-		labelPseudo.setText("Pseudo");
-		labelPrenom.setText("Prenom");
-		labelNom.setText("Nom");
-		labelMail.setText("Mail");
-		labelMdp.setText("Mot de passe");
-		labelNombreDePuces.setText("Nombre de puces");
-		labelNombreDeProfils.setText("Nombre de profils");
-		labelNombreDePucesInfo.setText("5");
-		labelNombreDeProfilsInfo.setText("2");
+		labelPseudo.setText(Fields.PSEUDO);
+		labelPrenom.setText(Fields.FIRSTNAME);
+		labelNom.setText(Fields.LASTNAME);
+		labelMail.setText(Fields.EMAIL_ADDRESS);
+		labelMdp.setText(Fields.PASSWORD);
+		labelNombreDePuces.setText(UserInformationsManagement.TAGS_NUMBER_LABEL);
+		labelNombreDeProfils.setText(UserInformationsManagement.PROFILES_NUMBER_LABEL);
+		labelNombreDePucesInfo.setText("");
+		labelNombreDeProfilsInfo.setText("");
 		
 		Dimension maxDimension = new Dimension(2000, 20);
 		// textfield
@@ -95,7 +96,7 @@ public class InfoPerso extends JPanel {
 		//=====buttonModifier=====
 		
 		buttonModifier = new JButton();
-		buttonModifier.setText("Modifier");
+		buttonModifier.setText(UserInformationsManagement.MODIFY_BUTTON_NAME);
 		buttonModifier.addActionListener(new ButtonModifierListener());
 		
 		
@@ -187,14 +188,14 @@ public class InfoPerso extends JPanel {
 		  
 		  //action si on clic sur bouton modifier 
 
-			 ModifierInfo modifierInfoFenetre = new ModifierInfo(frameContainer, "Modifier Informations Personnelles");
+			 ModifierInfo modifierInfoFenetre = new ModifierInfo(frameContainer, UserInformationsManagement.ACCOUNT_MODIFICATION_WINDOW_TITLE);
 		     try {
 				modifierInfoFenetre.showEditor();
 				reloadDisplayedInformations();
 			} catch (NotAuthenticatedException e1) {
-				JOptionPane.showMessageDialog(frameContainer, "An abnormal error has occured. Please restart the application to try to solve the problem.", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frameContainer, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 			} catch (NetworkServiceException e1) {
-				JOptionPane.showMessageDialog(frameContainer, "An network error has occured. Please restart the application to try to solve the problem.", "Network error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frameContainer, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 			}
 			
 	        }

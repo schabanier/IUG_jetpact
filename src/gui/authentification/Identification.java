@@ -18,6 +18,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import engine.NetworkServiceProvider;
 import exceptions.AccountNotFoundException;
 import exceptions.NetworkServiceException;
+import gui.Constants;
 import gui.MainFrame;
 
 public class Identification extends JPanel
@@ -114,23 +115,23 @@ public class Identification extends JPanel
 			panel1.setVisible(true);
 
 			//---- label3 ----
-			labelPseudo.setText("Pseudo:");
+			labelPseudo.setText(Constants.Fields.PSEUDO);
 			panel1.add(labelPseudo, CC.xywh(3, 5, 5, 2));
 			panel1.add(textFieldPseudo, CC.xy(9, 5));
 
 			//---- label4 ----
-			labelMdp.setText("Mot de passe:");
+			labelMdp.setText(Constants.Fields.PASSWORD);
 			panel1.add(labelMdp, CC.xy(3, 9));
 			panel1.add(passwordField1, CC.xy(9, 9));
 
 			//---- button1 ----
-			buttonCreerCompte.setText("Cr\u00e9er un compte");
+			buttonCreerCompte.setText(Constants.Authentication.CREATE_ACCOUNT_BUTTON_NAME);
 			panel1.add(buttonCreerCompte, CC.xy(3, 15));
 
 			buttonCreerCompte.addActionListener(new Button1Listener(frameContainer));
 
 			//---- button2 ----
-			buttonConnexion.setText("Connexion");
+			buttonConnexion.setText(Constants.Authentication.DO_AUTHENTICATE_BUTTON_NAME);
 			panel1.add(buttonConnexion, CC.xy(9, 15));
 
 			buttonConnexion.addActionListener(new Button2Listener());
@@ -154,7 +155,7 @@ public class Identification extends JPanel
 
 			// action si clic sur bouton "creer compte"
 
-			AccountCreation accountCreationFenetre = new AccountCreation(frameContainer, "Creer compte");
+			AccountCreation accountCreationFenetre = new AccountCreation(frameContainer, Constants.UserInformationsManagement.ACCOUNT_CREATION_WINDOW_TITLE);
 			accountCreationFenetre.setVisible(true);
 
 
@@ -170,10 +171,10 @@ public class Identification extends JPanel
 			String password = new String(passwordField1.getPassword());
 			
 			if(pseudo.length() == 0) // il manque le pseudo
-				JOptionPane.showMessageDialog(null, "Veuillez rentrer votre pseudo.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.getEmptyFieldErrorMessage(Constants.Fields.PSEUDO), Constants.CommonErrorMessages.getFieldErrorTitle(Constants.Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
 			
 			else if(password.length() == 0)	//il manque mdp1
-				JOptionPane.showMessageDialog(null, "Veuillez rentrer votre mot de passe", "Erreur", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.getEmptyFieldErrorMessage(Constants.Fields.PASSWORD), Constants.CommonErrorMessages.getFieldErrorTitle(Constants.Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
 			
 			else
 			{
@@ -189,13 +190,13 @@ public class Identification extends JPanel
 				} catch (AccountNotFoundException e1) {
 					// TODO Auto-generated catch block
 
-					JOptionPane.showMessageDialog(frameContainer, "Ce compte n'existe pas", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frameContainer, Constants.Authentication.ACCOUNT_NOT_FOUND_MESSAGE, Constants.Authentication.ACCOUNT_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 
 
 				} catch (NetworkServiceException e1) {
 					// TODO Auto-generated catch block
 
-					JOptionPane.showMessageDialog(frameContainer, "Erreur réseau", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

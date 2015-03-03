@@ -1,5 +1,6 @@
 package gui.tagsmanagement;
 
+import gui.Constants.TagsManagement;
 import gui.IconsProvider;
 import gui.MainFrame;
 
@@ -98,39 +99,6 @@ public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 		setMaximumSize(new Dimension(getMaximumSize().width, 35));
 	}
 	
-//	public Component getListCellRendererComponent(JList<? extends Tag> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
-//	{
-//		currentTag = value;
-//		
-//		tagLabel.setText(currentTag.getObjectName());
-//		
-//		if(currentTag.getObjectImageName() != null)
-//		{
-//			
-//			try {
-//				tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(25, 25, Image.SCALE_FAST)));
-//			} catch (IOException e) { // an error occured while reading the image file. the default object image will be displayed.
-//				tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
-//			}
-//		}
-//		else
-//			tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
-//		
-//		if(isSelected)
-//		{
-//			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED), new EmptyBorder(3, 3, 3, 3)));
-//			setOpaque(true);
-//			setBackground(Color.CYAN);
-//		}
-//		else
-//		{
-//			setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(3, 3, 3, 3)));
-//			setOpaque(false);
-//		}
-//		
-//		return this;
-//	}
-	
 	
 	class ActionEditTag implements ActionListener
 	{
@@ -165,7 +133,7 @@ public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED), new EmptyBorder(2, 2, 2, 2)));
 			setOpaque(true);
 			setBackground(Color.RED);
-			int returnValue = JOptionPane.showConfirmDialog(MainFrame.getInstance(), "Do you really want to remove the selected tag ?", "Remove confirmation", JOptionPane.YES_NO_OPTION);
+			int returnValue = JOptionPane.showConfirmDialog(MainFrame.getInstance(), TagsManagement.CONFIRM_TAG_DELETION_MESSAGE, TagsManagement.CONFIRM_TAG_DELETION_TITLE, JOptionPane.YES_NO_OPTION);
 			
 			setSelected(isSelected);
 			if(returnValue == JOptionPane.YES_OPTION)
