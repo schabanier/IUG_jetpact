@@ -30,7 +30,7 @@ public class NetworkService implements NetworkServiceInterface {
 	
 	@Override
 	public void initNetworkService() throws NetworkServiceException {
-		adressHost = "local:8080"; //pour tests Henri : localhost:8080
+		adressHost = "92.222.33.38:8080/app_server/ns";
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class NetworkService implements NetworkServiceInterface {
 		/*  adapter au serveur choisi */
 		URL registerURL;
 		try {
-			registerURL = new URL("http://"+adressHost+"/ns/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&first_name="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getEMailAddress());
+			registerURL = new URL("http://"+adressHost+"/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&first_name="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getEMailAddress());
 		// http://localhost:8080/app_server/ns/doregister?pseudo=pqrs&password=abc&first_name=xyz&last_name=cdf&email=hij
 		
 			String reponse = HTTPLoader.getTextFile(registerURL);
@@ -64,7 +64,7 @@ public class NetworkService implements NetworkServiceInterface {
 		URL loginURL;
 		try {
 			// http://localhost:8080/app_server/ns/dologin?pseudo=abc&password=xyz
-			loginURL = new URL("http://"+adressHost+"/ns/dologin?e="+pseudo+"&password="+password);
+			loginURL = new URL("http://"+adressHost+"/dologin?pseudo="+pseudo+"&password="+password);
 			String reponse = HTTPLoader.getTextFile(loginURL);
 			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 			if ((boolean) obj.get("status")) {
@@ -92,7 +92,7 @@ public class NetworkService implements NetworkServiceInterface {
 		URL loginURL;
 		try {
 			// http://localhost:8080/app_server/ns/dologin?pseudo=abc&password=xyz
-			loginURL = new URL("http://"+adressHost+"/ns/dologin?e="+userAccount.getPseudo()+"&password="+userPassword);
+			loginURL = new URL("http://"+adressHost+"/dologin?e="+userAccount.getPseudo()+"&password="+userPassword);
 			String reponse = HTTPLoader.getTextFile(loginURL);
 			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 			if ((boolean) obj.get("status")) {
@@ -192,29 +192,6 @@ public class NetworkService implements NetworkServiceInterface {
 	}
 
 	@Override
-	public Account modifyAccount(String newPseudo, String newPassword, String newFirstName, String newLastName, String newEMailAdress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-		
-		URL modifyAccountURL;
-		try {
-			// http://localhost:8080/app_server/modifyAccount?pseudo=abc&password=xyz&newPseudo=abc&newPassword&newFirstName=abc&newLastName=abc&newEMailAdress=abc
-			modifyAccountURL = new URL("http://"+adressHost+"/modifyAccount?pseudo="+userAccount.getPseudo()+"&password="+userPassword+"&newPseudo="+newPseudo+"&newPassword="+newPassword+"&newFirstName="+newFirstName+"&newLastName="+newLastName+"&newEMailAdress="+newEMailAdress);
-			String reponse = HTTPLoader.getTextFile(modifyAccountURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-			if ((boolean) obj.get("status")) {
-				userAccount = new Account((String)obj.get("pseudo"), (String)obj.get("first_name"), (String)obj.get("last_name"), (String)obj.get("email"));
-				userPassword=newPassword;
-			}else{
-				System.out.println("Error occured");
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		return userAccount;
-	}
-
-	@Override
 	public List<Tag> getTags() throws NotAuthenticatedException,
 			NetworkServiceException {
 		
@@ -279,5 +256,47 @@ public class NetworkService implements NetworkServiceInterface {
 		return null;
 	}
 
+
+	@Override
+	public void modifyEMailAddress(String newEMailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {			
+		URL modifyEMailAddressURL;
+		try {
+			// http://localhost:8080/app_server/modifyEMailAddress?pseudo=abc&password=xyz&newEMailAdress=abc
+			modifyEMailAddressURL = new URL("http://"+adressHost+"/modifyEMailAddress?pseudo="+userAccount.getPseudo()+"&password="+userPassword+"&newEMailAddress="+newEMailAddress);
+			String reponse = HTTPLoader.getTextFile(modifyEMailAddressURL);
+			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
+			if ((boolean) obj.get("status")) {
+				userAccount.setMailAddress(newEMailAddress);
+			} else {
+				System.out.println("Error occured");
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+
+	@Override
+	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {			
+		URL modifyPasswordURL;
+		try {
+			// http://localhost:8080/app_server/modifyPassword?pseudo=abc&password=xyz&newPassword=abc
+			modifyPasswordURL = new URL("http://"+adressHost+"/modifyPassword?pseudo="+userAccount.getPseudo()+"&password="+userPassword+"&newPassword="+newPassword);
+			String reponse = HTTPLoader.getTextFile(modifyPasswordURL);
+			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
+			if ((boolean) obj.get("status")) {
+				userPassword = newPassword;
+			} else {
+				System.out.println("Error occured");
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 }
+	
 
