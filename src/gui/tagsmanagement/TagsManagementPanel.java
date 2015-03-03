@@ -1,6 +1,9 @@
 package gui.tagsmanagement;
 
 import gui.Constants;
+import gui.Constants.CommonErrorMessages;
+import gui.Constants.Fields;
+import gui.Constants.TagsManagement;
 import gui.IconsProvider;
 import gui.MainFrame;
 
@@ -82,12 +85,6 @@ public class TagsManagementPanel extends JPanel
 		tagsListLabel = new JLabel("X tags linked with account");
 		tagsListLabel.setDoubleBuffered(true);
 		
-//		JList<Tag> tagsList = new JList<>();
-//		tagsListModel = new DefaultListModel<Tag>();
-//		tagsList.setModel(tagsListModel);
-//		tagsList.setDoubleBuffered(true);
-//		tagsList.setCellRenderer(new TagRenderer());
-		
 		selectedTag = null;
 		tagsNumber = 0;
 		
@@ -133,7 +130,7 @@ public class TagsManagementPanel extends JPanel
 		tagIdLabel = new JLabel();
 		tagIdLabel.setDoubleBuffered(true);
 		tagIdLabel.setAlignmentX(CENTER_ALIGNMENT);
-		tagIdLabel.setToolTipText("Tag identifier.");
+		tagIdLabel.setToolTipText(Fields.TAG_UID);
 		
 		JList<String> profilesList = new JList<>();
 		profilesListModel = new DefaultListModel<>();
@@ -150,7 +147,7 @@ public class TagsManagementPanel extends JPanel
 		
 		JScrollPane scrollPane = new JScrollPane(profilesList, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setDoubleBuffered(true);
-		scrollPane.setBorder(new TitledBorder("linked profiles"));
+		scrollPane.setBorder(new TitledBorder(TagsManagement.LINKED_PROFILES_LIST_TITLE));
 		
 		tagInformationsPanel.add(objectImage);
 		tagInformationsPanel.add(Box.createVerticalStrut(15));
@@ -205,7 +202,7 @@ public class TagsManagementPanel extends JPanel
 		tagsListPanel.repaint();
 		
 		tagsNumber++;
-		tagsListLabel.setText(tagsNumber + " tags");
+		tagsListLabel.setText(TagsManagement.getTagsNumberTitle(tagsNumber));
 	}
 	
 	class tagsListMouseListener extends MouseAdapter implements MouseListener
@@ -320,18 +317,18 @@ public class TagsManagementPanel extends JPanel
 			tagsListPanel.remove(renderer);
 			tagsNumber--;
 
-			tagsListLabel.setText(tagsNumber + " tags");
+			tagsListLabel.setText(TagsManagement.getTagsNumberTitle(tagsNumber));
 			tagsListPanel.repaint(); // To refresh the graphical interface.
 		} catch (IllegalFieldException e) { // Abnormal exception in this case. Will not occur.
 			if(e.getFieldId() == IllegalFieldException.TAG_UID && e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
-				JOptionPane.showMessageDialog(MainFrame.getInstance(), "Unable to modify : this tag has been removed by an user on another application instance.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(MainFrame.getInstance(), TagsManagement.DELETION_TAG_NOT_FOUND_MESSAGE, TagsManagement.DELETION_TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 			else
-				JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please restart the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(MainFrame.getInstance(), CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NotAuthenticatedException e) { // Abnormal exception in this case. Will not occur.
-			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A abnormal error has occured. Please restart the application to try to solve this problem", "Abnormal error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NetworkServiceException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(MainFrame.getInstance(), "A network error has occured.", "Network error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
