@@ -5,4 +5,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="test"></style>
+
+    <style name="testc" parent="test">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:choiceMode">multipleChoice</item>
+    </style>
+
 </resources>

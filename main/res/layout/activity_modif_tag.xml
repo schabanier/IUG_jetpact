@@ -6,7 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".ModifTagActivity"
+    tools:context=".activities.ModifTagActivity"
     android:background="#ff24088f"
     android:id="@+id/modifTag">
 
@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Modifier"
-        android:onClick="goToFiche" />
+        android:onClick="goToFiche"
+        android:background="#ff5e6eff"
+        android:textColor="#ffffffff" />
 
 </LinearLayout>

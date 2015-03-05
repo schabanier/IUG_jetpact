@@ -54,23 +54,23 @@
         </activity>
         <activity
             android:name="com.stuffinder.activities.AjoutTagActivity"
-            android:label="@string/title_activity_info_perso" >
+            android:label="@string/title_activity_ajout_tag" >
         </activity>
         <activity
             android:name="com.stuffinder.activities.InfoTagActivity"
-            android:label="@string/title_activity_info_perso" >
+            android:label="@string/title_activity_info_tag" >
         </activity>
         <activity
             android:name="com.stuffinder.activities.ModifTagActivity"
-            android:label="@string/title_activity_info_perso" >
+            android:label="@string/title_activity_modif_tag" >
         </activity>
         <activity
             android:name="com.stuffinder.activities.SupprTagActivity"
-            android:label="@string/title_activity_info_perso" >
+            android:label="@string/title_activity_suppr_tag" >
         </activity>
         <activity
             android:name="com.stuffinder.activities.TagsActivity"
-            android:label="@string/title_activity_info_perso" >
+            android:label="@string/title_activity_tags" >
         </activity>
     </application>
 

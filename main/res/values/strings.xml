@@ -14,5 +14,10 @@
     <string name="title_activity_parametres">ParametresActivity</string>
     <string name="title_activity_configuration">ConfigurationActivity</string>
     <string name="title_activity_info_perso">InfoPersoActivity</string>
+    <string name="title_activity_ajout_tag">AjoutTagActivity</string>
+    <string name="title_activity_info_tag">InfoTagActivity</string>
+    <string name="title_activity_modif_tag">ModifTagActivity</string>
+    <string name="title_activity_suppr_tag">SupprTagActivity</string>
+    <string name="title_activity_tags">TagsActivity</string>
 
 </resources>
