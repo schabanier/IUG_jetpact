@@ -84,4 +84,9 @@ public class Tag
 		return (!(obj instanceof Tag)) ? false : 
 					uid.equals(((Tag) obj).getUid());
 	}
+
+    public String toString()
+    {
+        return objectName;
+    }
 }

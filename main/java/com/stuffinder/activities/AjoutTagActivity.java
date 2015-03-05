@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
@@ -42,44 +41,41 @@ public class AjoutTagActivity extends Activity {
         String image = EditTextImage.getText().toString();
         String identifiant = EditTextId.getText().toString();
 
+        if(nom.length() == 0)
+            Toast.makeText(AjoutTagActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
+        else if(identifiant.length() == 0)
+            Toast.makeText(AjoutTagActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
+        else
+        {
+            try {
 
-        try {
-
-            if (!FieldVerifier.verifyTagName(nom)) {
-                throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, "remplir nom");
-            }                                                                            /* Vérification de la validité des champs*/
-            if (!FieldVerifier.verifyTagUID(identifiant)) {
-                throw new IllegalFieldException(IllegalFieldException.TAG_UID, "remplir prenom");
+                Tag tag = new Tag(identifiant, nom, image);
+                NetworkServiceProvider.getNetworkService().addTag(tag) ;
+                startActivity(intent);
             }
-
-
-            Tag tag = new Tag(identifiant, nom, image);
-            NetworkServiceProvider.getNetworkService().addTag(tag) ;
-
-
-            startActivity(intent);  }
                                                                          /* Passer à l'activité Home*/
-        catch (NullPointerException e) {}
+            catch (NullPointerException e) {}
 
-        catch (IllegalFieldException e) {
-            switch (e.getFieldId()) {
-                case IllegalFieldException.TAG_OBJECT_NAME:
-                    Toast.makeText(AjoutTagActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
-                    break;
-                case IllegalFieldException.TAG_OBJECT_IMAGE:
-                    Toast.makeText(AjoutTagActivity.this, "Entrer image", Toast.LENGTH_LONG).show();
-                case IllegalFieldException.TAG_UID:
-                    Toast.makeText(AjoutTagActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
-                    break;
+            catch (IllegalFieldException e) {
+                switch (e.getFieldId()) {
+                    case IllegalFieldException.TAG_OBJECT_NAME:
+                        Toast.makeText(AjoutTagActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
+                        break;
+                    case IllegalFieldException.TAG_OBJECT_IMAGE:
+                        Toast.makeText(AjoutTagActivity.this, "Entrer image", Toast.LENGTH_LONG).show();
+                    case IllegalFieldException.TAG_UID:
+                        Toast.makeText(AjoutTagActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
+                        break;
+                }
             }
-        }
 
-        catch (NotAuthenticatedException e) {
-            e.printStackTrace();
-        }
+            catch (NotAuthenticatedException e) {
+                e.printStackTrace();
+            }
 
-        catch (NetworkServiceException e) {
-            e.printStackTrace();
+            catch (NetworkServiceException e) {
+                e.printStackTrace();
+            }
         }
 
 

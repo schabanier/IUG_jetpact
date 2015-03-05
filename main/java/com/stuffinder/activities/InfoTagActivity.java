@@ -7,14 +7,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
+import com.stuffinder.exceptions.NotAuthenticatedException;
 
 public class InfoTagActivity extends Activity {
 
     EditText EditTextNom ;
     EditText EditTextImage ;
-    EditText EditTextId ;
+
+    private static Tag tagModif;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,15 +31,26 @@ public class InfoTagActivity extends Activity {
 
         EditTextNom = (EditText)findViewById(R.id.editTextNom) ;
         EditTextImage = (EditText)findViewById(R.id.editTextImage) ;
-        EditTextId = (EditText)findViewById(R.id.editTextId) ;
 
 
+            EditTextNom.setText(tagModif.getObjectName(), TextView.BufferType.EDITABLE);
+            EditTextImage.setText(tagModif.getObjectImageName(), TextView.BufferType.EDITABLE);
 
     }
 
     public void creerCompte (View view) {
-        Intent intent = new Intent (InfoTagActivity.this, TagsActivity.class);
-        startActivity(intent);
+
+        try {
+            NetworkServiceProvider.getNetworkService().modifyObjectName(tagModif, EditTextNom.getText().toString()) ;
+            NetworkServiceProvider.getNetworkService().modifyObjectImage(tagModif, EditTextImage.getText().toString()) ;
+            Intent intent = new Intent (InfoTagActivity.this, TagsActivity.class);
+            startActivity(intent);
+        } catch (NotAuthenticatedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -57,5 +76,10 @@ public class InfoTagActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public static void ChangeTag(Tag tag)
+    {
+        tagModif = tag ;
+
+    }
 
 }

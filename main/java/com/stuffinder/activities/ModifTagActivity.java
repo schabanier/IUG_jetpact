@@ -10,18 +10,34 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Tag;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ModifTagActivity extends Activity {
 
     private ListView mListModif = null;
 
     private Button mSend = null;
+    private static List<Tag> arrayAdapter = new ArrayList<>();
 
-    private String[] mModif = {"Clefs", "TvCommande", "Lunettes", "Portefeuile"};
+
 
     public void goToFiche(View view){
-        Intent intent = new Intent(ModifTagActivity.this, InfoTagActivity.class);
-        startActivity(intent);}
+        //Intent intent = new Intent(ModifTagActivity.this, InfoTagActivity.class);
+        //startActivity(intent);
+
+        int rang = mListModif.getCheckedItemPosition() ;
+        Tag tag = arrayAdapter.get(rang);
+
+            InfoTagActivity.ChangeTag(tag);
+            Intent intent = new Intent (ModifTagActivity.this, InfoTagActivity.class);
+            startActivity(intent);
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,9 +48,27 @@ public class ModifTagActivity extends Activity {
 
         mSend = (Button) findViewById(R.id.send);
 
-        mListModif.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, mModif));
+        ArrayAdapter<Tag> tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_single_choice);
+        tagArrayAdapter.addAll(arrayAdapter);
+
+        mListModif.setAdapter(tagArrayAdapter);
 
 
 
+
+    }
+
+    public static void ChangeTagsList(List<Tag> list)
+    {
+        arrayAdapter.clear();
+
+        arrayAdapter.addAll(list);
+
+        Collections.sort(arrayAdapter, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag lhs, Tag rhs) {
+                return lhs.getObjectName().compareTo(rhs.getObjectName());
+            }
+        });
     }
 }

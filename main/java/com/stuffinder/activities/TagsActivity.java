@@ -8,6 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
+import com.stuffinder.exceptions.NotAuthenticatedException;
+
+import java.util.List;
 
 public class TagsActivity extends Activity {
 
@@ -21,8 +27,18 @@ public class TagsActivity extends Activity {
         startActivity(intentAjout);}
 
     public void goToModif (View view) {
-        Intent intentModif = new Intent ( TagsActivity.this, ModifTagActivity.class);
-        startActivity(intentModif);
+        try {
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+
+            ModifTagActivity.ChangeTagsList(list);
+            Intent intentModif = new Intent ( TagsActivity.this, ModifTagActivity.class);
+            startActivity(intentModif);
+        } catch (NotAuthenticatedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void goToSuppr (View view) {

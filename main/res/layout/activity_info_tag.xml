@@ -19,18 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/editTextId"
-        android:layout_marginTop="190dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"
-        android:editable="true"
-        android:background="#ff5e6eff"
-        android:visibility="visible" />
+
 
     <Button
         style="@android:style/ButtonBar"
@@ -44,14 +33,7 @@
         android:onClick="creerCompte"
         android:layout_alignRight="@+id/editTextId" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ID"
-        android:id="@+id/Identifiant"
-        android:textColor="#ffffffff"
-        android:textSize="18dp"
-        android:layout_alignTop="@+id/editTextId" />
+
 
     <EditText
         android:layout_width="210dp"
@@ -62,14 +44,14 @@
         android:editable="true"
         android:background="#ff5e6eff"
         android:visibility="visible"
-        android:layout_alignEnd="@+id/editTextId"
-        android:layout_marginBottom="49dp"
-        android:layout_marginTop="130dp" />
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/editTextNom"
+        android:layout_alignStart="@+id/editTextNom" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Commentaires"
+        android:text="Image"
         android:id="@+id/textView3"
         android:textColor="#ffffffff"
         android:textSize="18dp"
@@ -98,7 +80,6 @@
         android:textColor="#ffffffff"
         android:textSize="18dp"
         android:layout_alignTop="@+id/editTextNom"
-        android:layout_toStartOf="@+id/editTextNom"
-        android:layout_alignLeft="@+id/Identifiant" />
+        android:layout_alignEnd="@+id/textView3" />
 
 </RelativeLayout>
