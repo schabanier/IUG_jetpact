@@ -27,8 +27,6 @@ public class ModifTagActivity extends Activity {
 
 
     public void goToFiche(View view){
-        //Intent intent = new Intent(ModifTagActivity.this, InfoTagActivity.class);
-        //startActivity(intent);
 
         int rang = mListModif.getCheckedItemPosition() ;
         Tag tag = arrayAdapter.get(rang);

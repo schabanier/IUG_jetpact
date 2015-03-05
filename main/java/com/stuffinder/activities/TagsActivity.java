@@ -31,7 +31,7 @@ public class TagsActivity extends Activity {
             List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
             ModifTagActivity.ChangeTagsList(list);
-            Intent intentModif = new Intent ( TagsActivity.this, ModifTagActivity.class);
+            Intent intentModif = new Intent (TagsActivity.this, ModifTagActivity.class);
             startActivity(intentModif);
         } catch (NotAuthenticatedException e) {
             e.printStackTrace();
@@ -42,8 +42,18 @@ public class TagsActivity extends Activity {
     }
 
     public void goToSuppr (View view) {
-        Intent intentSuppr = new Intent ( TagsActivity.this, SupprTagActivity.class);
-        startActivity(intentSuppr);
+
+        try {
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+
+            SupprTagActivity.ChangeTagsList(list);
+            Intent intentSuppr = new Intent (TagsActivity.this, SupprTagActivity.class);
+            startActivity(intentSuppr);
+        } catch (NotAuthenticatedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
+        }
     }
 
 
