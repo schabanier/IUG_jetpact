@@ -1,31 +1,29 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.widget.TextView.BufferType;
-import android.content.Intent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import com.stuffinder.R;
+
 import com.stuffinder.data.Account;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
 
 public class InfoPersoActivity extends Activity {
 
 
-
-    EditText editTextNom ;
-    EditText editTextPrenom;
-    EditText editTextIdentifiant;
-    EditText editTextEmail ;
-
-
+    TextView nomTextView ;
+    TextView prenomTextView ;
+    TextView idTextView ;
+    EditText editTextMail ;
+    EditText editTextModp ;
 
 
     @Override
@@ -33,30 +31,41 @@ public class InfoPersoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_perso);
 
-        editTextNom= (EditText)findViewById(R.id.editTextNom);
-        editTextPrenom= (EditText)findViewById(R.id.editTextPrenom);
-        editTextIdentifiant= (EditText)findViewById(R.id.editTextIdentifiant1);
-        editTextEmail= (EditText)findViewById(R.id.editTextEmail);
+        nomTextView = (TextView)findViewById(R.id.textViewNomVue);
+        prenomTextView = (TextView)findViewById(R.id.textViewPrenomVue);
+        idTextView = (TextView)findViewById(R.id.textViewIdVue);
+        editTextMail= (EditText)findViewById(R.id.editTextMail);
+        editTextModp= (EditText)findViewById(R.id.editTextModp);
 
 
+        Account account = null;
         try {
-            Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
-            editTextNom.setText(account.getLastName(), BufferType.EDITABLE);
-            editTextPrenom.setText(account.getFirstName(), BufferType.EDITABLE);
-            editTextEmail.setText(account.getEMailAddress(), BufferType.EDITABLE);
-            editTextIdentifiant.setText(account.getPseudo(), BufferType.EDITABLE);
-
-
+            account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
+            nomTextView.setText(account.getLastName());
+            prenomTextView.setText(account.getFirstName());
+            idTextView.setText(account.getPseudo());
+            editTextMail.setText(account.getEMailAddress(), TextView.BufferType.EDITABLE);
         } catch (NotAuthenticatedException e) {
-            Toast.makeText(InfoPersoActivity.this, "Nous n'avons pas réussi à récupérer les informations de votre compte, veuillez réassyer", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
+
     }
 
 
 
     public void retourConfiguration(View view) {
-        Intent intent = new Intent ( InfoPersoActivity.this,ConfigurationActivity.class);
-        startActivity(intent);
+
+        try {
+            NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextMail.getText().toString());
+            NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextModp.getText().toString());
+            Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
+            startActivity(intent);
+        } catch (NotAuthenticatedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

@@ -9,7 +9,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 
-import com.stuffinder.R;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
