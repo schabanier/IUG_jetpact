@@ -63,5 +63,16 @@
         android:layout_marginTop="320dp"
         android:onClick="goToConfiguration"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choisissez un mode"
+        android:id="@+id/textView14"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:textColor="#ffffffff"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

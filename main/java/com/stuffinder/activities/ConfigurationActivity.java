@@ -28,6 +28,10 @@ public class ConfigurationActivity extends Activity {
         startActivity(intentPuces);
     }
 
+    public void retour1 (View view) {
+        Intent intentRetour = new Intent ( ConfigurationActivity.this, HomeActivity.class);
+        startActivity(intentRetour);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

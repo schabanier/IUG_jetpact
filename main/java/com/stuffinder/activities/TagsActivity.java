@@ -41,6 +41,10 @@ public class TagsActivity extends Activity {
 
     }
 
+    public void retour6 (View view) {
+        Intent intentRetour = new Intent (TagsActivity.this, ConfigurationActivity.class);
+        startActivity(intentRetour); }
+
     public void goToSuppr (View view) {
 
         try {
@@ -60,7 +64,7 @@ public class TagsActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_configuration, menu);
+        getMenuInflater().inflate(R.menu.menu_tags, menu);
         return true;
     }
 

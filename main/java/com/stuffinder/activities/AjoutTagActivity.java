@@ -32,6 +32,11 @@ public class AjoutTagActivity extends Activity {
         EditTextId = (EditText)findViewById(R.id.editTextId) ;
     }
 
+    public void retour2 (View view) {
+        Intent intentRetour = new Intent (AjoutTagActivity.this, TagsActivity.class);
+        startActivity(intentRetour);
+    }
+
     public void creerTag (View view) {
         Intent intent = new Intent (AjoutTagActivity.this, TagsActivity.class);
 

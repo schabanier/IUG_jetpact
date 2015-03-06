@@ -24,7 +24,9 @@ public class ModifTagActivity extends Activity {
     private Button mSend = null;
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
-
+    public void retour3 (View view) {
+        Intent intentRetour = new Intent (ModifTagActivity.this, TagsActivity.class);
+        startActivity(intentRetour); }
 
     public void goToFiche(View view){
 
@@ -50,6 +52,7 @@ public class ModifTagActivity extends Activity {
         tagArrayAdapter.addAll(arrayAdapter);
 
         mListModif.setAdapter(tagArrayAdapter);
+        mListModif.setItemChecked(0, true);
 
 
 

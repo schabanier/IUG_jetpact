@@ -39,6 +39,10 @@ public class InfoTagActivity extends Activity {
 
     }
 
+    public void retour7 (View view) {
+        Intent intentRetour = new Intent (InfoTagActivity.this, ModifTagActivity.class);
+        startActivity(intentRetour); }
+
     public void creerCompte (View view) {
 
         try {

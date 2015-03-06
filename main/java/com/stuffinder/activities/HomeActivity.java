@@ -21,16 +21,16 @@ public class HomeActivity extends Activity {
     }
 
     public void goToInterieur(View view){
-        Intent intent = new Intent( HomeActivity.this, InterieurActivity.class);
-        startActivity(intent);}
+        Intent intentInterieur = new Intent(HomeActivity.this, InterieurActivity.class);
+        startActivity(intentInterieur);}
 
     public void goToExterieur(View view){
-        Intent intent = new Intent( HomeActivity.this, ExterieurActivity.class);
-        startActivity(intent);}
+        Intent intentExt = new Intent(HomeActivity.this, ExterieurActivity.class);
+        startActivity(intentExt);}
 
     public void goToConfiguration(View view){
-        Intent intent = new Intent( HomeActivity.this, ConfigurationActivity.class);
-        startActivity(intent);}
+        Intent intentConf = new Intent(HomeActivity.this, ConfigurationActivity.class);
+        startActivity(intentConf);}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

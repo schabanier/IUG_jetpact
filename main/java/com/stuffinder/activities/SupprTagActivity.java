@@ -29,7 +29,9 @@ public class SupprTagActivity extends Activity {
     private Button mSend = null;
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
-
+    public void retour4 (View view) {
+        Intent intentRetour = new Intent (SupprTagActivity.this, TagsActivity.class);
+        startActivity(intentRetour); }
 
     public void goToTags(View view){
 

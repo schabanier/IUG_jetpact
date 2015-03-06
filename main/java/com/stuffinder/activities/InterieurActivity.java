@@ -8,12 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
-
-import com.stuffinder.data.Account;
+import com.stuffinder.R;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
-import com.stuffinder.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +32,22 @@ public class InterieurActivity extends Activity {
 
 
         try {
-            Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
-            List<Tag> tags = account.getTags();
+            List<Tag> tags = NetworkServiceProvider.getNetworkService().getTags();
             ArrayList<String> liste = new ArrayList<String>();
             int size = tags.size();
 
             for ( int i=0; i<size; i++ ) {
-               String name = tags.get(i).getObjectName();
-               liste.add(name);
+                String name = tags.get(i).getObjectName();
+                liste.add(name);
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.list_content, liste);
             grid.setAdapter(adapter);
+        } catch (NotAuthenticatedException e1) {
+            Toast.makeText(InterieurActivity.this, "Nous n'avons pas réussi à récupérer les informations de votre compte, veuillez réassyer", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e1) {
+            e1.printStackTrace();
         }
-
-        catch ( NotAuthenticatedException e ) {
-            Toast.makeText(InterieurActivity.this, "Nous n'avons pas réussi à récupérer les informations de votre compte, veuillez réassyer",Toast.LENGTH_LONG).show();}
 
 
     }

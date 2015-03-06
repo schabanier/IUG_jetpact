@@ -10,6 +10,20 @@
     android:background="#ff24088f"
     android:id="@+id/supprTag">
 
+    <Button
+        style="@android:style/MediaButton.Previous"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:text="Retour"
+        android:id="@+id/buttonRetour"
+        android:background="#ff24088f"
+        android:textColor="#ffffffff"
+        android:textSize="10dp"
+        android:onClick="retour4"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_alignBottom="@+id/textView" />
+
     <ListView
         android:id="@+id/listSuppr"
         android:layout_width="fill_parent"

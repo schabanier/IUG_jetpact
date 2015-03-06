@@ -52,7 +52,9 @@ public class InfoPersoActivity extends Activity {
 
     }
 
-
+    public void retour5 (View view) {
+        Intent intentRetour = new Intent (InfoPersoActivity.this, ConfigurationActivity.class);
+        startActivity(intentRetour); }
 
     public void retourConfiguration(View view) {
 

@@ -101,4 +101,18 @@
         android:layout_toStartOf="@+id/editTextNom"
         android:layout_alignLeft="@+id/Identifiant" />
 
+    <Button
+        style="@android:style/MediaButton.Previous"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="Retour"
+        android:id="@+id/buttonRetour"
+        android:background="#ff24088f"
+        android:textColor="#ffffffff"
+        android:textSize="10dp"
+        android:onClick="retour2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/textViewModif" />
+
 </RelativeLayout>
