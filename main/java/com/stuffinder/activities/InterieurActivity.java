@@ -1,34 +1,45 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
-import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
 public class InterieurActivity extends Activity {
 
-    GridView grid = null;
+    private ListView mListInt = null;
+    private static List<Tag> arrayAdapter = new ArrayList<>();
+
+    public void retour8 (View view) {
+        Intent intentRetour = new Intent (InterieurActivity.this, HomeActivity.class);
+        startActivity(intentRetour); }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interieur);
 
+        mListInt = (ListView) findViewById(R.id.listInt);
 
-        grid = (GridView)findViewById(R.id.gridView);
+        ArrayAdapter<Tag> tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_single_choice);
+        tagArrayAdapter.addAll(arrayAdapter);
+
+        mListInt.setAdapter(tagArrayAdapter);
+/*
+        GridView grid = (GridView)findViewById(R.id.gridView);
 
 
         try {
@@ -48,10 +59,23 @@ public class InterieurActivity extends Activity {
         } catch (NetworkServiceException e1) {
             e1.printStackTrace();
         }
-
-
+*/
     }
 
+
+    public static void ChangeTagsList(List<Tag> list)
+    {
+        arrayAdapter.clear();
+
+        arrayAdapter.addAll(list);
+
+        Collections.sort(arrayAdapter, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag lhs, Tag rhs) {
+                return lhs.getObjectName().compareTo(rhs.getObjectName());
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

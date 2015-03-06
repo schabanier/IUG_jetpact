@@ -8,6 +8,12 @@ import android.content.Intent;
 import android.view.View;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
+import com.stuffinder.exceptions.NotAuthenticatedException;
+
+import java.util.List;
 
 
 public class HomeActivity extends Activity {
@@ -21,8 +27,20 @@ public class HomeActivity extends Activity {
     }
 
     public void goToInterieur(View view){
-        Intent intentInterieur = new Intent(HomeActivity.this, InterieurActivity.class);
-        startActivity(intentInterieur);}
+
+        try {
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+
+            InterieurActivity.ChangeTagsList(list);
+            Intent intentInt = new Intent (HomeActivity.this, InterieurActivity.class);
+            startActivity(intentInt);
+        } catch (NotAuthenticatedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void goToExterieur(View view){
         Intent intentExt = new Intent(HomeActivity.this, ExterieurActivity.class);
