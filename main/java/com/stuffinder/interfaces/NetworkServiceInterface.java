@@ -1,15 +1,15 @@
 package com.stuffinder.interfaces;
 
-import java.util.List;
-
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.AccountNotFoundException;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
-import com.stuffinder.engine.NetworkServiceProvider;
+
+import java.util.List;
 
 /**
  * This interface makes the link between the network service (in this case, this is the client web service) and the engine of the application.

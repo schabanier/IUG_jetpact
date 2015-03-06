@@ -14,6 +14,7 @@ import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
+import com.stuffinder.R;
 
 public class InfoTagActivity extends Activity {
 
@@ -57,7 +58,7 @@ public class InfoTagActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_configuration, menu);
+        getMenuInflater().inflate(R.menu.menu_info_tag, menu);
         return true;
     }
 

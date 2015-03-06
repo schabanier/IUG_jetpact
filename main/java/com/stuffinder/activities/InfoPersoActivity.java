@@ -14,6 +14,7 @@ import com.stuffinder.data.Account;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
+import com.stuffinder.R;
 
 
 public class InfoPersoActivity extends Activity {
@@ -57,7 +58,7 @@ public class InfoPersoActivity extends Activity {
 
         try {
             NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextMail.getText().toString());
-            NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextModp.getText().toString());
+            NetworkServiceProvider.getNetworkService().modifyPassword(editTextModp.getText().toString());
             Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
             startActivity(intent);
         } catch (NotAuthenticatedException e) {

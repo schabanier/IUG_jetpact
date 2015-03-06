@@ -17,7 +17,7 @@
         android:id="@+id/buttonCreer"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff"
-        android:onClick="creerCompte"
+        android:onClick="retourConfiguration"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
 
@@ -146,7 +146,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editTextMdp"
+        android:id="@+id/editTextModp"
         android:background="#ff5e6eff"
         android:layout_alignTop="@+id/textViewMdp"
         android:layout_alignEnd="@+id/editTextMail" />

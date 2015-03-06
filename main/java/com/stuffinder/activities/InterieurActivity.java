@@ -13,6 +13,7 @@ import com.stuffinder.data.Account;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NotAuthenticatedException;
+import com.stuffinder.R;
 
 import java.util.ArrayList;
 import java.util.List;
