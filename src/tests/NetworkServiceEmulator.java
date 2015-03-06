@@ -35,7 +35,20 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		authenticatedAccount = null;
 		
 		
-		Account testAccount = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
+		Account testAccount0 = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
+		Account testAccount1 = new Account("gdelajungle", "Georges", "Delajungle", "georges.delajungle@gmail.com");
+		// caractère incorrect
+		Account testAccount2 = new Account("jdupon", "Jean", "Dupont", "%@gmail.com");
+		//URL trop longue ?
+		Account testAccount3 = new Account("jdupon", "Jeanaaaaazzzzzzzzzzzzzzzzzeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrttttttttttttttttttyyyyyyyyyyyyyyy", "Dupont", "jean.dupont@gmail.com");
+
+		
+		String password0 = "jduponpwd";
+		// caractère incorrect
+		String password1 = "Jdupon%";
+		// trop facile ?
+		String password2 = "123";
+
 
 		Tag tag1 = new Tag("a1bef83a374", "Home keys");
 		Tag tag2 = new Tag("bd3496e342c", "Car key");
@@ -49,14 +62,14 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		tags.add(tag4);
 		tags.add(tag5);
 
-		testAccount.getTags().add(tag1);
-		testAccount.getTags().add(tag2);
-		testAccount.getTags().add(tag3);
-		testAccount.getTags().add(tag4);
-		testAccount.getTags().add(tag5);
+		testAccount0.getTags().add(tag1);
+		testAccount0.getTags().add(tag2);
+		testAccount0.getTags().add(tag3);
+		testAccount0.getTags().add(tag4);
+		testAccount0.getTags().add(tag5);
 		
 		
-		accounts.add(testAccount);
+		accounts.add(testAccount0);
 		passwords.add("123456");
 	}
 	

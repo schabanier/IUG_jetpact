@@ -2,7 +2,6 @@
 
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -23,6 +22,7 @@ public class NetworkService implements NetworkServiceInterface {
 	private static String adressHost;
 	private static Account userAccount;
 	private static String userPassword;
+	private static ArrayList<Exception> exceptionTable;
 	
 	public NetworkService() {
 		
@@ -31,6 +31,22 @@ public class NetworkService implements NetworkServiceInterface {
 	@Override
 	public void initNetworkService() throws NetworkServiceException {
 		adressHost = "92.222.33.38:8080/app_server/ns";
+		
+		/* S'il y a une erreur côté serveur et base de donnée, le json renvoyé contiendra une key "IntError", 
+		 * qui est l'indice dans ExceptionTable de l'exception concernée. 
+		 * 
+		 * Cette partie requiert d'être mise à jour à chaque modification des Exceptions côté Serveur
+		 */
+		NetworkServiceException e0 = new NetworkServiceException("Wrong combination pseudo/password");
+		NetworkServiceException e1 = new NetworkServiceException("Error with database");
+		NetworkServiceException e2 = new NetworkServiceException("You are already registered");
+		NetworkServiceException e3 = new NetworkServiceException("Special Characters are not allowed in Pseudo and Password");
+		
+		exceptionTable.set(0, e0 );
+		exceptionTable.set(1, e1 );
+		exceptionTable.set(2, e2 );
+		exceptionTable.set(3, e3 );
+
 	}
 
 	@Override
@@ -47,7 +63,12 @@ public class NetworkService implements NetworkServiceInterface {
 			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 		
 			if (!(boolean) obj.get("status")){
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 				
 
@@ -71,7 +92,12 @@ public class NetworkService implements NetworkServiceInterface {
 				userAccount = new Account((String)obj.get("pseudo"), (String)obj.get("first_name"), (String)obj.get("last_name"), (String)obj.get("email"));
 				userPassword = password;
 			}else{
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
@@ -98,7 +124,12 @@ public class NetworkService implements NetworkServiceInterface {
 			if ((boolean) obj.get("status")) {
 				userAccount = new Account((String)obj.get("pseudo"), (String)obj.get("first_name"), (String)obj.get("last_name"), (String)obj.get("email"));
 			}else{
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
@@ -120,7 +151,12 @@ public class NetworkService implements NetworkServiceInterface {
 			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 
 			if (!(boolean) obj.get("status")){
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
@@ -140,7 +176,12 @@ public class NetworkService implements NetworkServiceInterface {
 			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 
 			if (!(boolean) obj.get("status")){
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
@@ -214,7 +255,12 @@ public class NetworkService implements NetworkServiceInterface {
 					ListTag.add(tag);	
 				}
 			}else{
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
@@ -268,7 +314,12 @@ public class NetworkService implements NetworkServiceInterface {
 			if ((boolean) obj.get("status")) {
 				userAccount.setMailAddress(newEMailAddress);
 			} else {
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
@@ -289,7 +340,12 @@ public class NetworkService implements NetworkServiceInterface {
 			if ((boolean) obj.get("status")) {
 				userPassword = newPassword;
 			} else {
-				System.out.println("Error occured");
+				try {
+					throw exceptionTable.get((int) obj.get("IntError"));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("JSONException");
+				}
 			}
 			
 		} catch (MalformedURLException e) {
