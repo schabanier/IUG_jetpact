@@ -26,6 +26,8 @@ public class ReussiteCreationCompteActivity extends Activity {
 
     public void seConnecter ( View view) {
         Intent intent = new Intent ( ReussiteCreationCompteActivity.this, SeConnecterActivity.class);
+
+        finish();
         startActivity(intent);
     }
 

@@ -85,6 +85,7 @@ public class CreerCompteActivity extends Activity {
                 Account account = new Account(identifiant, prenom, nom, email);                            /* Création d'un compte*/
                 NetworkServiceProvider.getNetworkService().createAccount(account, mdp);                                        /*Demande de création de compte au web service */
 
+                finish();
                 startActivity(intentToReussite);
             }
 
