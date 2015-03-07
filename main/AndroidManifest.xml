@@ -37,10 +37,6 @@
             android:label="@string/title_activity_interieur" >
         </activity>
         <activity
-            android:name="com.stuffinder.tests.TestGridView"
-            android:label="@string/title_activity_test_grid_view" >
-        </activity>
-        <activity
             android:name="com.stuffinder.activities.ExterieurActivity"
             android:label="@string/title_activity_exterieur" >
         </activity>
