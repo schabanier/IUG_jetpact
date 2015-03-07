@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -62,16 +63,11 @@ public class SeConnecterActivity extends Activity {
 
 
 
-  public void goToHome() {
-      Intent intentGoToHome = new Intent( SeConnecterActivity.this, HomeActivity.class);
-      startActivity(intentGoToHome);
-      }
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_se_connecter);
 
         editTextIdentifiant = (EditText)findViewById(R.id.editTextIdentifiant1);

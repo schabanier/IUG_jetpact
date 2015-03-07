@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -30,6 +31,8 @@ public class InterieurActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_interieur);
 
         mListInt = (ListView) findViewById(R.id.listInt);
@@ -38,28 +41,6 @@ public class InterieurActivity extends Activity {
         tagArrayAdapter.addAll(arrayAdapter);
 
         mListInt.setAdapter(tagArrayAdapter);
-/*
-        GridView grid = (GridView)findViewById(R.id.gridView);
-
-
-        try {
-            List<Tag> tags = NetworkServiceProvider.getNetworkService().getTags();
-            ArrayList<String> liste = new ArrayList<String>();
-            int size = tags.size();
-
-            for ( int i=0; i<size; i++ ) {
-                String name = tags.get(i).getObjectName();
-                liste.add(name);
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.list_content, liste);
-            grid.setAdapter(adapter);
-        } catch (NotAuthenticatedException e1) {
-            Toast.makeText(InterieurActivity.this, "Nous n'avons pas réussi à récupérer les informations de votre compte, veuillez réassyer", Toast.LENGTH_LONG).show();
-        } catch (NetworkServiceException e1) {
-            e1.printStackTrace();
-        }
-*/
     }
 
 

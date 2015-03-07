@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
+import android.view.Window;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
@@ -22,6 +23,8 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home);
 
     }

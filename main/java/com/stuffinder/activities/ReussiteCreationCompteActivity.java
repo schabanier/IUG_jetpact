@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
+import android.view.Window;
 
 import com.stuffinder.R;
 
@@ -17,6 +18,8 @@ public class ReussiteCreationCompteActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_reussite_creation_compte);
 
     }
