@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,18 +26,23 @@ public class CreerCompteActivity extends Activity {
     EditText editTextIdentifiant;
     EditText editTextEmail ;
     EditText editTextMdP ;
+    EditText editTextConfirmPassword ;
 
 
 
     public void retourAccueil ( View view) {
-        Intent intentRetour = new Intent ( CreerCompteActivity.this, Accueil.class);
-        startActivity(intentRetour);
+        finish();
+
+        //Intent intentRetour = new Intent ( CreerCompteActivity.this, Accueil.class);
+        //startActivity(intentRetour);
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_creer_compte);
 
         editTextNom= (EditText)findViewById(R.id.editTextNom);
@@ -44,6 +50,7 @@ public class CreerCompteActivity extends Activity {
         editTextIdentifiant= (EditText)findViewById(R.id.editTextIdentifiant1);
         editTextEmail= (EditText)findViewById(R.id.editTextEmail);
         editTextMdP= (EditText)findViewById(R.id.editTextMdP);
+        editTextConfirmPassword= (EditText)findViewById(R.id.editTextConfirmPassword);
     }
 
 
@@ -58,17 +65,22 @@ public class CreerCompteActivity extends Activity {
         String identifiant = editTextIdentifiant.getText().toString();
         String email = editTextEmail.getText().toString();
         String mdp = editTextMdP.getText().toString();
+        String confirmMdp = editTextConfirmPassword.getText().toString();
 
         if(nom.length() == 0)
             Toast.makeText(CreerCompteActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
         else if(prenom.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer prenom", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrer prénom", Toast.LENGTH_LONG).show();
         else if(identifiant.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrer pseudo", Toast.LENGTH_LONG).show();
         else if(email.length() == 0)
             Toast.makeText(CreerCompteActivity.this, "Entrer email", Toast.LENGTH_LONG).show();
         else if(mdp.length() == 0)
             Toast.makeText(CreerCompteActivity.this, "Entrer mot de passe", Toast.LENGTH_LONG).show();
+        else if(confirmMdp.length() == 0)
+            Toast.makeText(CreerCompteActivity.this, "Confirmer mot de passe", Toast.LENGTH_LONG).show();
+        else if(! confirmMdp.equals(mdp))
+            Toast.makeText(CreerCompteActivity.this, "Confirmation de mot de passe incorrecte", Toast.LENGTH_LONG).show();
         else
         {
             try {
@@ -76,22 +88,21 @@ public class CreerCompteActivity extends Activity {
                 Account account = new Account(identifiant, prenom, nom, email);                            /* Création d'un compte*/
                 NetworkServiceProvider.getNetworkService().createAccount(account, mdp);                                        /*Demande de création de compte au web service */
 
-                startActivity(intentToReussite);  }
-                                                                         /* Passer à l'activité Home*/
-            catch (NullPointerException e) {}
+                startActivity(intentToReussite);
+            }
 
             catch (IllegalFieldException e) {
                 switch (e.getFieldId()) {
                     case IllegalFieldException.PSEUDO:
                         if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-                            Toast.makeText(CreerCompteActivity.this, "Identifiant deja utilise", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreerCompteActivity.this, "Pseudo déja utilise", Toast.LENGTH_LONG).show();
                         else
-                            Toast.makeText(CreerCompteActivity.this, "Identifiant incorrect", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreerCompteActivity.this, "Pseudo incorrect", Toast.LENGTH_LONG).show();
                         break;
                     case IllegalFieldException.FIRSTNAME:
-                        Toast.makeText(CreerCompteActivity.this, "Entrer prenom", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreerCompteActivity.this, "Prénom incorrect", Toast.LENGTH_LONG).show();
                     case IllegalFieldException.LASTNAME:
-                        Toast.makeText(CreerCompteActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreerCompteActivity.this, "Nom incorrect", Toast.LENGTH_LONG).show();
                         break;
                     case IllegalFieldException.EMAIL_ADDRESS:
                         Toast.makeText(CreerCompteActivity.this, "Email Incorrect", Toast.LENGTH_LONG).show();
