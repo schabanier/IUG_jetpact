@@ -27,8 +27,7 @@ public class SeConnecterActivity extends Activity {
 
 
     public void retourAccueil ( View view) {
-        Intent intentRetour = new Intent ( SeConnecterActivity.this, Accueil.class);
-        startActivity(intentRetour);
+        finish();
     }
 
 

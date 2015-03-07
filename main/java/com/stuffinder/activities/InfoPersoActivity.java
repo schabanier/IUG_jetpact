@@ -65,9 +65,6 @@ public class InfoPersoActivity extends Activity {
 
     public void retour5 (View view) {
         finish();
-
-        // Intent intentRetour = new Intent (InfoPersoActivity.this, ConfigurationActivity.class);
-        // startActivity(intentRetour);
     }
 
     public void actionModifier(View view) {

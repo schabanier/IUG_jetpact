@@ -32,9 +32,6 @@ public class CreerCompteActivity extends Activity {
 
     public void retourAccueil ( View view) {
         finish();
-
-        //Intent intentRetour = new Intent ( CreerCompteActivity.this, Accueil.class);
-        //startActivity(intentRetour);
     }
 
 

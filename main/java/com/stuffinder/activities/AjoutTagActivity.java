@@ -35,8 +35,7 @@ public class AjoutTagActivity extends Activity {
     }
 
     public void retour2 (View view) {
-        Intent intentRetour = new Intent (AjoutTagActivity.this, TagsActivity.class);
-        startActivity(intentRetour);
+        finish();
     }
 
     public void creerTag (View view) {

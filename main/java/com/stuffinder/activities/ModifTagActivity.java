@@ -26,8 +26,8 @@ public class ModifTagActivity extends Activity {
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
     public void retour3 (View view) {
-        Intent intentRetour = new Intent (ModifTagActivity.this, TagsActivity.class);
-        startActivity(intentRetour); }
+        finish();
+    }
 
     public void goToFiche(View view){
 

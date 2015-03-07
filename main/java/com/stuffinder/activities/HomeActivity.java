@@ -74,4 +74,9 @@ public class HomeActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void finish() { // à modifier pour quitter l'application, ou se déconnecter et revenir à l'écran de connexion.
+        super.finish();
+    }
 }

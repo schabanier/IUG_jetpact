@@ -25,8 +25,8 @@ public class InterieurActivity extends Activity {
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
     public void retour8 (View view) {
-        Intent intentRetour = new Intent (InterieurActivity.this, HomeActivity.class);
-        startActivity(intentRetour); }
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

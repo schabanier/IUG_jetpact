@@ -45,8 +45,8 @@ public class TagsActivity extends Activity {
     }
 
     public void retour6 (View view) {
-        Intent intentRetour = new Intent (TagsActivity.this, ConfigurationActivity.class);
-        startActivity(intentRetour); }
+        finish();
+    }
 
     public void goToSuppr (View view) {
 

@@ -32,8 +32,7 @@ public class ConfigurationActivity extends Activity {
     }
 
     public void retour1 (View view) {
-        Intent intentRetour = new Intent ( ConfigurationActivity.this, HomeActivity.class);
-        startActivity(intentRetour);
+        finish();
     }
 
     @Override
