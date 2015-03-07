@@ -1,17 +1,19 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.stuffinder.data.Account;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.R;
@@ -23,20 +25,28 @@ public class InfoPersoActivity extends Activity {
     TextView nomTextView ;
     TextView prenomTextView ;
     TextView idTextView ;
+
+    String currentEmail;
     EditText editTextMail ;
-    EditText editTextModp ;
+
+    EditText editTextMdp;
+    EditText editTextConfirmMdp ;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_info_perso);
 
         nomTextView = (TextView)findViewById(R.id.textViewNomVue);
         prenomTextView = (TextView)findViewById(R.id.textViewPrenomVue);
         idTextView = (TextView)findViewById(R.id.textViewIdVue);
         editTextMail= (EditText)findViewById(R.id.editTextMail);
-        editTextModp= (EditText)findViewById(R.id.editTextModp);
+        editTextMdp = (EditText)findViewById(R.id.editTextModp);
+        editTextConfirmMdp = (EditText)findViewById(R.id.editTextConfirmPassword);
 
 
         Account account = null;
@@ -45,7 +55,8 @@ public class InfoPersoActivity extends Activity {
             nomTextView.setText(account.getLastName());
             prenomTextView.setText(account.getFirstName());
             idTextView.setText(account.getPseudo());
-            editTextMail.setText(account.getEMailAddress(), TextView.BufferType.EDITABLE);
+            currentEmail = account.getEMailAddress();
+            editTextMail.setText(currentEmail, TextView.BufferType.EDITABLE);
         } catch (NotAuthenticatedException e) {
             e.printStackTrace();
         }
@@ -53,21 +64,56 @@ public class InfoPersoActivity extends Activity {
     }
 
     public void retour5 (View view) {
-        Intent intentRetour = new Intent (InfoPersoActivity.this, ConfigurationActivity.class);
-        startActivity(intentRetour); }
+        finish();
 
-    public void retourConfiguration(View view) {
+        // Intent intentRetour = new Intent (InfoPersoActivity.this, ConfigurationActivity.class);
+        // startActivity(intentRetour);
+    }
 
-        try {
-            NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextMail.getText().toString());
-            NetworkServiceProvider.getNetworkService().modifyPassword(editTextModp.getText().toString());
-            Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
-            startActivity(intent);
-        } catch (NotAuthenticatedException e) {
-            e.printStackTrace();
-        } catch (NetworkServiceException e) {
-            e.printStackTrace();
+    public void actionModifier(View view) {
+        String email = editTextMail.getText().toString();
+        String mdp = editTextMdp.getText().toString();
+        String confirmMdp = editTextConfirmMdp.getText().toString();
+
+        if(email.length() == 0)
+            Toast.makeText(this, "Entrer email", Toast.LENGTH_LONG).show();
+        else if(mdp.length() == 0 && confirmMdp.length() > 0)
+            Toast.makeText(this, "Entrer mot de passe", Toast.LENGTH_LONG).show();
+        else if(mdp.length() != 0 && confirmMdp.length() == 0)
+            Toast.makeText(this, "Confirmer mot de passe", Toast.LENGTH_LONG).show();
+        else if(! confirmMdp.equals(mdp))
+            Toast.makeText(this, "Confirmation de mot de passe incorrecte", Toast.LENGTH_LONG).show();
+        else
+        {
+            try {
+                if(! email.equals(currentEmail)) // l'adresse email a changé.
+                    NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextMail.getText().toString());
+
+                if(mdp.length() > 0)
+                    NetworkServiceProvider.getNetworkService().modifyPassword(editTextMdp.getText().toString());
+
+                //Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
+                //startActivity(intent);
+                finish();
+            }
+            catch (IllegalFieldException e) {
+                switch (e.getFieldId()) {
+                    case IllegalFieldException.EMAIL_ADDRESS:
+                        Toast.makeText(this, "Email Incorrect", Toast.LENGTH_LONG).show();
+                        break;
+                    case IllegalFieldException.PASSWORD:
+                        Toast.makeText(this, "Mot de passe incorect ; il doit contenir au moins 6 caractères", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+            catch (NotAuthenticatedException e) {
+                Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+            }
+            catch (NetworkServiceException e) {
+                Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+            }
         }
+
 
 
     }
