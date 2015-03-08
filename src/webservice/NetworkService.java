@@ -5,8 +5,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
- 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.apache.http.HttpEntity;
@@ -17,6 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
  
  
+
 import data.Account;
 import data.Profile;
 import data.Tag;
@@ -119,7 +121,7 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                        	currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
+                        	// currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
  
                         }
  
@@ -618,7 +620,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        List<Tag> res = null;
+        List<Tag> res = new ArrayList<Tag>();
  
         // We first check the validity of the arguments to create the parameters
  
@@ -665,7 +667,7 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                            org.json.JSONArray arrayOfJsonTag = new org.json.JSONArray(obj.getJSONArray("listTags"));
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
  
                             for (int i = 0; i < arrayOfJsonTag.length(); i++) {
  

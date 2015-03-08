@@ -1,6 +1,5 @@
 package tests.gui;
 
-import tests.NetworkServiceEmulator;
 import webservice.NetworkService;
 import engine.NetworkServiceProvider;
 import exceptions.NetworkServiceException;

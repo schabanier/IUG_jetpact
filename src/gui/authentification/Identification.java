@@ -2,6 +2,8 @@ package gui.authentification;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -16,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import engine.NetworkServiceProvider;
 import exceptions.AccountNotFoundException;
+import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import gui.Constants;
 import gui.MainFrame;
@@ -169,6 +172,7 @@ public class Identification extends JPanel
 			String pseudo = textFieldPseudo.getText();
 			String password = new String(passwordField1.getPassword());
 			
+			
 			if(pseudo.length() == 0) // il manque le pseudo
 				JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.getEmptyFieldErrorMessage(Constants.Fields.PSEUDO), Constants.CommonErrorMessages.getFieldErrorTitle(Constants.Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
 			
@@ -187,15 +191,14 @@ public class Identification extends JPanel
 					MainFrame.getInstance().authenticationDone();
 					
 				} catch (AccountNotFoundException e1) {
-					// TODO Auto-generated catch block
 
 					JOptionPane.showMessageDialog(frameContainer, Constants.Authentication.ACCOUNT_NOT_FOUND_MESSAGE, Constants.Authentication.ACCOUNT_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 
 
 				} catch (NetworkServiceException e1) {
-					// TODO Auto-generated catch block
-
 					JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+				} catch(IllegalFieldException e1) {
+					JOptionPane.showMessageDialog(frameContainer, Constants.Authentication.ACCOUNT_NOT_FOUND_MESSAGE, Constants.Authentication.ACCOUNT_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

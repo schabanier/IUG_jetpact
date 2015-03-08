@@ -99,33 +99,33 @@ public class AccountCreation extends JDialog
 					//---- label8 ----
 					labelNom.setText(Fields.LASTNAME);
 					panelDialog.add(labelNom, CC.xy(3, 1));
-					panelDialog.add(textFieldNom, CC.xywh(7, 1, 7, 1));
+					panelDialog.add(textFieldNom, CC.xywh(7, 1, 11, 1));
 
 					//---- label9 ----
 					labelPrenom.setText(Fields.FIRSTNAME);
 					panelDialog.add(labelPrenom, CC.xy(3, 3));
 					
-					panelDialog.add(textFieldPrenom, CC.xywh(7, 3, 7, 1));
+					panelDialog.add(textFieldPrenom, CC.xywh(7, 3, 11, 1));
 
 					//---- label10 ----
 					labelMail.setText(Fields.EMAIL_ADDRESS);
 					panelDialog.add(labelMail, CC.xy(3, 5));
-					panelDialog.add(textFieldMail, CC.xywh(7, 5, 7, 1));
+					panelDialog.add(textFieldMail, CC.xywh(7, 5, 11, 1));
 
 					//---- label5 ----
 					labelPseudo.setText(Fields.PSEUDO);
 					panelDialog.add(labelPseudo, CC.xy(3, 7));
-					panelDialog.add(textFieldPseudo, CC.xywh(7, 7, 7, 1));
+					panelDialog.add(textFieldPseudo, CC.xywh(7, 7, 11, 1));
 
 					//---- label6 ----
 					labelPassword1.setText(Fields.PASSWORD_LABEL);
 					panelDialog.add(labelPassword1, CC.xy(3, 9));
-					panelDialog.add(passwordField2, CC.xywh(7, 9, 7, 1));
+					panelDialog.add(passwordField2, CC.xywh(7, 9, 11, 1));
 
 					//---- label7 ----
 					labelPassword2.setText(Fields.PASSWORD_CONFIRMATION_LABEL);
 					panelDialog.add(labelPassword2, CC.xy(3, 11));
-					panelDialog.add(passwordField3, CC.xywh(7, 11, 7, 1));
+					panelDialog.add(passwordField3, CC.xywh(7, 11, 11, 1));
 
 					//---- button3 ----
 					button3Annuler.setText(UserInformationsManagement.CANCEL_BUTTON_NAME);
