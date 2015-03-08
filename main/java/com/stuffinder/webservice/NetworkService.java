@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.apache.http.client.methods.HttpUriRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.apache.http.HttpEntity;
@@ -36,6 +37,51 @@ public class NetworkService implements NetworkServiceInterface {
 
     }
 
+    private HttpResponse executeRequest(HttpUriRequest request) throws InterruptedException, IOException {
+        HttpExecuter httpExecuter = new HttpExecuter(request);
+
+        httpExecuter.start();
+        httpExecuter.join();
+
+        if(httpExecuter.isRequestSuccessful())
+            return httpExecuter.getResponse();
+        else
+            throw httpExecuter.getCatchedIOException();
+    }
+
+    class HttpExecuter extends Thread {
+        private HttpUriRequest request;
+
+        private HttpResponse response;
+        private IOException catchedIOException;
+
+        HttpExecuter(HttpUriRequest request){
+            super();
+            this.request = request;
+        }
+
+        @Override
+        public void run(){
+            try {
+                response = client.execute(request);
+            } catch (IOException e) {
+                catchedIOException = e;
+            }
+        }
+
+        boolean isRequestSuccessful(){
+            return catchedIOException == null;
+        }
+
+        IOException getCatchedIOException(){
+            return catchedIOException;
+        }
+
+        HttpResponse getResponse(){
+            return response;
+        }
+    }
+
     @Override
     public void initNetworkService() throws NetworkServiceException {
         NetworkService.client = new DefaultHttpClient();
@@ -63,7 +109,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/register?pseudo=" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/register?pseudo=" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -113,6 +159,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
     }
@@ -133,7 +181,7 @@ public class NetworkService implements NetworkServiceInterface {
 
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/login?pseudo=" + pseudo + "&password=" + password));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/login?pseudo=" + pseudo + "&password=" + password));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -183,6 +231,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
         return currentAccount;
@@ -228,7 +278,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyemail?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_email=" + emailAddress));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyemail?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_email=" + emailAddress));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -277,6 +327,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
     }
@@ -293,7 +345,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifypassword?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_password=" + newPassword));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifypassword?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_password=" + newPassword));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -342,6 +394,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
     }
 
@@ -357,7 +411,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/retrievetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/retrievetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -410,6 +464,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
         return res;
@@ -429,7 +485,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/addtag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&object_name=" + tag.getObjectName() + "&picture=" + tag.getObjectImageName()));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/addtag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&object_name=" + tag.getObjectName() + "&picture=" + tag.getObjectImageName()));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -476,6 +532,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
         return tag;
@@ -493,7 +551,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyobjectname?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&new_object_name=" + newObjectName));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyobjectname?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&new_object_name=" + newObjectName));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -542,6 +600,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
         return tag;
@@ -562,7 +622,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/deletetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
+            HttpResponse httpResponse = executeRequest(new HttpGet("http://92.222.33.38:8080/app_server/ns/deletetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -610,6 +670,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occured while executing request.");
         }
 
     }
