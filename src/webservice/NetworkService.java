@@ -1,358 +1,1250 @@
-  package webservice;
 
-import java.net.*;
-import java.util.ArrayList;
+package webservice;
+ 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
+ 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+ 
+ 
 import data.Account;
 import data.Profile;
 import data.Tag;
+import engine.FieldVerifier;
 import exceptions.AccountNotFoundException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import interfaces.NetworkServiceInterface;
-
+ 
 public class NetworkService implements NetworkServiceInterface {
-
-	private static String adressHost;
-	private static Account userAccount;
-	private static String userPassword;
-	private static ArrayList<Exception> exceptionTable;
-	
-	public NetworkService() {
-		
-	}
-	
-	@Override
-	public void initNetworkService() throws NetworkServiceException {
-		adressHost = "92.222.33.38:8080/app_server/ns";
-		
-		/* S'il y a une erreur côté serveur et base de donnée, le json renvoyé contiendra une key "IntError", 
-		 * qui est l'indice dans ExceptionTable de l'exception concernée. 
-		 * 
-		 * Cette partie requiert d'être mise à jour à chaque modification des Exceptions côté Serveur
-		 */
-		NetworkServiceException e0 = new NetworkServiceException("Wrong combination pseudo/password");
-		NetworkServiceException e1 = new NetworkServiceException("Error with database");
-		NetworkServiceException e2 = new NetworkServiceException("You are already registered");
-		NetworkServiceException e3 = new NetworkServiceException("Special Characters are not allowed in Pseudo and Password");
-		
-		exceptionTable.set(0, e0 );
-		exceptionTable.set(1, e1 );
-		exceptionTable.set(2, e2 );
-		exceptionTable.set(3, e3 );
-
-	}
-
-	@Override
-	public void createAccount(Account newAccount, String newPassword)
-			throws IllegalFieldException, NetworkServiceException {
-		
-		/*  adapter au serveur choisi */
-		URL registerURL;
-		try {
-			registerURL = new URL("http://"+adressHost+"/doregister?pseudo="+newAccount.getPseudo()+"&password="+newPassword+"&first_name="+newAccount.getFirstName()+"&last_name="+newAccount.getLastName()+"&email="+newAccount.getEMailAddress());
-		// http://localhost:8080/app_server/ns/doregister?pseudo=pqrs&password=abc&first_name=xyz&last_name=cdf&email=hij
-		
-			String reponse = HTTPLoader.getTextFile(registerURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-		
-			if (!(boolean) obj.get("status")){
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-				
-
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public Account authenticate(String pseudo, String password)
-			throws AccountNotFoundException, NetworkServiceException {
-
-		URL loginURL;
-		try {
-			// http://localhost:8080/app_server/ns/dologin?pseudo=abc&password=xyz
-			loginURL = new URL("http://"+adressHost+"/dologin?pseudo="+pseudo+"&password="+password);
-			String reponse = HTTPLoader.getTextFile(loginURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-			if ((boolean) obj.get("status")) {
-				userAccount = new Account((String)obj.get("pseudo"), (String)obj.get("first_name"), (String)obj.get("last_name"), (String)obj.get("email"));
-				userPassword = password;
-			}else{
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		return userAccount;
-	}
-
-	@Override
-	public void logOut() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Account getCurrentAccount() throws NotAuthenticatedException {
-		URL loginURL;
-		try {
-			// http://localhost:8080/app_server/ns/dologin?pseudo=abc&password=xyz
-			loginURL = new URL("http://"+adressHost+"/dologin?pseudo="+userAccount.getPseudo()+"&password="+userPassword);
-			String reponse = HTTPLoader.getTextFile(loginURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-			if ((boolean) obj.get("status")) {
-				userAccount = new Account((String)obj.get("pseudo"), (String)obj.get("first_name"), (String)obj.get("last_name"), (String)obj.get("email"));
-			}else{
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		return userAccount;
-	}
-
-	//return = argument ?? -> différencier modifyTag et addTag
-	@Override
-	public Tag addTag(Tag tag) {
-
-		URL addTagURL;
-		try {
-			// http://localhost/<appln-folder-name>/tag/addtag?pseudo=abc&password=abc&object_name=xyz&picture=url				
-			addTagURL = new URL("http://"+adressHost+"/tag/addtag?e="+userAccount.getPseudo()+"&password="+userPassword+"&object_name="+tag.getObjectName()+"&picture="+tag.getObjectImageName());
-			String reponse = HTTPLoader.getTextFile(addTagURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-
-			if (!(boolean) obj.get("status")){
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return tag;				
-	}
-
-	@Override
-	public void removeTag(Tag tag) {
-		URL deleteTagURL;
-		try {
-			// http://localhost/<appln-folder-name>/tag/deletetag?pseudo=abc&password=abc&object_name=xyz
-			deleteTagURL = new URL("http://"+adressHost+"/tag/deletetag?"+userAccount.getPseudo()+"&password="+userPassword+"&object_name="+tag.getObjectName());
-			String reponse = HTTPLoader.getTextFile(deleteTagURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-
-			if (!(boolean) obj.get("status")){
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}			
-	}
-
-	@Override
-	public Profile createProfile(String profileName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile addTagToProfile(Profile profile, Tag tag) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile removeTagFromProfile(Profile profile, Tag tag) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile removeAllFromProfile(Profile profile) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile getProfile(String profileName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Tag> getTags() throws NotAuthenticatedException,
-			NetworkServiceException {
-		
-		URL getTagsURL;
-		List<Tag> ListTag = new ArrayList<Tag>();
-
-		try {
-			// http://localhost/<appln-folder-name>/tag/retrievetags?pseudo=abc&password=abc			
-			getTagsURL = new URL("http://"+adressHost+"/tag/retrievetags?"+userAccount.getPseudo()+"&password="+userPassword);
-			String reponse = HTTPLoader.getTextFile(getTagsURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-			
-			if ((boolean) obj.get("status")) {
-				JSONArray arrayOfJsonTags = (JSONArray) obj.get("arrayOfJsonTags");
-				int n = arrayOfJsonTags.size();
-				for(int i=0; i<n; i++){
-					JSONObject tagJson = new JSONObject();
-					tagJson = (JSONObject) arrayOfJsonTags.get(i);
-					Tag tag = new Tag((String)tagJson.get("tagID"), (String)tagJson.get("nameTag"), (String)tagJson.get("picture"));
-					ListTag.add(tag);	
-				}
-			}else{
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}			
-		
-		return ListTag;
-	}
-
-	@Override
-	public Tag modifyObjectName(Tag tag, String newObjectName)
-			throws NotAuthenticatedException, IllegalFieldException,
-			NetworkServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Tag modifyObjectImage(Tag tag, String newImageFileName)
-			throws NotAuthenticatedException, IllegalFieldException,
-			NetworkServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Profile addTagsToProfile(Profile profile, List<Tag> tags)
-			throws NotAuthenticatedException, IllegalFieldException,
-			NetworkServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Profile> getProfiles() throws NotAuthenticatedException,
-			NetworkServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void modifyEMailAddress(String newEMailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {			
-		URL modifyEMailAddressURL;
-		try {
-			// http://localhost:8080/app_server/modifyEMailAddress?pseudo=abc&password=xyz&newEMailAdress=abc
-			modifyEMailAddressURL = new URL("http://"+adressHost+"/modifyEMailAddress?pseudo="+userAccount.getPseudo()+"&password="+userPassword+"&newEMailAddress="+newEMailAddress);
-			String reponse = HTTPLoader.getTextFile(modifyEMailAddressURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-			if ((boolean) obj.get("status")) {
-				userAccount.setMailAddress(newEMailAddress);
-			} else {
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-	}
-	
-
-	@Override
-	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {			
-		URL modifyPasswordURL;
-		try {
-			// http://localhost:8080/app_server/modifyPassword?pseudo=abc&password=xyz&newPassword=abc
-			modifyPasswordURL = new URL("http://"+adressHost+"/modifyPassword?pseudo="+userAccount.getPseudo()+"&password="+userPassword+"&newPassword="+newPassword);
-			String reponse = HTTPLoader.getTextFile(modifyPasswordURL);
-			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
-			if ((boolean) obj.get("status")) {
-				userPassword = newPassword;
-			} else {
-				try {
-					throw exceptionTable.get((int) obj.get("IntError"));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("JSONException");
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-	}
+ 
+ 
+    private static HttpClient client;
+ 
+    private Account currentAccount = null;
+ 
+    private String currentPassword = null;
+ 
+ 
+    private NetworkService() {
+ 
 }
-	
-
+ 
+ 
+    @Override
+ 
+    public void initNetworkService() throws NetworkServiceException {
+ 
+        NetworkService.client = new DefaultHttpClient();
+}
+ 
+ 
+    @Override
+ 
+    public void createAccount(Account newAccount, String newPassword)
+ 
+            throws IllegalFieldException, NetworkServiceException {    // We first check the validity of the arguments to create the parameters
+ 
+        if (!FieldVerifier.verifyName(newAccount.getPseudo()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getPseudo());
+ 
+ 
+        if (!FieldVerifier.verifyPassword(newPassword))
+ 
+            throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);
+ 
+ 
+        if (!FieldVerifier.verifyName(newAccount.getFirstName()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.FIRSTNAME, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getFirstName());
+ 
+ 
+        if (!FieldVerifier.verifyName(newAccount.getLastName()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.LASTNAME, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getLastName());
+ 
+ 
+        if (!FieldVerifier.verifyEMailAddress(newAccount.getEMailAddress()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getEMailAddress());
+ 
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/register?pseudo =" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                            currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
+ 
+                        }
+ 
+                        // Else display error message
+ 
+                        else if (returnCode == 1) {
+ 
+                            currentPassword = null;
+ 
+                            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_ALREADY_USED, newAccount.getPseudo());
+ 
+                        } else {
+ 
+                            currentPassword = null;
+ 
+                            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getPseudo());
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+}
+ 
+ 
+ 
+    @Override
+ 
+    public Account authenticate(String pseudo, String password)
+ 
+            throws AccountNotFoundException, NetworkServiceException {
+ 
+        // We first check the validity of the arguments to create the parameters
+ 
+        if(! FieldVerifier.verifyName(pseudo))
+ 
+            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, pseudo);
+ 
+ 
+        if (! FieldVerifier.verifyPassword(password))
+ 
+            throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, password);
+ 
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/login?pseudo =" + pseudo + "&password=" + password));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                            currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
+ 
+                            currentPassword = password; // correction.
+ 
+                        }
+ 
+                        // Else display error message
+ 
+                        else if (returnCode == 1) {
+ 
+                            currentPassword = null;
+ 
+                            throw new AccountNotFoundException();
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+ 
+        return currentAccount;
+}
+ 
+ 
+    // convert inputstream to String
+ 
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+ 
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+ 
+        String line = "";
+ 
+        String result = "";
+ 
+        while ((line = bufferedReader.readLine()) != null)
+ 
+            result += line;
+ 
+ 
+        inputStream.close();
+ 
+        return result;
+}
+ 
+ 
+ 
+    @Override
+ 
+    public void logOut() {
+ 
+        currentAccount = null;
+ 
+        currentPassword = null;
+}
+ 
+ 
+    @Override
+ 
+    public Account getCurrentAccount() throws NotAuthenticatedException {
+ 
+        if (currentAccount != null) {
+ 
+            return currentAccount;
+ 
+        } else {
+ 
+            throw new NotAuthenticatedException();
+ 
+        }
+}
+ 
+ 
+    @Override
+ 
+    public void modifyEMailAddress(String emailAddress)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // We first check the validity of the arguments to create the parameters
+ 
+        if (! FieldVerifier.verifyEMailAddress(emailAddress))
+ 
+            throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, emailAddress);
+ 
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/modifyemail?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_email=" + emailAddress));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                            currentAccount.setMailAddress(obj.getString("email"));
+ 
+                        }
+ 
+                        // Else display error message
+ 
+                        else if (returnCode == 1) {
+ 
+                            throw new NetworkServiceException("Problem of access to the DB");
+ 
+                        } else {
+ 
+                            throw new NotAuthenticatedException();
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+}
+ 
+ 
+    @Override
+ 
+    public void modifyPassword(String newPassword)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // We first check the validity of the arguments to create the parameters
+ 
+        if (! FieldVerifier.verifyPassword(newPassword))
+ 
+            throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);
+ 
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/modifypassword?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_password=" + newPassword));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                            currentPassword = newPassword;
+ 
+                        }
+ 
+                        // Else display error message
+ 
+                        else if (returnCode == 1) {
+ 
+                            throw new NetworkServiceException("Problem of access to the DB");
+ 
+                        } else {
+ 
+                            throw new NotAuthenticatedException();
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+}
+ 
+ 
+    @Override
+ 
+    public List<Tag> getTags() throws NotAuthenticatedException,
+ 
+            NetworkServiceException {
+ 
+        List<Tag> res = null;
+ 
+        // We first check the validity of the arguments to create the parameters
+ 
+        if (! FieldVerifier.verifyName(currentAccount.getPseudo()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, currentAccount.getPseudo());
+ 
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/retrievetag?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                            org.json.JSONArray arrayOfJsonTag = new org.json.JSONArray(obj.getJSONArray("listTags"));
+ 
+                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
+ 
+                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
+ 
+                                Tag tag = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
+ 
+                                res.add(tag);
+ 
+                            }
+ 
+                        }
+ 
+                        // Else display error message
+ 
+ 
+                        else {
+ 
+                            throw new NotAuthenticatedException();
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+ 
+        return res;
+}
+ 
+ 
+    @Override
+ 
+    public Tag addTag(Tag tag) throws NotAuthenticatedException,
+ 
+            IllegalFieldException, NetworkServiceException {
+ 
+        // We first check the validity of the arguments to create the parameters
+ 
+        if (! FieldVerifier.verifyTagUID(tag.getUid()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+ 
+ 
+        if (! FieldVerifier.verifyTagUID(tag.getUid()))
+ 
+            throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectName());
+ 
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/addtag?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&object_name=" + tag.getObjectName() + "&picture=" + tag.getObjectImageName()));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                        }
+ 
+                        // Else display error message
+ 
+ 
+                        else {
+ 
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+ 
+        return tag;
+}
+ 
+ 
+    @Override
+ 
+    public Tag modifyObjectName(Tag tag, String newObjectName)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // We first check the validity of the arguments to create the parameters
+ 
+        if (! FieldVerifier.verifyName(newObjectName))
+ 
+            throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, newObjectName);
+ 
+ 
+        InputStream inputStream = null;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/modifyobjectname?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&new_object_name=" + newObjectName));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                            tag.setObjectName(obj.getString("newobjectname"));
+ 
+                        }
+ 
+                        // Else display error message
+ 
+                        else if (returnCode == 1) {
+ 
+                            throw new NetworkServiceException("Problem of access to the DB");
+ 
+                        } else {
+ 
+                            throw new NotAuthenticatedException();
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+ 
+        return tag;
+}
+ 
+ 
+    @Override
+ 
+    public Tag modifyObjectImage(Tag tag, String newImageFileName)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public void removeTag(Tag tag) throws NotAuthenticatedException,
+ 
+            IllegalFieldException, NetworkServiceException {
+ 
+        InputStream inputStream;
+ 
+        String result = "";
+ 
+        try {
+ 
+            // make GET request to the given URL
+ 
+            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/deletetag?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
+ 
+            StatusLine statusLine = httpResponse.getStatusLine();
+ 
+            int statusCode = statusLine.getStatusCode();
+ 
+            if (statusCode == 200) {
+ 
+                // receive response as inputStream
+ 
+                HttpEntity entity = httpResponse.getEntity();
+ 
+                inputStream = entity.getContent();
+ 
+                // convert inputstream to string
+ 
+                if (inputStream != null) {
+ 
+                    result = convertInputStreamToString(inputStream);
+ 
+                    try {
+ 
+                        // creation JSON Object
+ 
+                        JSONObject obj = new JSONObject(result);
+ 
+                        int returnCode = obj.getInt("returncode");
+ 
+                        if (returnCode == 0) {
+ 
+                        }
+ 
+                        // Else display error message
+ 
+                        else if (returnCode == 1) {
+ 
+                            throw new NetworkServiceException("Problem of access to the DB");
+ 
+                        } else {
+ 
+                            throw new NotAuthenticatedException();
+ 
+                        }
+ 
+                    } catch (JSONException e) {
+ 
+                        // "Error Occured [Server's JSON response might be invalid]!"
+ 
+                        throw new NetworkServiceException("Server response might be invalid.");
+ 
+                    }
+ 
+                } else {
+ 
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+ 
+                }
+ 
+            }
+ 
+ 
+ 
+            // When Http response code is '404'
+ 
+            else if (statusCode == 404) {
+ 
+                throw new NetworkServiceException("Requested resource not found");
+ 
+            }
+ 
+ 
+            // When Http response code is '500'
+ 
+            else if (statusCode == 500) {
+ 
+                throw new NetworkServiceException("Something went wrong at server end");
+ 
+            }
+ 
+ 
+            // When Http response code other than 404, 500
+ 
+            else {
+ 
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+ 
+            }
+ 
+        } catch (IOException | IllegalStateException e) {
+ 
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+ 
+        }
+ 
+}
+ 
+ 
+    @Override
+ 
+    public Profile createProfile(String profileName)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile addTagToProfile(Profile profile, Tag tag)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile addTagsToProfile(Profile profile, List<Tag> tags)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile removeTagFromProfile(Profile profile, Tag tag)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile removeAllFromProfile(Profile profile)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList)
+ 
+            throws NotAuthenticatedException, IllegalFieldException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public Profile getProfile(String profileName)
+ 
+            throws NotAuthenticatedException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+    @Override
+ 
+    public List<Profile> getProfiles() throws NotAuthenticatedException,
+ 
+            NetworkServiceException {
+ 
+        // TODO Auto-generated method stub
+ 
+        return null;
+}
+ 
+ 
+ 
+    // to use singleton design pattern.
+ 
+ 
+    private static NetworkService instance = new NetworkService();
+ 
+ 
+    public static NetworkService getInstance() {
+ 
+        return instance;
+}
+}
