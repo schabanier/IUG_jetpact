@@ -24,8 +24,18 @@ public class InterieurActivity extends Activity {
     private ListView mListInt = null;
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
-    public void retour8 (View view) {
-        finish();
+    public void retour8 (View view){
+      finish();
+    }
+
+    public void goToLoc (View view) {
+        int rang = mListInt.getCheckedItemPosition() ;
+        Tag tag = arrayAdapter.get(rang);
+
+        LocalisationActivity.ChangeTag(tag);
+
+        Intent intentLoc = new Intent (InterieurActivity.this, LocalisationActivity.class);
+        startActivity(intentLoc);
     }
 
     @Override
@@ -41,6 +51,7 @@ public class InterieurActivity extends Activity {
         tagArrayAdapter.addAll(arrayAdapter);
 
         mListInt.setAdapter(tagArrayAdapter);
+        mListInt.setItemChecked(0,true);
     }
 
 

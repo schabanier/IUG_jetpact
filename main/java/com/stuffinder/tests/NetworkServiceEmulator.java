@@ -41,7 +41,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         Tag tag1 = new Tag("a1bef83a374", "Home keys");
         Tag tag2 = new Tag("bd3496e342c", "Car key");
         Tag tag3 = new Tag("aefd573fc3e", "Bag");
-        Tag tag4 = new Tag("f53ebc87298", "Wallet");
+        Tag tag4 = new Tag("F9:1F:24:D3:1B:D4", "Tag BLE correct");
         Tag tag5 = new Tag("e68fa3547cb", "Android tablet");
 
         tags.add(tag1);

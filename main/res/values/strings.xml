@@ -16,5 +16,6 @@
     <string name="title_activity_modif_tag">Modification d\'une puce</string>
     <string name="title_activity_suppr_tag">Suppression d\'une puce</string>
     <string name="title_activity_tags">Gestion des puces</string>
+    <string name="title_activity_localisation">Localisation</string>
 
 </resources>

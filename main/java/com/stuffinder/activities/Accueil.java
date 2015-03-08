@@ -7,10 +7,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.tests.NetworkServiceEmulator;
+import com.stuffinder.webservice.NetworkService;
 
 
 public class Accueil extends Activity {
@@ -18,10 +21,10 @@ public class Accueil extends Activity {
 
 
 
-public void accueilToSeCo (View view) {
-    Intent intentSeCo = new Intent ( Accueil.this, SeConnecterActivity.class);
-    startActivity(intentSeCo);
-}
+    public void accueilToSeCo (View view) {
+        Intent intentSeCo = new Intent ( Accueil.this, SeConnecterActivity.class);
+        startActivity(intentSeCo);
+    }
 
     public void accueilToCreer ( View view) {
         Intent intentCreer = new Intent ( Accueil.this, CreerCompteActivity.class);
@@ -37,6 +40,12 @@ public void accueilToSeCo (View view) {
         setContentView(R.layout.activity_accueil);
 
         NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
+        try {
+            NetworkServiceProvider.getNetworkService().initNetworkService();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG);
+            finish();
+        }
 
     }
 
