@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Supprimer"
-        android:onClick="goToTags"
+        android:onClick="actionSupprimerTagsSelectionnes"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff" />
 

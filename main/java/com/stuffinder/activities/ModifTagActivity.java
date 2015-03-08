@@ -23,7 +23,7 @@ public class ModifTagActivity extends Activity {
     private ListView mListModif = null;
 
     private Button mSend = null;
-    private static List<Tag> arrayAdapter = new ArrayList<>();
+    private static List<Tag> tagsList = new ArrayList<>();
 
     public void retour3 (View view) {
         finish();
@@ -32,11 +32,13 @@ public class ModifTagActivity extends Activity {
     public void goToFiche(View view){
 
         int rang = mListModif.getCheckedItemPosition() ;
-        Tag tag = arrayAdapter.get(rang);
+        Tag tag = tagsList.get(rang);
 
-            InfoTagActivity.ChangeTag(tag);
-            Intent intent = new Intent (ModifTagActivity.this, InfoTagActivity.class);
-            startActivity(intent);
+        InfoTagActivity.changeTag(tag);
+        Intent intent = new Intent (ModifTagActivity.this, InfoTagActivity.class);
+
+        finish();
+        startActivity(intent);
 
     }
 
@@ -52,7 +54,7 @@ public class ModifTagActivity extends Activity {
         mSend = (Button) findViewById(R.id.send);
 
         ArrayAdapter<Tag> tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_single_choice);
-        tagArrayAdapter.addAll(arrayAdapter);
+        tagArrayAdapter.addAll(tagsList);
 
         mListModif.setAdapter(tagArrayAdapter);
         mListModif.setItemChecked(0, true);
@@ -64,11 +66,11 @@ public class ModifTagActivity extends Activity {
 
     public static void ChangeTagsList(List<Tag> list)
     {
-        arrayAdapter.clear();
+        tagsList.clear();
 
-        arrayAdapter.addAll(list);
+        tagsList.addAll(list);
 
-        Collections.sort(arrayAdapter, new Comparator<Tag>() {
+        Collections.sort(tagsList, new Comparator<Tag>() {
             @Override
             public int compare(Tag lhs, Tag rhs) {
                 return lhs.getObjectName().compareTo(rhs.getObjectName());

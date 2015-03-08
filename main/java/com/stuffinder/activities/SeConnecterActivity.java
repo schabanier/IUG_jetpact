@@ -17,7 +17,6 @@ import com.stuffinder.exceptions.IllegalFieldException;
 
 import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.data.Account;
 
 public class SeConnecterActivity extends Activity {
 
@@ -39,12 +38,11 @@ public class SeConnecterActivity extends Activity {
        Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
 
        try {
-           if (! FieldVerifier.verifyName(identifiant)) { throw new IllegalFieldException(IllegalFieldException.PSEUDO, "entrer identifiant ");}
-           if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, " Mot de passe trop court ");}
-           Account account = NetworkServiceProvider.getNetworkService().authenticate( identifiant, mdp);
+           if (! FieldVerifier.verifyName(identifiant)) { throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, identifiant);}
+           if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, mdp);}
+           NetworkServiceProvider.getNetworkService().authenticate( identifiant, mdp);
            startActivity(intent);
        }
-       catch ( NullPointerException e ) {}
        catch ( IllegalFieldException e ) {
            switch(e.getFieldId()) {
                case IllegalFieldException.PSEUDO:
@@ -71,8 +69,6 @@ public class SeConnecterActivity extends Activity {
 
         editTextIdentifiant = (EditText)findViewById(R.id.editTextIdentifiant1);
         editTextMdp = (EditText)findViewById(R.id.editTextMdP1);
-
-        //NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
     }
 
 

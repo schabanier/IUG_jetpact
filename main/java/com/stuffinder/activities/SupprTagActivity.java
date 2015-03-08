@@ -2,7 +2,6 @@ package com.stuffinder.activities;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -10,10 +9,12 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -26,34 +27,59 @@ import java.util.List;
 public class SupprTagActivity extends Activity {
 
     private ListView mListSuppr = null;
+    private ArrayAdapter<Tag> tagArrayAdapter;
 
     private Button mSend = null;
-    private static List<Tag> arrayAdapter = new ArrayList<>();
+
+
+    private static List<Tag> tagsList = new ArrayList<>();
 
     public void retour4 (View view) {
         finish();
     }
 
-    public void goToTags(View view){
+    public void actionSupprimerTagsSelectionnes(View view){
 
         SparseBooleanArray tab = mListSuppr.getCheckedItemPositions() ;
 
-        for(int i=0; i<arrayAdapter.size(); i++) {
-           if (tab.get(i) == true)
-           { try {
-                   NetworkServiceProvider.getNetworkService().removeTag(arrayAdapter.get(i));
-               } catch (NotAuthenticatedException e) {
-                   e.printStackTrace();
-               } catch (NetworkServiceException e) {
-                   e.printStackTrace();
-               }
+        boolean errorOccured = false;
+        boolean oneTagRemoved = false;
+
+        int i=0;
+        try {
+
+            for(i=0; i< tagsList.size(); i++) {
+                if (tab.get(i) == true) {
+                    NetworkServiceProvider.getNetworkService().removeTag(tagsList.get(i));
+                    oneTagRemoved = true;
+                }
             }
+
+            finish();
+        } catch (IllegalFieldException e) {// abnormal error.
+            if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                Toast.makeText(this, "Suppresion impossible : le tag \"" + tagsList.get(i).getObjectName() + "\" a déjà été supprimé.", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+            errorOccured = true;
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+            errorOccured = true;
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+            errorOccured = true;
         }
 
+        if(errorOccured && oneTagRemoved) { // to try to reload tags list because one tag or more has been removed.
+            try {
+                changeTagsList(NetworkServiceProvider.getNetworkService().getTags());
 
-        Intent intent = new Intent(SupprTagActivity.this, TagsActivity.class);
-        startActivity(intent);
-
+                tagArrayAdapter.clear();
+                tagArrayAdapter.addAll(tagsList);
+            } catch (NotAuthenticatedException | NetworkServiceException e) {
+                //
+            }
+        }
     }
 
     @Override
@@ -67,8 +93,8 @@ public class SupprTagActivity extends Activity {
 
         mSend = (Button) findViewById(R.id.send);
 
-        ArrayAdapter<Tag> tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
-        tagArrayAdapter.addAll(arrayAdapter);
+        tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
+        tagArrayAdapter.addAll(tagsList);
 
         mListSuppr.setAdapter(tagArrayAdapter);
 
@@ -77,13 +103,13 @@ public class SupprTagActivity extends Activity {
 
     }
 
-    public static void ChangeTagsList(List<Tag> list)
+    public static void changeTagsList(List<Tag> list)
     {
-        arrayAdapter.clear();
+        tagsList.clear();
 
-        arrayAdapter.addAll(list);
+        tagsList.addAll(list);
 
-        Collections.sort(arrayAdapter, new Comparator<Tag>() {
+        Collections.sort(tagsList, new Comparator<Tag>() {
             @Override
             public int compare(Tag lhs, Tag rhs) {
                 return lhs.getObjectName().compareTo(rhs.getObjectName());

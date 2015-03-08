@@ -25,9 +25,11 @@ public class TagsActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_tags);
     }
+
     public void goToAjout(View view){
         Intent intentAjout = new Intent( TagsActivity.this, AjoutTagActivity.class);
-        startActivity(intentAjout);}
+        startActivity(intentAjout);
+    }
 
     public void goToModif (View view) {
         try {
@@ -53,7 +55,7 @@ public class TagsActivity extends Activity {
         try {
             List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
-            SupprTagActivity.ChangeTagsList(list);
+            SupprTagActivity.changeTagsList(list);
             Intent intentSuppr = new Intent (TagsActivity.this, SupprTagActivity.class);
             startActivity(intentSuppr);
         } catch (NotAuthenticatedException e) {

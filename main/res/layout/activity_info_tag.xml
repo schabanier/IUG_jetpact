@@ -29,9 +29,10 @@
         android:id="@+id/buttonModifier"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff"
+        android:onClick="modifierTag"
         android:layout_alignParentBottom="true"
-        android:onClick="creerCompte"
-        android:layout_alignRight="@+id/editTextId" />
+        android:layout_toEndOf="@+id/textViewModif"
+        android:layout_alignParentRight="true" />
 
 
 

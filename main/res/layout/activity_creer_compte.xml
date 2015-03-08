@@ -108,7 +108,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/editTextEmail"
         android:layout_alignEnd="@+id/editTextEmail"
-        android:onClick="creerCompte"/>
+        android:onClick="modifierTag"/>
 
     <Button
         style="@android:style/MediaButton.Previous"

@@ -1,7 +1,6 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +38,6 @@ public class AjoutTagActivity extends Activity {
     }
 
     public void creerTag (View view) {
-        Intent intent = new Intent (AjoutTagActivity.this, TagsActivity.class);
 
 
 
@@ -48,39 +46,42 @@ public class AjoutTagActivity extends Activity {
         String identifiant = EditTextId.getText().toString();
 
         if(nom.length() == 0)
-            Toast.makeText(AjoutTagActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Entrer nom", Toast.LENGTH_LONG).show();
         else if(identifiant.length() == 0)
-            Toast.makeText(AjoutTagActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Entrer identifiant", Toast.LENGTH_LONG).show();
         else
         {
             try {
 
                 Tag tag = new Tag(identifiant, nom, image);
-                NetworkServiceProvider.getNetworkService().addTag(tag) ;
-                startActivity(intent);
+                NetworkServiceProvider.getNetworkService().addTag(tag);
+
+                finish();
             }
-                                                                         /* Passer à l'activité Home*/
-            catch (NullPointerException e) {}
 
             catch (IllegalFieldException e) {
                 switch (e.getFieldId()) {
                     case IllegalFieldException.TAG_OBJECT_NAME:
-                        Toast.makeText(AjoutTagActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
+                        if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                            Toast.makeText(this, "nom déjà utilisé", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(this, "Nom incorrect", Toast.LENGTH_LONG).show();
                         break;
                     case IllegalFieldException.TAG_OBJECT_IMAGE:
-                        Toast.makeText(AjoutTagActivity.this, "Entrer image", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Entrer image", Toast.LENGTH_LONG).show();
                     case IllegalFieldException.TAG_UID:
-                        Toast.makeText(AjoutTagActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
+                        if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                            Toast.makeText(this, "identifiant déjà utilisé", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(this, "identifiant incorrect", Toast.LENGTH_LONG).show();
                         break;
                 }
             }
-
             catch (NotAuthenticatedException e) {
-                e.printStackTrace();
+                Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
             }
-
             catch (NetworkServiceException e) {
-                e.printStackTrace();
+                Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
             }
         }
 
