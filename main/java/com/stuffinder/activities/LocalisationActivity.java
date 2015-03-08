@@ -21,6 +21,8 @@ import com.stuffinder.exceptions.TagNotDetectedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Handler;
+
 
 public class LocalisationActivity extends Activity {
 
@@ -30,7 +32,8 @@ public class LocalisationActivity extends Activity {
     private BluetoothAdapter mBluetoothAdapter;
     public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
     private static HashMap<BluetoothDevice,Integer> listRssi = new HashMap<BluetoothDevice, Integer>();
-    private static final long SCAN_PERIOD = 10000; //durée d'un scan
+    private static final long SCAN_PERIOD = 5000; //durée d'un scan
+
 
     private Boolean presence = false;
     private int puissance;
@@ -135,14 +138,15 @@ public class LocalisationActivity extends Activity {
 
         scanLeDevice();
 
+
         for (int i=0; i < mDevices.size(); i++) {
             if (mDevices.get(i).getAddress().equals(id_Tag)) {
                 presence = true;
             }
         }
 
-        listRssi.clear();
-        mDevices.clear();
+
+
 
         return presence;
     }
@@ -150,7 +154,7 @@ public class LocalisationActivity extends Activity {
     public int distance(String id_Tag) //"F9:1F:24:D3:1B:D4"
             throws TagNotDetectedException {
 
-        int indicePuissance=3;
+        int indicePuissance =3;
 
         if (!presence)
             throw new TagNotDetectedException();
@@ -158,36 +162,40 @@ public class LocalisationActivity extends Activity {
         else {
             for (int i = 0; i < mDevices.size(); i++) {
                 if (mDevices.get(i).getAddress().equals(id_Tag)) {
-                    puissance = listRssi.get(mDevices.get(i)).intValue();
+                    puissance = Math.abs(listRssi.get(mDevices.get(i)).intValue());
                 }
             }
 
-            if (puissance < 60)
+
+            if (puissance < 40)
                 indicePuissance = 1;
 
-            else if (puissance < 80 && puissance > 59)
+            else if (puissance < 70 && puissance >= 40)
                 indicePuissance = 2;
         }
+
+        listRssi.clear();
+        mDevices.clear();
 
         return indicePuissance;
     }
 
     private void scanLeDevice() { //timer pour le scan
-        new Thread() {
 
-            @Override
-            public void run() {
-                mBluetoothAdapter.startLeScan(mLeScanCallback);
 
-                try {
-                    Thread.sleep(SCAN_PERIOD);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-                mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            }
-        }.start();
+
+        mBluetoothAdapter.startLeScan(mLeScanCallback);
+
+        try {
+            Thread.sleep(SCAN_PERIOD);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -200,10 +208,10 @@ public class LocalisationActivity extends Activity {
                     mDevices.add(device);
                 listRssi.put(device, new Integer(rssi));
 
-                if (device.getAddress().equals(UUID_Tag)) {
+                /*if (device.getAddress().equals(UUID_Tag)) {
                     presence = true;
                     puissance = rssi;
-                }
+                } */
             }
 
         }
