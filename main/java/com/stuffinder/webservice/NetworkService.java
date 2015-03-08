@@ -1,5 +1,7 @@
 package com.stuffinder.webservice;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -239,15 +241,53 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     // convert inputstream to String
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while ((line = bufferedReader.readLine()) != null)
-            result += line;
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException, InterruptedException {
+        InputStreamConverter inputStreamConverter = new InputStreamConverter(inputStream);
 
-        inputStream.close();
-        return result;
+        inputStreamConverter.start();
+        inputStreamConverter.join();
+
+        if(inputStreamConverter.isConversionSuccessful())
+            return inputStreamConverter.getResult();
+        else
+            throw inputStreamConverter.getCatchedIOException();
+    }
+
+    static class InputStreamConverter extends Thread{
+        private InputStream inputStream;
+        private String result;
+
+        IOException catchedIOException;
+
+        InputStreamConverter(InputStream inputStream){
+            this.inputStream = inputStream;
+        }
+
+        public void run(){
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                result = "";
+                while ((line = bufferedReader.readLine()) != null)
+                    result += line;
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                catchedIOException = e;
+            }
+        }
+
+        public boolean isConversionSuccessful(){
+            return catchedIOException == null;
+        }
+
+        IOException getCatchedIOException(){
+            return catchedIOException;
+        }
+
+        String getResult(){
+            return result;
+        }
     }
 
 
@@ -439,6 +479,8 @@ public class NetworkService implements NetworkServiceInterface {
                             throw new NotAuthenticatedException();
                         }
                     } catch (JSONException e) {
+                        Log.e("content of the catched JSON", result);
+                        e.printStackTrace();
                         // "Error Occured [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
                     }
@@ -463,8 +505,10 @@ public class NetworkService implements NetworkServiceInterface {
                 throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
             }
         } catch (IOException | IllegalStateException e) {
+            e.printStackTrace();
             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
         } catch (InterruptedException e) {
+            e.printStackTrace();
             throw new NetworkServiceException("error occured while executing request.");
         }
 
