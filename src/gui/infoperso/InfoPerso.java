@@ -212,7 +212,7 @@ public class InfoPerso extends JPanel {
 	  
 	  Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
 	  int tagsNumber = NetworkServiceProvider.getNetworkService().getTags().size();
-	  int profilesNumber = NetworkServiceProvider.getNetworkService().getProfiles().size();
+	  int profilesNumber = 0; //NetworkServiceProvider.getNetworkService().getProfiles().size();
 	  
 	  
 	  textfieldPseudo.setText(account.getPseudo());
