@@ -19,6 +19,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
  
  
 
+
 import data.Account;
 import data.Profile;
 import data.Tag;
@@ -29,6 +30,7 @@ import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import interfaces.NetworkServiceInterface;
  
+@SuppressWarnings("deprecation")
 public class NetworkService implements NetworkServiceInterface {
  
  
