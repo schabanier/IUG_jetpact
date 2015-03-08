@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
@@ -38,10 +39,10 @@ public class TagsActivity extends Activity {
             ModifTagActivity.ChangeTagsList(list);
             Intent intentModif = new Intent (TagsActivity.this, ModifTagActivity.class);
             startActivity(intentModif);
-        } catch (NotAuthenticatedException e) {
-            e.printStackTrace();
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
         } catch (NetworkServiceException e) {
-            e.printStackTrace();
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -58,10 +59,10 @@ public class TagsActivity extends Activity {
             SupprTagActivity.changeTagsList(list);
             Intent intentSuppr = new Intent (TagsActivity.this, SupprTagActivity.class);
             startActivity(intentSuppr);
-        } catch (NotAuthenticatedException e) {
-            e.printStackTrace();
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
         } catch (NetworkServiceException e) {
-            e.printStackTrace();
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
         }
     }
 
