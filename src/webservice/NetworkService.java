@@ -89,7 +89,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/register?pseudo =" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/register?pseudo=" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -119,7 +119,7 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                            currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
+                        	currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
  
                         }
  
@@ -219,7 +219,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/login?pseudo =" + pseudo + "&password=" + password));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/login?pseudo=" + pseudo + "&password=" + password));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -392,7 +392,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/modifyemail?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_email=" + emailAddress));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyemail?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_email=" + emailAddress));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -514,7 +514,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/modifypassword?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_password=" + newPassword));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifypassword?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_password=" + newPassword));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -635,7 +635,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/retrievetag?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/retrievetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -769,7 +769,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/addtag?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&object_name=" + tag.getObjectName() + "&picture=" + tag.getObjectImageName()));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/addtag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&object_name=" + tag.getObjectName() + "&picture=" + tag.getObjectImageName()));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -888,7 +888,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/modifyobjectname?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&new_object_name=" + newObjectName));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyobjectname?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&new_object_name=" + newObjectName));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
@@ -1017,7 +1017,7 @@ public class NetworkService implements NetworkServiceInterface {
  
             // make GET request to the given URL
  
-            HttpResponse httpResponse = client.execute(new HttpGet(" http://92.222.33.38:8080/app_server/ns/deletetag?pseudo =" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/deletetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
  
             StatusLine statusLine = httpResponse.getStatusLine();
  
