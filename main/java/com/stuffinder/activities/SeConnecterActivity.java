@@ -38,27 +38,29 @@ public class SeConnecterActivity extends Activity {
        Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
 
        if(identifiant.length() == 0)
-           Toast.makeText(SeConnecterActivity.this, "Entrer identifiant", Toast.LENGTH_LONG).show();
+           Toast.makeText(SeConnecterActivity.this, "Entrez votre pseudo", Toast.LENGTH_LONG).show();
        else if(mdp.length() == 0)
-           Toast.makeText(SeConnecterActivity.this, "Entrer mot de passe", Toast.LENGTH_LONG).show();
+           Toast.makeText(SeConnecterActivity.this, "Entrez votre mot de passe", Toast.LENGTH_LONG).show();
        else
        {
            try {
                if (! FieldVerifier.verifyName(identifiant)) { throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, identifiant);}
                if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, mdp);}
                NetworkServiceProvider.getNetworkService().authenticate( identifiant, mdp);
+
+               finish();
                startActivity(intent);
            }
            catch ( IllegalFieldException e ) {
                switch(e.getFieldId()) {
                    case IllegalFieldException.PSEUDO:
-                       Toast.makeText(SeConnecterActivity.this, "Identifiant incorrect", Toast.LENGTH_LONG).show();
+                       Toast.makeText(SeConnecterActivity.this, "Pseudo incorrect", Toast.LENGTH_LONG).show();
                        break;
                    case IllegalFieldException.PASSWORD:
                        Toast.makeText(SeConnecterActivity.this, "Mot de passe incorect ; il doit contenir au moins 6 caractères", Toast.LENGTH_LONG).show();
                        break;
                } }
-           catch (AccountNotFoundException e)   { Toast.makeText(SeConnecterActivity.this, "Vos identifiant et mot de passe sont incorrects",Toast.LENGTH_LONG).show(); }
+           catch (AccountNotFoundException e)   { Toast.makeText(SeConnecterActivity.this, "Vos pseudo et mot de passe sont incorrects",Toast.LENGTH_LONG).show(); }
            catch (NetworkServiceException e) {Toast.makeText(SeConnecterActivity.this, "Erreur de serveur", Toast.LENGTH_LONG).show();}
        }
    }

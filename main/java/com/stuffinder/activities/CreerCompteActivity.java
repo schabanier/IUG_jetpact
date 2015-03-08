@@ -65,17 +65,17 @@ public class CreerCompteActivity extends Activity {
         String confirmMdp = editTextConfirmPassword.getText().toString();
 
         if(nom.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer nom", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrez votre nom", Toast.LENGTH_LONG).show();
         else if(prenom.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer prénom", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrez votre prénom", Toast.LENGTH_LONG).show();
         else if(identifiant.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer pseudo", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrez un pseudo", Toast.LENGTH_LONG).show();
         else if(email.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer email", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrez votre email", Toast.LENGTH_LONG).show();
         else if(mdp.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Entrer mot de passe", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Entrez un mot de passe", Toast.LENGTH_LONG).show();
         else if(confirmMdp.length() == 0)
-            Toast.makeText(CreerCompteActivity.this, "Confirmer mot de passe", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreerCompteActivity.this, "Confirmez le mot de passe", Toast.LENGTH_LONG).show();
         else if(! confirmMdp.equals(mdp))
             Toast.makeText(CreerCompteActivity.this, "Confirmation de mot de passe incorrecte", Toast.LENGTH_LONG).show();
         else

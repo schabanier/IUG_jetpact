@@ -127,7 +127,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returncode");
                         if (returnCode == 0) {
-                            currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
+                            // currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
                         }
                         // Else display error message
                         else if (returnCode == 1) {
