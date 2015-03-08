@@ -39,11 +39,11 @@ public class Accueil extends Activity {
 
         setContentView(R.layout.activity_accueil);
 
-        NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
+        NetworkServiceProvider.setNetworkService(NetworkService.getInstance());
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
         } catch (NetworkServiceException e) {
-            Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG);
+            Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
             finish();
         }
 
