@@ -3,6 +3,8 @@ package gui.authentification;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,9 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 
 import engine.NetworkServiceProvider;
 import exceptions.AccountNotFoundException;
@@ -66,73 +65,73 @@ public class Identification extends JPanel
 
 			panel1.setBorder(new EmptyBorder(5,15,5,5));
 
-//			GroupLayout layout = new GroupLayout(panel1);
-//			panel1.setLayout(layout);
-//			
-//			layout.setAutoCreateGaps(true);
-//			layout.setAutoCreateContainerGaps(true);
-//			
-//			layout.setHorizontalGroup(
-//					layout.createSequentialGroup()
-//						.addGroup(
-//							layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//								.addComponent(labelPseudo)
-//								.addComponent(labelMdp)
-//								.addComponent(buttonConnexion)
-//							)
-//						.addGroup(
-//							layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//								.addComponent(textFieldPseudo)
-//								.addComponent(passwordField1)
-//								.addComponent(buttonCreerCompte)
-//							)
-//					);
-//			
-//			
-//			layout.setVerticalGroup(
-//					layout.createSequentialGroup()
-//						.addGroup(
-//							layout.createParallelGroup(Alignment.BASELINE)
-//								.addComponent(labelPseudo)
-//								.addComponent(textFieldPseudo)
-//							)
-//						.addGroup(
-//							layout.createParallelGroup(Alignment.BASELINE)
-//								.addComponent(labelMdp)
-//								.addComponent(passwordField1)
-//							)
-//						.addGroup(
-//							layout.createParallelGroup(Alignment.BASELINE)
-//								.addComponent(buttonConnexion)
-//								.addComponent(buttonCreerCompte)
-//							)
-//					);
+			GroupLayout layout = new GroupLayout(panel1);
+			panel1.setLayout(layout);
+			
+			layout.setAutoCreateGaps(true);
+			layout.setAutoCreateContainerGaps(true);
+			
+			layout.setHorizontalGroup(
+					layout.createSequentialGroup()
+						.addGroup(
+							layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(labelPseudo)
+								.addComponent(labelMdp)
+								.addComponent(buttonConnexion)
+							)
+						.addGroup(
+							layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(textFieldPseudo)
+								.addComponent(passwordField1)
+								.addComponent(buttonCreerCompte)
+							)
+					);
+			
+			
+			layout.setVerticalGroup(
+					layout.createSequentialGroup()
+						.addGroup(
+							layout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(labelPseudo)
+								.addComponent(textFieldPseudo)
+							)
+						.addGroup(
+							layout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(labelMdp)
+								.addComponent(passwordField1)
+							)
+						.addGroup(
+							layout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(buttonConnexion)
+								.addComponent(buttonCreerCompte)
+							)
+					);
 
-			panel1.setLayout(new FormLayout(
-					"10*(default, $lcgap), default",
-					"11*(default, $lgap), default"));
+//			panel1.setLayout(new FormLayout(
+//					"10*(default, $lcgap), default",
+//					"11*(default, $lgap), default"));
 
 			panel1.setVisible(true);
 
 			//---- label3 ----
 			labelPseudo.setText(Constants.Fields.PSEUDO);
-			panel1.add(labelPseudo, CC.xywh(3, 5, 5, 2));
-			panel1.add(textFieldPseudo, CC.xy(9, 5));
+//			panel1.add(labelPseudo, CC.xywh(3, 5, 5, 2));
+//			panel1.add(textFieldPseudo, CC.xy(9, 5));
 
 			//---- label4 ----
 			labelMdp.setText(Constants.Fields.PASSWORD);
-			panel1.add(labelMdp, CC.xy(3, 9));
-			panel1.add(passwordField1, CC.xy(9, 9));
+//			panel1.add(labelMdp, CC.xy(3, 9));
+//			panel1.add(passwordField1, CC.xy(9, 9));
 
 			//---- button1 ----
 			buttonCreerCompte.setText(Constants.Authentication.CREATE_ACCOUNT_BUTTON_NAME);
-			panel1.add(buttonCreerCompte, CC.xy(3, 15));
+//			panel1.add(buttonCreerCompte, CC.xy(3, 15));
 
 			buttonCreerCompte.addActionListener(new Button1Listener(frameContainer));
 
 			//---- button2 ----
 			buttonConnexion.setText(Constants.Authentication.DO_AUTHENTICATE_BUTTON_NAME);
-			panel1.add(buttonConnexion, CC.xy(9, 15));
+//			panel1.add(buttonConnexion, CC.xy(9, 15));
 
 			buttonConnexion.addActionListener(new Button2Listener());
 		}

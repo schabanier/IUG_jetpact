@@ -175,29 +175,29 @@ public class AccountCreation extends JDialog
 			
 			if (textFieldNom.getText().length() == 0 ) // il manque le nom
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.LASTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.LASTNAME), JOptionPane.ERROR_MESSAGE);
-			else if(FieldVerifier.verifyName(textFieldNom.getText()))
+			else if(! FieldVerifier.verifyName(textFieldNom.getText()))
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.LASTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.LASTNAME), JOptionPane.ERROR_MESSAGE);
 			
 			else if (textFieldPrenom.getText().length() == 0) //il manque le prenom
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.FIRSTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.FIRSTNAME), JOptionPane.ERROR_MESSAGE);
-			else if(FieldVerifier.verifyName(textFieldPrenom.getText()))
+			else if(! FieldVerifier.verifyName(textFieldPrenom.getText()))
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.FIRSTNAME), CommonErrorMessages.getFieldErrorTitle(Fields.FIRSTNAME), JOptionPane.ERROR_MESSAGE);
 			
 			
 			else if(textFieldMail.getText().length() == 0) // il manque le mail
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.EMAIL_ADDRESS), CommonErrorMessages.getFieldErrorTitle(Fields.EMAIL_ADDRESS), JOptionPane.ERROR_MESSAGE);
-			else if(FieldVerifier.verifyEMailAddress(textFieldMail.getText()))
+			else if(! FieldVerifier.verifyEMailAddress(textFieldMail.getText()))
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.EMAIL_ADDRESS), CommonErrorMessages.getFieldErrorTitle(Fields.EMAIL_ADDRESS), JOptionPane.ERROR_MESSAGE);
 			
 			else if(textFieldPseudo.getText().length() == 0) // il manque le pseudo
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.PSEUDO), CommonErrorMessages.getFieldErrorTitle(Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
-			else if(FieldVerifier.verifyName(textFieldPseudo.getText()))
+			else if(! FieldVerifier.verifyName(textFieldPseudo.getText()))
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PSEUDO), CommonErrorMessages.getFieldErrorTitle(Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
 				
 			
 			else if(passwordField2.getPassword().length == 0)	//il manque mdp1
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getEmptyFieldErrorMessage(Fields.PASSWORD), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
-			else if(FieldVerifier.verifyPassword(new String(passwordField2.getPassword())))
+			else if(! FieldVerifier.verifyPassword(new String(passwordField2.getPassword())))
 				JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.PASSWORD), CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
 			
 			else if (passwordField3.getPassword().length == 0) //il manque mdp2
