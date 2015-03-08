@@ -118,7 +118,7 @@ public class NetworkService implements NetworkServiceInterface {
 		URL loginURL;
 		try {
 			// http://localhost:8080/app_server/ns/dologin?pseudo=abc&password=xyz
-			loginURL = new URL("http://"+adressHost+"/dologin?e="+userAccount.getPseudo()+"&password="+userPassword);
+			loginURL = new URL("http://"+adressHost+"/dologin?pseudo="+userAccount.getPseudo()+"&password="+userPassword);
 			String reponse = HTTPLoader.getTextFile(loginURL);
 			JSONObject obj = (JSONObject) JSONValue.parse(reponse);
 			if ((boolean) obj.get("status")) {
