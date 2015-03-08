@@ -3,18 +3,18 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Profil
+public class Profile
 {
 	private List<Tag> tags;
 	private String name;
 	
-	public Profil(String name)
+	public Profile(String name)
 	{
 		this.name = name;
 		tags = new ArrayList<>();
 	}
 	
-	String getName()
+	public String getName()
 	{
 		return name;
 	}
@@ -39,5 +39,12 @@ public class Profil
 	public void removeAllTags()
 	{
 		tags.clear();
+	}
+
+
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Profile)) ? false : 
+					name.equals(((Profile) obj).getName());
 	}
 }

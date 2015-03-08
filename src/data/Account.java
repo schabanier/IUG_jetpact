@@ -1,7 +1,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Account
@@ -9,14 +8,22 @@ public class Account
 	private String pseudo;
 	private String firstName;
 	private String lastName;
-	private Date birthDate;
-	private String mailAddress;
+	private String emailAddress;
 	
 	private List<Tag> tags;
-	private List<Profil> profils;
+	private List<Profile> profils;
 	
-	public Account()
+	public Account(String pseudo, String firstName, String lastName, String emailAddress)
 	{
+		if(pseudo == null)
+			throw new NullPointerException();
+		
+		this.pseudo = pseudo;
+		
+		setFirstName(firstName);
+		setLastName(lastName);
+		setMailAddress(emailAddress);
+		
 		tags = new ArrayList<>();
 		profils = new ArrayList<>();
 	}
@@ -26,12 +33,12 @@ public class Account
 		return tags;
 	}
 
-	public List<Profil> getProfils()
+	public List<Profile> getProfils()
 	{
 		return profils;
 	}
 
-	String getPseudo()
+	public String getPseudo()
 	{
 		return pseudo;
 	}
@@ -60,28 +67,22 @@ public class Account
 		this.lastName = lastName;
 	}
 
-	public Date getBirthDate()
+	public String getEMailAddress()
 	{
-		return birthDate;
+		return emailAddress;
 	}
 
-	public void setBirthDate(Date birthDate)
+	public void setMailAddress(String emailAddress)
 	{
-		if(birthDate == null)
-			throw new NullPointerException();
-		this.birthDate = birthDate;
-	}
-
-	public String getMailAddress()
-	{
-		return mailAddress;
-	}
-
-	public void setMailAddress(String mailAddress)
-	{
-		if(mailAddress == null)
+		if(emailAddress == null)
 			throw new NullPointerException();
 		
-		this.mailAddress = mailAddress;
+		this.emailAddress = emailAddress;
+	}
+
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Account)) ? false : 
+					pseudo.equals(((Account) obj).getPseudo());
 	}
 }
