@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.methods.HttpUriRequest;
@@ -442,7 +443,7 @@ public class NetworkService implements NetworkServiceInterface {
     @Override
     public List<Tag> getTags() throws NotAuthenticatedException,
             NetworkServiceException {
-        List<Tag> res = null;
+        List<Tag> res = new ArrayList<>();
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyName(currentAccount.getPseudo()))
             throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, currentAccount.getPseudo());
@@ -466,7 +467,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returncode");
                         if (returnCode == 0) {
-                            org.json.JSONArray arrayOfJsonTag = new org.json.JSONArray(obj.getJSONArray("listTags"));
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
                             for (int i = 0; i < arrayOfJsonTag.length(); i++) {
                                 JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
                                 Tag tag = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
