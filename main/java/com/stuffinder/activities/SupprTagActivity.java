@@ -2,6 +2,8 @@ package com.stuffinder.activities;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -38,7 +40,7 @@ public class SupprTagActivity extends Activity {
         finish();
     }
 
-    public void actionSupprimerTagsSelectionnes(View view){
+    void supprimerTagsSelectionnes(){
 
         SparseBooleanArray tab = mListSuppr.getCheckedItemPositions() ;
 
@@ -80,6 +82,32 @@ public class SupprTagActivity extends Activity {
                 //
             }
         }
+    }
+
+    public void actionSupprimerTagsSelectionnes(View view){
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Vous êtes sur le point de supprimer les tags sélectionnés.")
+                .setTitle("Supprimer les tags sélectionnés ?");
+
+        // Add the buttons
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                supprimerTagsSelectionnes();
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
     @Override
