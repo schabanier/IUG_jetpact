@@ -270,7 +270,7 @@ public class CreerProfil extends JDialog {
 				
 				try {
 					
-				 NetworkServiceProvider.getNetworkService().addTagToProfile(nomTextField.getText(),listAvailable.getComponent(i));
+				 NetworkServiceProvider.getNetworkService().addTagToProfile(nomTextField.getText(),listAvailable.getM);
 				} catch(NotAuthenticatedException e1)
 				{
 					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
