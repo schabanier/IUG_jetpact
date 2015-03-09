@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 public class GestionDeProfils extends JPanel 
 {
 	private JPanel principalPanel;
-	private JPanel panel1, panel2;
+	private JPanel panelLeft, panelRight;
 	
 	private JButton buttonAjouterProfil ;
 	private JFrame frameContainer;
@@ -30,8 +30,8 @@ public class GestionDeProfils extends JPanel
 		this.frameContainer= frameContainer ;
 		
 		principalPanel = new JPanel();
-		panel1 = new JPanel() ;
-		panel2 = new JPanel();
+		panelLeft = new JPanel() ;
+		panelRight = new JPanel();
 		
 		
 		buttonAjouterProfil = new JButton() ;
@@ -43,7 +43,7 @@ public class GestionDeProfils extends JPanel
 		
 		// ==== Panel Gestion Profil =====
 		
-		panel1.setBorder(new EmptyBorder(5,15,5,5));
+		panelLeft.setBorder(new EmptyBorder(5,15,5,5));
 		
 		
 		// ===== profilsList ====
@@ -52,7 +52,7 @@ public class GestionDeProfils extends JPanel
 		
 		//==== Panel informations ====
 		
-		panel2.setBorder(new EmptyBorder(5,15,5,5));
+		panelRight.setBorder(new EmptyBorder(5,15,5,5));
 		
 		
 		
