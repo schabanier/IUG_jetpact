@@ -35,11 +35,11 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#PSEUDO Pseudo} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED value already used} if the pseudo is already used for another account) </li>
-	 * 		<li>{@link IllegalFieldException#FIRSTNAME First name} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect) </li>
-	 * 		<li>{@link IllegalFieldException#LASTNAME Last name} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect) </li>
-	 * 		<li>{@link IllegalFieldException#EMAIL_ADDRESS Email address} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is incorrect) </li>
-	 * 		<li>{@link IllegalFieldException#PASSWORD Password} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect) </li>
+	 * 		<li>{@link IllegalFieldException#PSEUDO Pseudo} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if the pseudo is already used for another account) </li>
+	 * 		<li>{@link IllegalFieldException#FIRSTNAME First name} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect) </li>
+	 * 		<li>{@link IllegalFieldException#LASTNAME Last name} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect) </li>
+	 * 		<li>{@link IllegalFieldException#EMAIL_ADDRESS Email address} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is incorrect) </li>
+	 * 		<li>{@link IllegalFieldException#PASSWORD Password} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect) </li>
 	 * </ul>
 	 * 
 	 * @throws NetworkServiceException If a network service error has occurred.
@@ -106,9 +106,9 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED value already used} if the tag uid is already used) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_NAME object name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED value already used} if the object name is already used for another tag) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_IMAGE object image} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the filename is incorrect, i.e. if the file is not found or is not an image) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if the tag uid is already used) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_NAME object name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if the object name is already used for another tag) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_IMAGE object image} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the filename is incorrect, i.e. if the file is not found or is not an image) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
@@ -123,8 +123,8 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_NAME object name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED value already used} if this object name is already used for another tag) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_NAME object name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this object name is already used for another tag) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
@@ -133,96 +133,186 @@ public interface NetworkServiceInterface
 	/**
 	 * Modify the object image for a tag.
 	 * @param tag The tag to be modified.
-	 * @param newImageFileName the filename of the new object image.
+	 * @param newImageFileName The filename of the new object image.
 	 * @return The tag modified if this operation succeeds.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_IMAGE object image} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if the filename is incorrect, i.e. if the file is not found or is not an image) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_IMAGE object image} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the filename is incorrect, i.e. if the file is not found or is not an image) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * Remove a tag from the current account.
+	 * Remove a tag from the current account. This tag is also removed from all profiles which contains it.
 	 * @param tag The tag to be removed.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 	
-
-	/**
-	 * To create a new profile empty.
-	 * @param profileName The name of the new profile.
-	 * @return the created profile if this operation succeeds.
-	 * @throws NotAuthenticatedException If the authentication is not done.
-	 * @throws IllegalFieldException If the field {@link IllegalFieldException#PROFILE_NAME profile name} is incorrect. The reason can be {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} or {@link IllegalFieldException#REASON_VALUE_ALREADY_USED value already used}.
-	 * @throws NetworkServiceException If a network service error has occurred.
-	 */
-	public Profile createProfile(String profileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	
 	
 
 	/**
-	 * To add a tag to a profile.
+	 * Creates an empty profile named <code>profileName</code>.
+	 * @param profileName The name of the new profile to be created.
+	 * @return The profile created.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already a profile with this name) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network service error has occurred.
+	 */
+	public Profile createProfile(String profileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+	/**
+	 * Creates a new profile named <code>profileName</code> and adds the tags of the list <code>tagList</code> into this profile.
+	 * <br/>Only the UID of the tags are used to perform this operation.
+	 * 
+	 * @param profileName The name of the new profile to be created.
+	 * @param tagList The tags to add into the new profile.
+	 * @return The profile created.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already a profile with this name) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is twice or more in the specified list) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network service error has occurred.
+	 */
+	public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	
+
+	/**
+	 * Adds a tag into a profile.
+	 * <br/>Only the UID of the tag is used to perform this operation.
 	 * @param profile The profile to be modified.
-	 * @param tag The tag to be added.
+	 * @param tag The tag to be added into the specified profile.
 	 * @return The profile modified if this operation succeeds.
 	 * @throws NotAuthenticatedException If the authentication is not done.
-	 * @throws IllegalFieldException
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is already added into this profile) </li>
+	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 
 	/**
-	 * 
-	 * @param profile
-	 * @param tags
-	 * @return
-	 * @throws NotAuthenticatedException
-	 * @throws IllegalFieldException
-	 * @throws NetworkServiceException
+	 * Adds the tags of a list into a profile.
+	 * <br/>Only the UID of the tags are used to perform this operation.
+	 * @param profile The profile to be modified.
+	 * @param tags the tags to be added into the specified profile.
+	 * @return The profile modified if this operation succeeds.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} of one tag of the list. (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is already added into this profile) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
+
 	/**
-	 * SPECIFICATION NOT FINISHED.
+	 * Removes a tag from a profile.
+	 * @param profile The profile to be modified.
+	 * @param tag The tag to be removed from the specified profile.
+	 * @return The profile modified if this operation succeeds.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the specified profile doesn't contain this tag or no tag has this UID) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
-	/**
-	 * SPECIFICATION NOT FINISHED.
-	 */
-	public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * SPECIFICATION NOT FINISHED.
+	 * Removes tags from a profile.
+	 * @param profile The profile to be modified.
+	 * @param tag The tags to be removed from the specified profile.
+	 * @return The profile modified if this operation succeeds.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID UID} of one tag of the list (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the specified profile doesn't contain this tag or no tag has this UID) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network service error has occurred.
+	 */
+	public Profile removeTagsFromProfile(Profile profile, List<Tag> tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+	
+	
+	/**
+	 * Replace the tag list of a profile by the specified tag list.
+	 * @param profile The profile to be modified.
+	 * @param tagList The new tag list for the specified profile.
+	 * @return The profile modified if this operation succeeds.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is twice or more in the specified list) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * SPECIFICATION NOT FINISHED.
+	 * Removes a profile.
+	 * @param profile The profile to be removed.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * </ul>
+	 * @throws NetworkServiceException If a network error has occurred.
 	 */
-	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * SPECIFICATION NOT FINISHED.
+	 * To get a profile by a name.
+	 * @param profileName The name of a profile
+	 * @return The profile matching with the name <code>profileName</code>.
+	 * @throws NotAuthenticatedException If the authentication is not done.
+	 * @throws NetworkServiceException If a network service error has occurred.
+	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+	 * The possible fields with the reason(s) are : <br/>
+	 * <ul>
+	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+	 * </ul>
 	 */
-	public Profile getProfile(String profileName) throws NotAuthenticatedException;
+	public Profile getProfile(String profileName) throws NotAuthenticatedException, NetworkServiceException, IllegalFieldException;
 
 	/**
-	 * To get the profiles of the current account.
-	 * @return The profiles list if the authentication is already done successfully.
+	 * To get the profiles linked with the current account.
+	 * @return The profiles linked with the current account
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
