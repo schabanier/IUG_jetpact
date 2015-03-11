@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 import data.Tag;
 import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
+import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.infoperso.ModifierInfo;
 
@@ -177,6 +178,12 @@ public class CreerProfil extends JDialog {
 			} catch (NotAuthenticatedException e1) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+			} catch (IllegalFieldException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NetworkServiceException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 			 
 			}
