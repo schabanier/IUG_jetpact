@@ -22,14 +22,14 @@ public interface NetworkServiceInterface
 {
 	
 	/**
-	 * Initialize this service to rend it available for network communications.
+	 * Initializes this service to rend it available for network communications.
 	 * @throws NetworkServiceException if an error has occurred during the initialization.
 	 */
 	public void initNetworkService() throws NetworkServiceException;
 	
 	
 	/**
-	 * Create an account with the specified informations. Throws an exception if an error has occurred.
+	 * Creates an account with the specified informations. Throws an exception if an error has occurred.
 	 * @param newAccount Object which contains all informations about the account to be created.
 	 * @param newPassword Password for the account to be created.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
@@ -48,7 +48,7 @@ public interface NetworkServiceInterface
 
 	
 	/**
-	 * Do authentication with specified information.
+	 * Performs authentication with specified information.
 	 * @param pseudo The pseudo
 	 * @param password The password
 	 * @return The matching account if this operation succeeds.
@@ -58,7 +58,7 @@ public interface NetworkServiceInterface
 	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
 	
 	/**
-	 * Logout.
+	 * To logout.
 	 */
 	public void logOut();
 	
@@ -72,7 +72,7 @@ public interface NetworkServiceInterface
 
 	
 	/**
-	 * Modify the email address of the current account.
+	 * Modifies the email address of the current account.
 	 * @param emailAddress The new email address
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If the specified email address is incorrect (field id {@link IllegalFieldException#EMAIL_ADDRESS EMAIL_ADDRESS} and reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT}).
@@ -81,7 +81,7 @@ public interface NetworkServiceInterface
 	public void modifyEMailAddress(String emailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * Modify the password of the current account.
+	 * Modifies the password of the current account.
 	 * @param newPassword The new password
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If the specified password is syntactically incorrect (field id {@link IllegalFieldException#PASSWORD PASSWORD} and reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT}).
@@ -99,7 +99,7 @@ public interface NetworkServiceInterface
 	public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException;
 	
 	/**
-	 * Add a new tag to the current account.
+	 * Adds a new tag to the current account.
 	 * @param tag The new tag to be added.
 	 * @return the tag added if this operation succeeds.
 	 * @throws NotAuthenticatedException If the authentication is not done.
@@ -115,7 +115,7 @@ public interface NetworkServiceInterface
 	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 	/**
-	 * Modify the object name for a tag.
+	 * Modifies the object name for a tag.
 	 * @param tag The tag to be modified.
 	 * @param newObjectName The new object name.
 	 * @return The tag modified if this operation succeeds.
@@ -131,7 +131,7 @@ public interface NetworkServiceInterface
 	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 	/**
-	 * Modify the object image for a tag.
+	 * Modifies the object image for a tag.
 	 * @param tag The tag to be modified.
 	 * @param newImageFileName The filename of the new object image.
 	 * @return The tag modified if this operation succeeds.
@@ -147,7 +147,7 @@ public interface NetworkServiceInterface
 	public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * Remove a tag from the current account. This tag is also removed from all profiles which contains it.
+	 * Removes a tag from the current account. This tag is also removed from all profiles which contains it.
 	 * @param tag The tag to be removed.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
@@ -314,7 +314,7 @@ public interface NetworkServiceInterface
 	
 	
 	/**
-	 * Replace the tag list of a profile by the specified tag list.
+	 * Replaces the tag list of a profile by the specified tag list.
 	 * 
 	 * <br/><br/>Only the UID of the tags are used to perform this operation.
 	 * 
