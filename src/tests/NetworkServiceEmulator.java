@@ -14,11 +14,13 @@ import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import interfaces.NetworkServiceInterface;
+import static exceptions.IllegalFieldException.*;
 
 public class NetworkServiceEmulator implements NetworkServiceInterface
 {
 	private List<Account> accounts;
 	private List<String> passwords;
+	
 	private Set<Tag> tags;
 	
 	private Account authenticatedAccount;
@@ -31,6 +33,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		accounts = new ArrayList<>();
 		passwords = new ArrayList<>();
 		tags = new HashSet<>();
+		
 		
 		authenticatedAccount = null;
 		
@@ -248,12 +251,306 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
 		else
 		{
-			authenticatedAccount.getTags().remove(index);
-			tags.remove(tag);
+			Tag tmp = authenticatedAccount.getTags().remove(index);
+			
+			for(Profile profile : authenticatedAccount.getProfiles())
+				profile.getTags().remove(tmp);
+			
+			tags.remove(tmp);
 		}
 	}
 	
 	
+	
+
+	public Profile createProfile(String profileName)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+		
+		if(!FieldVerifier.verifyName(profileName))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
+		
+		Profile profile = new Profile(profileName);
+		
+		if(authenticatedAccount.getProfiles().contains(profile))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, profileName);
+		
+		authenticatedAccount.getProfiles().add(profile);
+		
+		return profile;
+	}
+
+	public Profile createProfile(String profileName, List<Tag> tagList)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		if(!FieldVerifier.verifyName(profileName))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
+		
+		Profile profile = new Profile(profileName);
+		
+		if(authenticatedAccount.getProfiles().contains(profile))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, profileName);
+		
+		
+		for(Tag tag : tagList)
+		{
+			if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect. 
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+			
+			int tagIndex = authenticatedAccount.getTags().indexOf(tag);
+			
+			if(tagIndex < 0) // if no tag of the current account has this UID.
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+			else if(! profile.getTags().contains(tag)) // to have this tag at most once.
+				profile.getTags().add(authenticatedAccount.getTags().get(tagIndex));
+		}
+			
+		
+		authenticatedAccount.getProfiles().add(profile);
+		
+		return profile;
+	}
+
+	public Profile addTagToProfile(Profile profile, Tag tag)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		
+		if(!FieldVerifier.verifyName(profile.getName()))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+		
+		int index = authenticatedAccount.getProfiles().indexOf(profile);
+		
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+		
+		Profile profile1 = authenticatedAccount.getProfiles().get(index);
+		
+
+		if(! FieldVerifier.verifyTagUID(tag.getUid())) // if this tag UID isn't incorrect.
+			throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+		
+		int tagIndex = authenticatedAccount.getTags().indexOf(tag);
+		
+		if(tagIndex < 0) // if no tag of the current account has this UID.
+			throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+		else if(! profile1.getTags().contains(tag)) // to have this tag at most once.
+		{
+			profile1.getTags().add(authenticatedAccount.getTags().get(tagIndex));
+			return profile1;
+		}
+		else
+			return null; // to indicate this profile is not modified.
+	}
+
+	public Profile addTagsToProfile(Profile profile, List<Tag> tagList)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		if(!FieldVerifier.verifyName(profile.getName()))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+		
+		int index = authenticatedAccount.getProfiles().indexOf(profile);
+		
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+		
+		Profile profile1 = authenticatedAccount.getProfiles().get(index);
+		
+		
+		Set<Tag> tmp = new HashSet<Tag>();
+		
+		for(Tag tag : tagList)
+		{
+			if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect. 
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+			
+			int tagIndex = authenticatedAccount.getTags().indexOf(tag);
+			
+			if(tagIndex < 0) // if no tag of the current account has this UID.
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+			else if(! profile1.getTags().contains(authenticatedAccount.getTags().get(tagIndex)))
+				tmp.add(authenticatedAccount.getTags().get(tagIndex));
+		}
+		
+		if(tmp.size() > 0)
+		{
+			profile1.getTags().addAll(tmp);
+			return profile1;
+		}
+		else
+			return null; // because this profile is not modified.
+	}
+
+	public Profile removeTagFromProfile(Profile profile, Tag tag)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		
+		if(!FieldVerifier.verifyName(profile.getName()))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+		
+		int index = authenticatedAccount.getProfiles().indexOf(profile);
+		
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+		
+		Profile profile1 = authenticatedAccount.getProfiles().get(index);
+		
+
+		if(! FieldVerifier.verifyTagUID(tag.getUid())) // if this tag UID isn't incorrect.
+			throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+		
+		if(! authenticatedAccount.getTags().contains(tag)) // if no tag of the current account has this UID.
+			throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+		
+		int tagIndex = profile1.getTags().indexOf(tag);
+		
+		if(tagIndex >= 0)
+		{
+			profile1.getTags().remove(tagIndex);
+			return profile1;
+		}
+		else
+			return null; // to indicate this profile is not modified.
+
+	}
+
+	public Profile removeTagsFromProfile(Profile profile, List<Tag> tagList)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		if(!FieldVerifier.verifyName(profile.getName()))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+		
+		int index = authenticatedAccount.getProfiles().indexOf(profile);
+		
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+		
+		Profile profile1 = authenticatedAccount.getProfiles().get(index);
+		
+		
+		Set<Tag> tmp = new HashSet<Tag>();
+		
+		for(Tag tag : tagList)
+		{
+			if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect. 
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+			
+			int tagIndex = authenticatedAccount.getTags().indexOf(tag);
+			
+			if(tagIndex < 0) // if no tag of the current account has this UID.
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+			else if(profile1.getTags().contains(authenticatedAccount.getTags().get(tagIndex)))
+				tmp.add(authenticatedAccount.getTags().get(tagIndex));
+		}
+		
+		if(tmp.size() > 0)
+		{
+			profile1.getTags().removeAll(tmp);
+			return profile1;
+		}
+		else
+			return null; // because this profile is not modified.
+	}
+
+	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		if(!FieldVerifier.verifyName(profile.getName()))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+		
+		int index = authenticatedAccount.getProfiles().indexOf(profile);
+		
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+		
+		Profile profile1 = authenticatedAccount.getProfiles().get(index);
+		
+		
+		Set<Tag> tmp = new HashSet<Tag>();
+		
+		for(Tag tag : tagList)
+		{
+			if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect. 
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+			
+			int tagIndex = authenticatedAccount.getTags().indexOf(tag);
+			
+			if(tagIndex < 0) // if no tag of the current account has this UID.
+				throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+			else
+				tmp.add(authenticatedAccount.getTags().get(tagIndex));
+		}
+		
+		
+		profile1.getTags().clear();
+		profile1.getTags().addAll(tmp);
+		
+		return profile1;
+	}
+
+	public void removeProfile(Profile profile)
+			throws NotAuthenticatedException, IllegalFieldException,
+			NetworkServiceException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		
+		if(!FieldVerifier.verifyName(profile.getName()))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+		
+		int index = authenticatedAccount.getProfiles().indexOf(profile);
+
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+		else
+			authenticatedAccount.getProfiles().remove(index);
+	}
+
+	public Profile getProfile(String profileName)
+			throws NotAuthenticatedException, NetworkServiceException,
+			IllegalFieldException
+	{
+		if(authenticatedAccount == null)
+			throw new NotAuthenticatedException();
+
+		
+		if(!FieldVerifier.verifyName(profileName))
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
+		
+		int index = authenticatedAccount.getProfiles().indexOf(new Profile(profileName));
+
+		if(index < 0)
+			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profileName);
+		else
+			return authenticatedAccount.getProfiles().get(index);
+	}
 
 
 	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException
@@ -261,76 +558,10 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 		
-		return authenticatedAccount.getProfils();
+		return authenticatedAccount.getProfiles();
 	}
-
-	public Profile getProfile(String profileName) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
-
-	public Profile createProfile(String profileName) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
 	
-	public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
-	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
 	
-	public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
-	public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
-	
-	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
-
-	public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) throws NotAuthenticatedException
-	{
-		if(authenticatedAccount == null)
-			throw new NotAuthenticatedException();
-		
-		return null;
-	}
 
 	public static NetworkServiceEmulator getInstance()
 	{

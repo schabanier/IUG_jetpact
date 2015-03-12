@@ -242,7 +242,7 @@ public interface NetworkServiceInterface
 	 * <br /><br />At the end of the call, if the profile is modified, it is returned. Else, <code>null</code> is returned.
 	 * 
 	 * @param profile The profile to be modified.
-	 * @param tags the tags to be added in the specified profile.
+	 * @param tagList the tags to be added in the specified profile.
 	 * @return The profile modified if it did not already contain one tag of the specified tag list or more, <code>null</code> otherwise.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
@@ -253,7 +253,7 @@ public interface NetworkServiceInterface
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
-	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	public Profile addTagsToProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	
 
@@ -297,7 +297,7 @@ public interface NetworkServiceInterface
 	 * <br /> <br /> To remove all tags from a profile, call the method {@link #replaceTagListOfProfile(Profile, List)} with an empty list as second parameter.
 	 * 
 	 * @param profile The profile to be modified.
-	 * @param tag The tags to be removed from the specified profile.
+	 * @param tagList The tags to be removed from the specified profile.
 	 * @return The profile modified if this operation succeeds.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
@@ -309,7 +309,7 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 * 
 	 */
-	public Profile removeTagsFromProfile(Profile profile, List<Tag> tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+	public Profile removeTagsFromProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	
 	
