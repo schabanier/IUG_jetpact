@@ -123,7 +123,7 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found (i.e. no tag linked with the current account has this UID)) </li>
 	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_NAME object name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the value is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this object name is already used for another tag) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
@@ -139,7 +139,7 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found (i.e. no tag linked with the current account has this UID)) </li>
 	 * 		<li>{@link IllegalFieldException#TAG_OBJECT_IMAGE object image} (reason {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if the filename is incorrect, i.e. if the file is not found or is not an image) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
@@ -153,7 +153,7 @@ public interface NetworkServiceInterface
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the tag is not found (i.e. no tag linked with the current account has this UID)) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
@@ -179,7 +179,15 @@ public interface NetworkServiceInterface
 
 	/**
 	 * Creates a new profile named <code>profileName</code> and adds the tags of the list <code>tagList</code> into this profile.
-	 * <br/>Only the UID of the tags are used to perform this operation.
+	 * 
+	 * <br/><br />Only the UID of the tags are used to perform this operation.
+	 * 
+	 * <br />If one of these UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID), 
+	 * an exception of type {@link IllegalFieldException} is thrown to indicate this problem.
+	 * 
+	 * <br />If a tag is twice or more in the specified tag list, it will be added only once.
+	 * 
+	 * <br /><br />At the end of call, it returns the new profile.
 	 * 
 	 * @param profileName The name of the new profile to be created.
 	 * @param tagList The tags to add into the new profile.
@@ -189,7 +197,7 @@ public interface NetworkServiceInterface
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
 	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already a profile with this name) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is twice or more in the specified list) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
@@ -198,16 +206,24 @@ public interface NetworkServiceInterface
 
 	/**
 	 * Adds a tag into a profile.
-	 * <br/>Only the UID of the tag is used to perform this operation.
+	 * 
+	 * <br/><br />Only the UID of the tag is used to perform this operation.
+	 * 
+	 * <br /> If this UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID),
+	 * an exception of type {@link IllegalFieldException} is thrown to indicate this problem.
+	 * 
+	 * <br /><br />If the specified profile already contains the specified tag, this profile is not modified and the return value is <code>null</code>.
+	 * Else, this tag is added in this profile and the return value is this profile modified. 
+	 * 
 	 * @param profile The profile to be modified.
-	 * @param tag The tag to be added into the specified profile.
-	 * @return The profile modified if this operation succeeds.
+	 * @param tag The tag to be added in the specified profile.
+	 * @return The profile modified if this profile did not already contain the specified tag, <code>null</code> otherwise.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
 	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is already added into this profile) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
@@ -216,33 +232,51 @@ public interface NetworkServiceInterface
 
 	/**
 	 * Adds the tags of a list into a profile.
-	 * <br/>Only the UID of the tags are used to perform this operation.
+	 * 
+	 * <br/><br />Only the UID of the tags are used to perform this operation.
+	 * 
+	 * <br />If one of these UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID), 
+	 * an exception of type {@link IllegalFieldException} is thrown to indicate this problem.
+	 * Else, each tag of this tag list are added in the specified profile if it doesn't already contain this tag.
+	 * 
+	 * <br /><br />At the end of the call, if the profile is modified, it is returned. Else, <code>null</code> is returned.
+	 * 
 	 * @param profile The profile to be modified.
-	 * @param tags the tags to be added into the specified profile.
-	 * @return The profile modified if this operation succeeds.
+	 * @param tags the tags to be added in the specified profile.
+	 * @return The profile modified if it did not already contain one tag of the specified tag list or more, <code>null</code> otherwise.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
 	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} of one tag of the list. (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is already added into this profile) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} of one tag of the list. (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
+	
 
 	/**
 	 * Removes a tag from a profile.
+	 * 
+	 * <br/><br />Only the UID of the tag is used to perform this operation.
+	 * 
+	 * <br /> If this UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID),
+	 * an exception of type {@link IllegalFieldException} is thrown to indicate this problem.
+	 * 
+	 * <br /><br />If the specified profile doesn't contain the specified tag, this profile is not modified and the return value is <code>null</code>.
+	 * Else, this tag is removed from this profile and the return value is this profile modified. 
+	 * 
 	 * @param profile The profile to be modified.
 	 * @param tag The tag to be removed from the specified profile.
-	 * @return The profile modified if this operation succeeds.
+	 * @return The profile modified if this profile did contain the specified tag, <code>null</code> otherwise.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
 	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the specified profile doesn't contain this tag or no tag has this UID) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if no tag linked with the current account has this UID) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
@@ -251,6 +285,17 @@ public interface NetworkServiceInterface
 
 	/**
 	 * Removes tags from a profile.
+	 * 
+	 * <br/><br />Only the UID of the tags are used to perform this operation.
+	 * 
+	 * <br />If one of these UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID), 
+	 * an exception of type {@link IllegalFieldException} is thrown to indicate this problem.
+	 * Else, each tag of this tag list are removed in the specified profile if it contains this tag.
+	 * 
+	 * <br /><br />At the end of the call, if the profile is modified, it is returned. Else, <code>null</code> is returned.
+	 * 
+	 * <br /> <br /> To remove all tags from a profile, call the method {@link #replaceTagListOfProfile(Profile, List)} with an empty list as second parameter.
+	 * 
 	 * @param profile The profile to be modified.
 	 * @param tag The tags to be removed from the specified profile.
 	 * @return The profile modified if this operation succeeds.
@@ -259,9 +304,10 @@ public interface NetworkServiceInterface
 	 * The possible fields with the reason(s) are : <br/>
 	 * <ul>
 	 * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
-	 * 		<li>{@link IllegalFieldException#TAG_UID UID} of one tag of the list (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if the specified profile doesn't contain this tag or no tag has this UID) </li>
+	 * 		<li>{@link IllegalFieldException#TAG_UID UID} of one tag of the list (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if no tag linked with the current account has this UID) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
+	 * 
 	 */
 	public Profile removeTagsFromProfile(Profile profile, List<Tag> tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
@@ -269,9 +315,21 @@ public interface NetworkServiceInterface
 	
 	/**
 	 * Replace the tag list of a profile by the specified tag list.
+	 * 
+	 * <br/><br/>Only the UID of the tags are used to perform this operation.
+	 * 
+	 * <br />If one of these UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID), 
+	 * an exception of type {@link IllegalFieldException} is thrown to indicate this problem.
+	 * 
+	 * Else, all tags of the specified profile are removed and all tags of the specified tag list are added in this profile.
+	 * 
+	 * <br />If a tag is twice or more in the specified tag list, it is added only once in the profile.
+	 * 
+	 * <br /><br />At the end of the call, this profile modified is returned.
+	 * 
 	 * @param profile The profile to be modified.
 	 * @param tagList The new tag list for the specified profile.
-	 * @return The profile modified if this operation succeeds.
+	 * @return The profile modified.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
 	 * The possible fields with the reason(s) are : <br/>
@@ -280,9 +338,12 @@ public interface NetworkServiceInterface
 	 * 		<li>{@link IllegalFieldException#TAG_UID tag UID} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID, and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this tag is twice or more in the specified list) </li>
 	 * </ul>
 	 * @throws NetworkServiceException If a network service error has occurred.
+	 * 
+	 * 
 	 */
 	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
+	
 	/**
 	 * Removes a profile.
 	 * @param profile The profile to be removed.
