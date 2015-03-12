@@ -45,19 +45,51 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		Tag tag3 = new Tag("aefd573fc3e", "Bag");
 		Tag tag4 = new Tag("f53ebc87298", "Wallet");
 		Tag tag5 = new Tag("e68fa3547cb", "Android tablet");
+		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag");
+		Tag tag7 = new Tag("e92fae67acb", "Android smartphone");
 		
 		tags.add(tag1);
 		tags.add(tag2);
 		tags.add(tag3);
 		tags.add(tag4);
 		tags.add(tag5);
+		tags.add(tag6);
+		tags.add(tag7);
 
 		testAccount.getTags().add(tag1);
 		testAccount.getTags().add(tag2);
 		testAccount.getTags().add(tag3);
 		testAccount.getTags().add(tag4);
 		testAccount.getTags().add(tag5);
+		testAccount.getTags().add(tag6);
+		testAccount.getTags().add(tag7);
 		
+		
+		Profile profile1 = new Profile("profile 1");
+		profile1.addTag(tag1);
+		profile1.addTag(tag2);
+		profile1.addTag(tag3);
+		profile1.addTag(tag7);
+		
+
+		Profile profile2 = new Profile("profile 2");
+		profile2.addTag(tag1);
+		profile2.addTag(tag4);
+		profile2.addTag(tag5);
+		profile2.addTag(tag6);
+		profile2.addTag(tag7);
+
+		Profile profile3 = new Profile("profile 2");
+		profile3.addTag(tag1);
+		profile3.addTag(tag2);
+		profile3.addTag(tag3);
+		profile3.addTag(tag4);
+		profile3.addTag(tag5);
+		profile3.addTag(tag6);
+		profile3.addTag(tag7);
+
+		testAccount.getProfiles().add(profile1);
+		testAccount.getProfiles().add(profile2);
 		
 		accounts.add(testAccount);
 		passwords.add("123456");
