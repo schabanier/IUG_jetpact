@@ -178,7 +178,7 @@ public interface NetworkServiceInterface
 	public Profile createProfile(String profileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
-	 * Creates a new profile named <code>profileName</code> and adds the tags of the list <code>tagList</code> into this profile.
+	 * Creates a new profile named <code>profileName</code> and adds the tags of the list <code>tagList</code> in this profile.
 	 * 
 	 * <br/><br />Only the UID of the tags are used to perform this operation.
 	 * 
@@ -190,7 +190,7 @@ public interface NetworkServiceInterface
 	 * <br /><br />At the end of call, it returns the new profile.
 	 * 
 	 * @param profileName The name of the new profile to be created.
-	 * @param tagList The tags to add into the new profile.
+	 * @param tagList The tags to add in the new profile.
 	 * @return The profile created.
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
@@ -205,7 +205,7 @@ public interface NetworkServiceInterface
 	
 
 	/**
-	 * Adds a tag into a profile.
+	 * Adds a tag in a profile.
 	 * 
 	 * <br/><br />Only the UID of the tag is used to perform this operation.
 	 * 
@@ -231,7 +231,7 @@ public interface NetworkServiceInterface
 	
 
 	/**
-	 * Adds the tags of a list into a profile.
+	 * Adds the tags of a list in a profile.
 	 * 
 	 * <br/><br />Only the UID of the tags are used to perform this operation.
 	 * 
