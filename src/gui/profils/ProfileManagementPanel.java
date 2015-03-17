@@ -245,7 +245,7 @@ public class ProfileManagementPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			Profile profile = profileManagerDialog.addProfile();
+			Profile newProfile = 
 			
 			if(profile != null)
 			{
