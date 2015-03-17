@@ -47,4 +47,11 @@ public class Profile
 		return (!(obj instanceof Profile)) ? false : 
 					name.equals(((Profile) obj).getName());
 	}
+
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
+	
+	
 }
