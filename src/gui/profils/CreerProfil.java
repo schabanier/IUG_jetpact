@@ -20,6 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import data.Profile;
 import data.Tag;
 import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
@@ -35,17 +36,19 @@ public class CreerProfil extends JDialog {
 	private JLabel labelAjout, labelDispo, labelNom ;
 	private JTextField nomTextField;
 	private JButton buttonCreer, buttonAnnuler, buttonGauche, buttonDroite ;
-	private JList listAdd, listAvailable;
-	private DefaultListModel listModelAdd, listModelAvailable;
+	private JList<Tag> listAdd, listAvailable;
+	private DefaultListModel<Tag> listModelAdd, listModelAvailable;
+	
+	private Profile profile;
 	
 	
 	
 	
 	
-	public CreerProfil(JFrame gestionProfilParent, String title) {
+	public CreerProfil(JFrame ProfileManagementPanel, String title) {
 		
 		
-		super(gestionProfilParent, title);
+		super(ProfileManagementPanel, title);
 		
 		panelPrincipal = new JPanel();
 		panel1= new JPanel();
@@ -191,7 +194,7 @@ public class CreerProfil extends JDialog {
 			
 		}
 		
-	}
+	
 	
 	
 		
@@ -227,7 +230,7 @@ public class CreerProfil extends JDialog {
 				
 				try {
 					
-				 NetworkServiceProvider.getNetworkService().removeTagFromProfile(nomTextField.getText(), listAdd.getComponent(i));
+				 NetworkServiceProvider.getNetworkService().removeTagFromProfile(nomTextField.getText(), (Tag) listModelAdd.get(i));
 				}catch(NotAuthenticatedException e1)
 				{
 					JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -319,6 +322,6 @@ public class CreerProfil extends JDialog {
 	
 	
 	
-	
+	}	
 
 }
