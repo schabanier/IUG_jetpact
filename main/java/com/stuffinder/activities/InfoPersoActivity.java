@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 
 import com.stuffinder.data.Account;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -51,7 +51,7 @@ public class InfoPersoActivity extends Activity {
 
         Account account = null;
         try {
-            account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
+            account = EngineServiceProvider.getEngineService().getCurrentAccount();
             nomTextView.setText(account.getLastName());
             prenomTextView.setText(account.getFirstName());
             idTextView.setText(account.getPseudo());
@@ -84,10 +84,10 @@ public class InfoPersoActivity extends Activity {
         {
             try {
                 if(! email.equals(currentEmail)) // l'adresse email a changé.
-                    NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextMail.getText().toString());
+                    EngineServiceProvider.getEngineService().modifyEMailAddress(editTextMail.getText().toString());
 
                 if(mdp.length() > 0)
-                    NetworkServiceProvider.getNetworkService().modifyPassword(editTextMdp.getText().toString());
+                    EngineServiceProvider.getEngineService().modifyPassword(editTextMdp.getText().toString());
 
                 //Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
                 //startActivity(intent);

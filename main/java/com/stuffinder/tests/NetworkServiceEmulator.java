@@ -338,4 +338,15 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         return emulator;
     }
 
+    @Override
+    public int getLastTagsUpdateTime() throws NetworkServiceException {
+        return 0;
+    }
+
+    @Override
+    public int getLastProfilesUpdateTime() throws NetworkServiceException {
+        return 0;
+    }
+
+
 }

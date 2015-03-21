@@ -227,4 +227,18 @@ public interface NetworkServiceInterface
      * @throws NetworkServiceException If a network service error has occurred.
      */
     public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException;
+
+    /**
+     *
+     * @return the last update time about tags.
+     * @throws NetworkServiceException
+    */
+    public int getLastTagsUpdateTime() throws NetworkServiceException;
+
+    /**
+     *
+     * @return The last update time about profiles.
+     * @throws NetworkServiceException
+     */
+    public int getLastProfilesUpdateTime() throws NetworkServiceException;
 }

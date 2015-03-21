@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class ExterieurActivity extends Activity {
 
         listView= (ListView)findViewById(R.id.listView);
         try {
-            Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
+            Account account = EngineServiceProvider.getEngineService().getCurrentAccount();
 
             List<Profile> profiles = account.getProfils();
             ArrayList<String> liste = new ArrayList<String>();

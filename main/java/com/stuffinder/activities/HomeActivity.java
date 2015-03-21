@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -35,7 +35,7 @@ public class HomeActivity extends Activity {
     public void goToInterieur(View view){
 
         try {
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
 
             InterieurActivity.ChangeTagsList(list);
             Intent intentInt = new Intent (HomeActivity.this, InterieurActivity.class);
@@ -85,7 +85,7 @@ public class HomeActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Do you really want to quit ?")
+        builder.setMessage("Voulez vous vraiment quitter ?")
                 .setTitle("");
         // Add the buttons
         builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {

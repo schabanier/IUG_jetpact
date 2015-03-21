@@ -791,6 +791,16 @@ public class NetworkService implements NetworkServiceInterface {
         return null;
     }
 
+    @Override
+    public int getLastTagsUpdateTime() throws NetworkServiceException {
+        return 0;
+    }
+
+    @Override
+    public int getLastProfilesUpdateTime() throws NetworkServiceException {
+        return 0;
+    }
+
 
     // to use singleton design pattern.
 
