@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -26,12 +28,13 @@ import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
+import gui.Constants.TagsManagement;
 import gui.infoperso.ModifierInfo;
 
 public class CreerProfil extends JDialog {
 	
 	
-	private JPanel panelPrincipal, panel1, panel2;
+	private JPanel panelPrincipal, panelL, panelR;
     private JDialog dialog1;
 	private JLabel labelAjout, labelDispo, labelNom ;
 	private JTextField nomTextField;
@@ -40,19 +43,20 @@ public class CreerProfil extends JDialog {
 	private DefaultListModel<Tag> listModelAdd, listModelAvailable;
 	
 	private Profile profile;
+	private Profile profileAdded;
 	
 	
 	
 	
 	
-	public CreerProfil(JFrame ProfileManagementPanel, String title) {
+	public CreerProfil(JFrame owner, String title) {
 		
 		
-		super(ProfileManagementPanel, title);
+		super(owner, title);
 		
 		panelPrincipal = new JPanel();
-		panel1= new JPanel();
-		panel2= new JPanel();
+		panelL= new JPanel();
+		panelR= new JPanel();
 		dialog1 = new JDialog();
 		labelAjout = new JLabel();
 		labelDispo = new JLabel();
@@ -75,7 +79,7 @@ public class CreerProfil extends JDialog {
 		//======== dialog1 ========
 		
 		
-			dialog1.setBackground(new Color(0, 153, 153));
+		
 			dialog1.setLocationRelativeTo(null);
 			dialog1.setResizable(false);
 			
@@ -128,14 +132,14 @@ public class CreerProfil extends JDialog {
 			
 		//=====label=====
 			
-			labelAjout.setText("Puces ajout�e");
-			labelDispo.setText("Puces disponibles");
-			labelNom.setText("Nom du profil");
+			labelAjout.setText("Tags added");
+			labelDispo.setText("Tags availbale");
+			labelNom.setText("Profile's name");
 			
 			
 			//======button=====
 			
-		buttonAnnuler.setText("Annuler");
+		buttonAnnuler.setText("Cancel");
 		buttonAnnuler.addActionListener(new ButtonAnnulerListener());
 		
 		
@@ -150,6 +154,54 @@ public class CreerProfil extends JDialog {
 			
 
 }
+	
+	private void actionAddProfile()
+	
+	{
+	    String nomProfile = nomTextField.getText();
+	    List<Tag> listTags = new ArrayList<>() ;
+	    
+	    for(Object tag:listModelAdd.toArray())
+	    	listTags.add((Tag) tag);
+	    
+
+		
+		 try {
+			NetworkServiceProvider.getNetworkService().createProfile(nomProfile,listTags);
+			
+			//addTagFromProfile
+		} catch (NotAuthenticatedException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
+		} catch (IllegalFieldException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (NetworkServiceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		 
+		}
+	
+	
+	public Profile addProfile()
+	{
+		
+		profileAdded = null;
+		
+		
+		
+		setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
+		// repositionnement de la fenêtre si elle sort de l'écran en haut ou à gauche.
+		if(getLocation().getX() < 0)
+			setLocation(0, (int) getLocation().getY());
+		if(getLocation().getY() < 0)
+				setLocation((int) getLocation().getX(), 0);
+		
+		setVisible(true);
+		return profileAdded;
+	}
+	
 	
 	
 	
@@ -174,25 +226,15 @@ public class CreerProfil extends JDialog {
 			// TODO Auto-generated method stub
 			// action si clic ok
 			
-			 try {
-				NetworkServiceProvider.getNetworkService().createProfile(nomTextField.getText());
-				
-				//addTagFromProfile
-			} catch (NotAuthenticatedException e1) {
-				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
-			} catch (IllegalFieldException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (NetworkServiceException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			 
-			}
-			 
+			actionAddProfile();
 			
 		}
+		
+	}
+		
+		
+			
+		
 		
 	
 	
@@ -305,6 +347,7 @@ public class CreerProfil extends JDialog {
 
 		
 	}
+	}
 	
 	
 	
@@ -324,4 +367,4 @@ public class CreerProfil extends JDialog {
 	
 	}	
 
-}
+

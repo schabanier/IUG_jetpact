@@ -59,8 +59,7 @@ public class ProfileManagementPanel extends JPanel
 	private JLabel profileLabel;
 	private DefaultListModel<String> profilesListModel;
 	
-	
-	// private TagManagerDialog tagManagerDialog;
+	private ProfileManagerDialog profileManagerDialog;
 	
 	public ProfileManagementPanel()
 	{
@@ -70,7 +69,8 @@ public class ProfileManagementPanel extends JPanel
 		add(createProfilesListPanel());
 		add(createProfileInformationsPanel());
 		
-		tagManagerDialog = new TagManagerDialog(MainFrame.getInstance());
+		profileManagerDialog = new ProfileManagerDialog(MainFrame.getInstance());
+		
 	}
 
 	private JPanel createProfilesListPanel()
@@ -128,7 +128,7 @@ public class ProfileManagementPanel extends JPanel
 		profilesList.setModel(profilesListModel);
 		profilesList.setDoubleBuffered(true);
 		profilesList.setCellRenderer(new DefaultListCellRenderer(){ // set custom renderer to disable selection on graphical view.
-			private static final long serialVersionUID = 1L;
+		
 			
 			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 			{
@@ -245,11 +245,11 @@ public class ProfileManagementPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			Profile newProfile = 
+		 Profile newProfile = profileManagerDialog.addProfile();
 			
-			if(profile != null)
+			if(newProfile != null)
 			{
-				addProfile(profile);
+				addProfile(newProfile);
 				profilesListPanel.repaint(); // to refresh the tags list panel.
 			}
 		}
@@ -258,7 +258,9 @@ public class ProfileManagementPanel extends JPanel
 	
 	public Profile runProfileEditor(ProfilRenderer ProfilRenderer)
 	{
+		//cest renderer modification qui appelle, on ouvre la jdialog qui modifie (on passe par management car il faut modifie le jpanelinfo)
 		Profile profile = profileManagerDialog.modifyProfile(ProfilRenderer.getProfile());
+		
 		if(profile != null && ProfilRenderer.isSelected())
 			this.displayProfileDetails(profile);
 		
@@ -282,7 +284,7 @@ public class ProfileManagementPanel extends JPanel
 			profilesListPanel.remove(renderer);
 			profilesNumber--;
 
-			profilesListLabel.setText(TagsManagement.getprofilesNumberTitle(profilesNumber));
+			profilesListLabel.setText(profilesNumber +""+"profiles");
 			profilesListPanel.repaint(); // To refresh the graphical interface.
 		} catch (IllegalFieldException e) { // Abnormal exception in this case. Will not occur.
 			
