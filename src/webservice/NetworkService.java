@@ -1,23 +1,31 @@
 
 package webservice;
  
+import interfaces.NetworkServiceInterface;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
- 
- 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import data.Account;
 import data.Profile;
@@ -27,8 +35,8 @@ import exceptions.AccountNotFoundException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-import interfaces.NetworkServiceInterface;
  
+@SuppressWarnings("deprecation")
 public class NetworkService implements NetworkServiceInterface {
  
  
@@ -38,12 +46,53 @@ public class NetworkService implements NetworkServiceInterface {
  
     private String currentPassword = null;
  
- 
+    
+    //test
+    public static void main(String[] args) {
+
+    	CloseableHttpClient httpClient = new DefaultHttpClient();
+    	 // check URL with your test
+    	HttpPost httppost=new HttpPost("http://localhost:8080/app_server/ns/upload");
+       	// check image with your test
+    	/* in final version : application\pictures\[pseudo]\[objectName].jpg */
+        File imageFile = new File("C:\\test.jpg");
+        	 
+        FileBody bin = new FileBody(imageFile);
+        	
+        HttpEntity reqEntity = MultipartEntityBuilder.create()
+                .addPart("pseudo", new StringBody("hlepage", ContentType.TEXT_PLAIN))
+                .addPart("password", new StringBody("lepage", ContentType.TEXT_PLAIN))
+                .addPart("objectName", new StringBody("tag1", ContentType.TEXT_PLAIN))
+                .addPart("file", bin)
+                .build();
+
+        httppost.setEntity(reqEntity);
+    	 
+        try {
+			HttpResponse httpResponse = httpClient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        try {
+			httpClient.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+    
+    
+    
     private NetworkService() {
  
 }
  
- 
+    
     @Override
  
     public void initNetworkService() throws NetworkServiceException {
@@ -52,6 +101,7 @@ public class NetworkService implements NetworkServiceInterface {
 }
  
  
+    
     @Override
  
     public void createAccount(Account newAccount, String newPassword)
@@ -999,8 +1049,129 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        // TODO Auto-generated method stub
- 
+    	 if (! FieldVerifier.verifyImageFileName(newImageFileName))
+    		 
+             throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
+  
+  
+         InputStream inputStream;
+  
+         String result = "";
+  
+         try {
+        	 // check URL with your test
+        	HttpPost httppost=new HttpPost("http://92.222.33.38:8080/app_server/ns/upload");
+           	// check image with your test
+        	/* in final version : application\pictures\[pseudo]\[objectName].jpg */
+            File imageFile = new File("C:\\test.jpg");
+            	 
+            FileBody bin = new FileBody(imageFile);
+            	
+            HttpEntity reqEntity = MultipartEntityBuilder.create()
+                    .addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN))
+                    .addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN))
+                    .addPart("objectName", new StringBody(tag.getObjectName(), ContentType.TEXT_PLAIN))
+                    .addPart("file", bin)
+                    .build();
+
+            httppost.setEntity(reqEntity);
+        	 
+            HttpResponse httpResponse = client.execute(httppost);
+  
+             StatusLine statusLine = httpResponse.getStatusLine();
+  
+             int statusCode = statusLine.getStatusCode();
+  
+             if (statusCode == 200) {
+  
+                 // receive response as inputStream
+  
+                 HttpEntity entity = httpResponse.getEntity();
+  
+                 inputStream = entity.getContent();
+  
+                 // convert inputstream to string
+  
+                 if (inputStream != null) {
+  
+                     result = convertInputStreamToString(inputStream);
+  
+                     try {
+  
+                         // creation JSON Object
+  
+                         JSONObject obj = new JSONObject(result);
+  
+                         int returnCode = obj.getInt("returncode");
+  
+                         if (returnCode == 0) {
+  
+                             currentAccount.setMailAddress(obj.getString("email"));
+  
+                         }
+  
+                         // Else display error message
+  
+                         else if (returnCode == 1) {
+  
+                             throw new NetworkServiceException("Problem of access to the DB");
+  
+                         } else {
+  
+                             throw new NotAuthenticatedException();
+  
+                         }
+  
+                     } catch (JSONException e) {
+  
+                         // "Error Occured [Server's JSON response might be invalid]!"
+  
+                         throw new NetworkServiceException("Server response might be invalid.");
+  
+                     }
+  
+                 } else {
+  
+                     throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+  
+                 }
+  
+             }
+  
+  
+  
+             // When Http response code is '404'
+  
+             else if (statusCode == 404) {
+  
+                 throw new NetworkServiceException("Requested resource not found");
+  
+             }
+  
+  
+             // When Http response code is '500'
+  
+             else if (statusCode == 500) {
+  
+                 throw new NetworkServiceException("Something went wrong at server end");
+  
+             }
+  
+  
+             // When Http response code other than 404, 500
+  
+             else {
+  
+                 throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+  
+             }
+  
+         } catch (IOException | IllegalStateException e) {
+  
+             throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+  
+         }
+         
         return null;
 }
  
@@ -1249,4 +1420,6 @@ public class NetworkService implements NetworkServiceInterface {
  
         return instance;
 }
+    
+    
 }
