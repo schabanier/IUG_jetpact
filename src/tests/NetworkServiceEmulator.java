@@ -315,6 +315,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return profile;
 	}
 
+	
 	public Profile createProfile(String profileName, List<Tag> tagList)
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException
@@ -350,6 +351,32 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return profile;
 	}
 
+
+
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        if(!FieldVerifier.verifyName(newProfileName))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, newProfileName);
+
+        int index = authenticatedAccount.getProfiles().indexOf(new Profile(profile.getName()));
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+
+        Profile tmp = authenticatedAccount.getProfiles().get(index);
+
+        for(Profile otherProfile : authenticatedAccount.getProfiles())
+            if(otherProfile != tmp && otherProfile.getName().equals(newProfileName))
+                throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, newProfileName);
+
+        tmp.setName(newProfileName);
+
+        return tmp;
+    }
+	
 	public Profile addTagToProfile(Profile profile, Tag tag)
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException

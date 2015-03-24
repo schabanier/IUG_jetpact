@@ -204,6 +204,22 @@ public interface NetworkServiceInterface
 	public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 	
 
+    /**
+     * Modify the name of a profile.
+     * @param profile The profile to be modified.
+     * @param newProfileName the new name for the profile.
+     * @return The profile modified if this operation succeeds.
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+     * The possible fields with the reason(s) are : <br/>
+     * <ul>
+     * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile with this name and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already another profile with this name) </li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+    
 	/**
 	 * Adds a tag in a profile.
 	 * 
