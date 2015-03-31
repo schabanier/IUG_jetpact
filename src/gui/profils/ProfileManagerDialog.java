@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -73,119 +74,177 @@ public class ProfileManagerDialog extends JDialog
 
 
 
+	 public ProfileManagerDialog(Frame owner)
+	    {
+	        super(owner, true);
+	        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-	public ProfileManagerDialog(Frame owner)
-	{
-		super(owner, true);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-
-		panelL= new JPanel();
-		panelR= new JPanel();
-		labelAjout = new JLabel();
-		labelDispo = new JLabel();
-		labelNom = new JLabel();
-		nomTextField = new JTextField();
-		buttonGauche = new JButton();
-		buttonDroite = new JButton();
+	        labelAjout = new JLabel();
+	        labelDispo = new JLabel();
+	        labelNom = new JLabel();
+	        nomTextField = new JTextField();
+	        buttonGauche = new JButton("<<");
+	        buttonDroite = new JButton(">>");
 
 
+	        listModelAdd = new DefaultListModel<>();
+	        listModelAvailable = new DefaultListModel<>();
 
-		listAdd = new JList (listModelAdd);
-		listAvailable = new JList(listModelAvailable);
-		listModelAdd = new DefaultListModel<Tag>();
-		listModelAvailable = new DefaultListModel<Tag>();
-
-
-		JPanel contentPane = new JPanel(true);
-		contentPane.setBorder(new EmptyBorder(12, 7, 12, 7));
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-		setContentPane(contentPane);
-
-		JPanel fieldsPanel = new JPanel(true);
-		fieldsPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
-
-		GroupLayout layout = new GroupLayout(fieldsPanel);
-		fieldsPanel.setLayout(layout);
-
-		//			layout.setAutoCreateContainerGaps(true);
-		layout.setAutoCreateGaps(true);
+	        listAdd = new JList<> (listModelAdd);
+	        listAvailable = new JList<>(listModelAvailable);
 
 
-		//=====label=====
+	        JPanel contentPane = new JPanel(true);
+//	        contentPane.setBorder(new EmptyBorder(12, 7, 12, 7));
+	        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+	        setContentPane(contentPane);
 
-		labelAjout.setText("Tags added");
-		labelDispo.setText("Tags available");
-		labelNom.setText("Profile's name");
+	        JPanel fieldsPanel = new JPanel(true);
+	        fieldsPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
+	        GroupLayout layout = new GroupLayout(fieldsPanel);
+	        fieldsPanel.setLayout(layout);
 
-
-
-
-
-
-		;
-		//====listes=====
-
-
-		JScrollPane spListAdd = new JScrollPane( listAdd); // � ajouter dans un panel !!
-		spListAdd.setPreferredSize(new Dimension(250, 80));
-		listAdd.setCellRenderer(new DefaultListCellRenderer(){ // set custom renderer to disable selection on graphical view.
-			private static final long serialVersionUID = 1L;
-			@SuppressWarnings("unused")
-			public Component getListCellRendererComponent(JList<? extends String> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
-			{
-				return super.getListCellRendererComponent(list, value.getObjectName(), index, false, cellHasFocus);
-			}
-		});
-		listAdd.setVisibleRowCount( 10 );
-		listAdd.setFixedCellHeight( 2 );
-		listAdd.setFixedCellWidth(8);
-		listAdd.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		listAdd.setLayoutOrientation(JList.VERTICAL);
-
-		listAdd.setDragEnabled(true);
+	        //            layout.setAutoCreateContainerGaps(true);
+	        layout.setAutoCreateGaps(true);
+	        layout.setAutoCreateContainerGaps(true);
 
 
-		JScrollPane spListAvailable = new JScrollPane( listAvailable); // � ajouter dans un panel !!
-		spListAvailable.setPreferredSize(new Dimension(250, 80));
+	        //=====label=====
 
-		listAvailable.setVisibleRowCount( 10 );
-		listAvailable.setFixedCellHeight( 2 );
-		listAvailable.setFixedCellWidth(8);
-		listAvailable.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		listAvailable.setLayoutOrientation(JList.VERTICAL);
-
-		listAvailable.setDragEnabled(true);
+	        labelAjout.setText("Tags added");
+	        labelDispo.setText("Tags available");
+	        labelNom.setText("Profile's name");
 
 
+	        //====listes=====
 
 
-		// buttons
+	        JScrollPane spListAdd = new JScrollPane( listAdd); // � ajouter dans un panel !!
+	        spListAdd.setPreferredSize(new Dimension(250, 80));
+	        listAdd.setCellRenderer(new DefaultListCellRenderer(){ // set custom renderer to disable selection on graphical view.
+	            private static final long serialVersionUID = 1L;
+	            @SuppressWarnings("unused")
+	            public Component getListCellRendererComponent(JList<? extends String> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
+	            {
+	                return super.getListCellRendererComponent(list, value.getObjectName(), index, false, cellHasFocus);
+	            }
+	        });
+//	        listAdd.setVisibleRowCount( 10 );
+//	        listAdd.setFixedCellHeight( 2 );
+//	        listAdd.setFixedCellWidth(8);
+	        listAdd.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+//	        listAdd.setLayoutOrientation(JList.VERTICAL);
 
-		JPanel buttonsPanel = new JPanel(true);
-		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+//	        listAdd.setDragEnabled(true);
 
-		JButton cancelButton = new JButton(TagsManagement.CANCEL_BUTTON_NAME);
-		cancelButton.setDoubleBuffered(true);
-		cancelButton.addActionListener(new ActionCancel());
 
-		validateButton = new JButton(TagsManagement.VALIDATE_TAG_ADDITION_BUTTON_NAME);
-		validateButton.setDoubleBuffered(true);
-		validateButton.addActionListener(new ActionValidate());
+	        JScrollPane spListAvailable = new JScrollPane( listAvailable); // � ajouter dans un panel !!
+	        spListAvailable.setPreferredSize(new Dimension(250, 80));
 
-		buttonsPanel.add(Box.createHorizontalGlue());
-		buttonsPanel.add(cancelButton);
-		buttonsPanel.add(Box.createHorizontalStrut(10));
-		buttonsPanel.add(validateButton);
-		buttonsPanel.add(Box.createHorizontalGlue());
+//	        listAvailable.setVisibleRowCount( 10 );
+//	        listAvailable.setFixedCellHeight( 2 );
+//	        listAvailable.setFixedCellWidth(8);
+	        listAvailable.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+//	        listAvailable.setLayoutOrientation(JList.VERTICAL);
+	//
+//	        listAvailable.setDragEnabled(true);
 
-		getContentPane().add(Box.createVerticalStrut(10));
-		getContentPane().add(buttonsPanel);
+	        JButton cancelButton = new JButton(TagsManagement.CANCEL_BUTTON_NAME);
+	        cancelButton.setDoubleBuffered(true);
+	        cancelButton.addActionListener(new ActionCancel());
 
-		setSize(350, 220);
-		setResizable(false);
-	}
+	        validateButton = new JButton(TagsManagement.VALIDATE_TAG_ADDITION_BUTTON_NAME);
+	        validateButton.setDoubleBuffered(true);
+	        validateButton.addActionListener(new ActionValidate());
+	        
+	        
+	        layout.setHorizontalGroup(
+	            layout.createSequentialGroup()
+	                .addGroup(
+	                    layout.createParallelGroup()
+	                        .addGroup(
+	                            layout.createSequentialGroup()
+	                                .addComponent(labelNom)
+	                                .addComponent(nomTextField)
+	                        )
+	                        .addGap(10)
+	                        .addGroup(
+	                            layout.createSequentialGroup()
+	                                .addGroup(
+	                                    layout.createParallelGroup()
+	                                        .addComponent(labelAjout, Alignment.CENTER)
+	                                        .addComponent(spListAdd)
+	                                )
+	                                .addGroup(
+	                                    layout.createParallelGroup()
+	                                        .addComponent(buttonDroite)
+	                                        .addComponent(buttonGauche)
+	                                )
+	                                .addGroup(
+	                                    layout.createParallelGroup()
+	                                        .addComponent(labelDispo, Alignment.CENTER)
+	                                        .addComponent(spListAvailable)
+	                                )
+	                        )
+	                        .addGap(10)
+	                        .addGroup(Alignment.CENTER,
+	                            layout.createSequentialGroup()
+	                                .addComponent(cancelButton)
+	                                .addComponent(validateButton)
+	                        )
+	                        
+	                )
+	        );
+
+	        layout.setVerticalGroup(
+	            layout.createSequentialGroup()
+	                .addGroup(
+	                    layout.createParallelGroup()
+	                        .addComponent(labelNom)
+	                        .addComponent(nomTextField)
+	                )
+	                .addGap(10)
+	                .addGroup(
+	                    layout.createParallelGroup()
+	                        .addComponent(labelAjout)
+	                        .addComponent(labelDispo)
+	                )
+	                .addGroup(
+	                    layout.createParallelGroup()
+	                        .addComponent(spListAdd)
+	                        .addGroup(Alignment.CENTER,
+	                            layout.createSequentialGroup()
+	                                .addComponent(buttonDroite)
+	                                .addComponent(buttonGauche)
+	                        )
+	                        .addComponent(spListAvailable)
+	                )
+	                .addGap(10)
+	                .addGroup(
+	                    layout.createParallelGroup()
+	                        .addComponent(cancelButton)
+	                        .addComponent(validateButton)
+	                )
+	        );
+	        
+	        layout.linkSize(cancelButton, validateButton);
+	        layout.linkSize(SwingConstants.VERTICAL, labelNom, nomTextField);
+	        
+
+	        // buttons
+
+	        JPanel buttonsPanel = new JPanel(true);
+	        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+
+
+	        getContentPane().add(fieldsPanel);
+	        getContentPane().add(Box.createVerticalStrut(10));
+	        getContentPane().add(buttonsPanel);
+
+	        setSize(400, 240);
+	        setResizable(false);
+	    }
 
 
 
@@ -388,7 +447,7 @@ public class ProfileManagerDialog extends JDialog
 		nomTextField.setText(profile.getName());
 		nomTextField.setEditable(true);
 
-		try {
+		
 			List<Tag> listTagsAvailable = NetworkServiceProvider.getNetworkService().getTags();
 
 			for(Tag tag : listTagsAvailable)
@@ -401,13 +460,7 @@ public class ProfileManagerDialog extends JDialog
 
 
 
-		} catch (NotAuthenticatedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NetworkServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
 
 

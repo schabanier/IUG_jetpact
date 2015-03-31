@@ -259,7 +259,16 @@ public class ProfileManagementPanel extends JPanel
 	public Profile runProfileEditor(ProfilRenderer ProfilRenderer)
 	{
 		//cest renderer modification qui appelle, on ouvre la jdialog qui modifie (on passe par management car il faut modifie le jpanelinfo)
-		Profile profile = profileManagerDialog.modifyProfile(ProfilRenderer.getProfile());
+		Profile profile = null;
+		try {
+			profile = profileManagerDialog.modifyProfile(ProfilRenderer.getProfile());
+		} catch (NotAuthenticatedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NetworkServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(profile != null && ProfilRenderer.isSelected())
 			this.displayProfileDetails(profile);
