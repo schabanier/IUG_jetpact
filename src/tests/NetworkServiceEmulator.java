@@ -215,7 +215,43 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 	}
 
-	public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    /**
+     * Downloads an object image and returns the path of the downloaded image file.
+     *
+     * @param tag The tag to be modified.
+     * @return the local filePath of the tag.
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication is not done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If one field (i.e. one information) is illegal. <br/>
+     *                                                             The possible fields with the reason(s) are : <br/>
+     *                                                             <ul>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_UID tag uid} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_OBJECT_IMAGE TAG_OBJECT_IMAGE} (reason {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no image associated with this tag).</li>
+     *                                                             </ul>
+     * @throws com.stuffinder.exceptions.NetworkServiceException   If a network service error has occurred.
+     */
+    @Override
+    public String downloadObjectImage(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        if(! FieldVerifier.verifyTagUID(tag.getUid()))
+            throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+
+        int index = authenticatedAccount.getTags().indexOf(tag);
+
+        if(index < 0)
+            throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+
+        String filename = authenticatedAccount.getTags().get(index).getObjectImageName();
+
+        if(filename == null || filename.length() == 0)
+            throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, "");
+
+        return filename;
+    }
+
+    public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
@@ -315,7 +351,6 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return profile;
 	}
 
-	
 	public Profile createProfile(String profileName, List<Tag> tagList)
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException
@@ -351,32 +386,6 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		return profile;
 	}
 
-
-
-    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
-    {
-        if(authenticatedAccount == null)
-            throw new NotAuthenticatedException();
-
-        if(!FieldVerifier.verifyName(newProfileName))
-            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, newProfileName);
-
-        int index = authenticatedAccount.getProfiles().indexOf(new Profile(profile.getName()));
-
-        if(index < 0)
-            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
-
-        Profile tmp = authenticatedAccount.getProfiles().get(index);
-
-        for(Profile otherProfile : authenticatedAccount.getProfiles())
-            if(otherProfile != tmp && otherProfile.getName().equals(newProfileName))
-                throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, newProfileName);
-
-        tmp.setName(newProfileName);
-
-        return tmp;
-    }
-	
 	public Profile addTagToProfile(Profile profile, Tag tag)
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException
@@ -619,10 +628,59 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		return authenticatedAccount.getProfiles();
 	}
-	
-	
 
-	public static NetworkServiceEmulator getInstance()
+    /**
+     * @return the last update time about tags.
+     * @throws com.stuffinder.exceptions.NetworkServiceException
+     */
+    @Override
+    public int getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException
+    {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        return 0;
+    }
+
+    /**
+     * @return The last update time about profiles.
+     * @throws com.stuffinder.exceptions.NetworkServiceException
+     */
+    @Override
+    public int getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException
+    {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        return 0;
+    }
+
+    @Override
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        if(!FieldVerifier.verifyName(newProfileName))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, newProfileName);
+
+        int index = authenticatedAccount.getProfiles().indexOf(new Profile(profile.getName()));
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+
+        Profile tmp = authenticatedAccount.getProfiles().get(index);
+
+        for(Profile otherProfile : authenticatedAccount.getProfiles())
+            if(otherProfile != tmp && otherProfile.getName().equals(newProfileName))
+                throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, newProfileName);
+
+        tmp.setName(newProfileName);
+
+        return tmp;
+    }
+
+    public static NetworkServiceEmulator getInstance()
 	{
 		return emulator;
 	}
