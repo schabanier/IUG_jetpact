@@ -177,6 +177,11 @@ public class TagsManagementPanel extends JPanel
 				addTag(tag);
 			
 			tagsListPanel.add(Box.createVerticalGlue());
+
+			if(list.size() > 1)
+				tagsListLabel.setText(list.size() + " tags linked with account");
+			else
+				tagsListLabel.setText(list.size() + " tag linked with account");
 		} catch (NotAuthenticatedException e) {
 			tagsListPanel.removeAll();
 			tagsListLabel.setText("");
