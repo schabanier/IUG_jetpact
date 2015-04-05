@@ -33,7 +33,7 @@ public class Account
         return tags;
     }
 
-    public List<Profile> getProfils()
+    public List<Profile> getProfiles()
     {
         return profils;
     }
@@ -85,4 +85,6 @@ public class Account
         return (!(obj instanceof Account)) ? false :
                 pseudo.equals(((Account) obj).getPseudo());
     }
+
+
 }

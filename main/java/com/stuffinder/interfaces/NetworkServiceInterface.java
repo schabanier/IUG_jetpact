@@ -342,6 +342,7 @@ public interface NetworkServiceInterface
     public Profile removeTagsFromProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 
+    Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
     /**
      * Replaces the tag list of a profile by the specified tag list.
@@ -386,6 +387,10 @@ public interface NetworkServiceInterface
      * @throws NetworkServiceException If a network error has occurred.
      */
     public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+    Profile replaceTagListOfProfile(Profile profile, Tag[] tagList)
+            throws NotAuthenticatedException, IllegalFieldException,
+            NetworkServiceException;
 
     /**
      * To get a profile by a name.

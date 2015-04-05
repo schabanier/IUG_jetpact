@@ -4,10 +4,13 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 import org.apache.http.client.methods.HttpUriRequest;
 import org.json.JSONException;
@@ -18,6 +21,11 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 
 import com.stuffinder.data.Account;
@@ -99,8 +107,8 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public void createAccount(Account newAccount, String newPassword)
-            throws IllegalFieldException, NetworkServiceException {    // We first check the validity of the arguments to create the parameters
+    public void createAccount(Account newAccount, String newPassword)  throws IllegalFieldException, NetworkServiceException {
+        // We first check the validity of the arguments to create the parameters
         if (!FieldVerifier.verifyName(newAccount.getPseudo()))
             throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getPseudo());
 
@@ -182,8 +190,7 @@ public class NetworkService implements NetworkServiceInterface {
 
 
     @Override
-    public Account authenticate(String pseudo, String password)
-            throws AccountNotFoundException, NetworkServiceException {
+    public Account authenticate(String pseudo, String password)throws AccountNotFoundException, NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
         if(! FieldVerifier.verifyName(pseudo))
             throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, pseudo);
@@ -319,9 +326,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public void modifyEMailAddress(String emailAddress)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
+    public void modifyEMailAddress(String emailAddress) throws NotAuthenticatedException, IllegalFieldException,  NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyEMailAddress(emailAddress))
             throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, emailAddress);
@@ -385,9 +390,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public void modifyPassword(String newPassword)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
+    public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyPassword(newPassword))
             throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);
@@ -453,8 +456,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public List<Tag> getTags() throws NotAuthenticatedException,
-            NetworkServiceException {
+    public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException {
         List<Tag> res = new ArrayList<>();
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyName(currentAccount.getPseudo()))
@@ -527,8 +529,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Tag addTag(Tag tag) throws NotAuthenticatedException,
-            IllegalFieldException, NetworkServiceException {
+    public Tag addTag(Tag tag) throws NotAuthenticatedException,IllegalFieldException, NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
@@ -600,13 +601,68 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public String downloadObjectImage(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+        // We first check the validity of the arguments to create the parameters
+        if (! FieldVerifier.verifyTagUID(tag.getUid()))
+            throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+
+        InputStream inputStream = null;
+        String destinationFile = tag.getObjectImageName()+".jpg";
+        String result = "";
+        try {
+            // make GET request to the given URL
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyobjectname?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
+            StatusLine statusLine = httpResponse.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                // receive response as inputStream
+                HttpEntity entity = httpResponse.getEntity();
+                inputStream = entity.getContent();
+                // convert inputstream to string
+                if (inputStream != null) {
+
+                    OutputStream os = new FileOutputStream(destinationFile);
+
+                    byte[] b = new byte[2048];
+                    int length;
+
+                    while ((length = inputStream.read(b)) != -1) {
+                        os.write(b, 0, length);
+                    }
+
+                    inputStream.close();
+                    os.close();
+
+                } else {
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
+                }
+            }
+
+
+            // When Http response code is '404'
+            else if (statusCode == 404) {
+                throw new NetworkServiceException("Requested resource not found");
+            }
+
+            // When Http response code is '500'
+            else if (statusCode == 500) {
+                throw new NetworkServiceException("Something went wrong at server end");
+            }
+
+            // When Http response code other than 404, 500
+            else {
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+            }
+        } catch (IOException | IllegalStateException e) {
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occurred while executing request.");
+        }
+
+        return destinationFile;
     }
 
     @Override
-    public Tag modifyObjectName(Tag tag, String newObjectName)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
+    public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyName(newObjectName))
             throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, newObjectName);
@@ -673,10 +729,134 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Tag modifyObjectImage(Tag tag, String newImageFileName)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
+    public Tag modifyObjectImage(Tag tag, String newImageFileName)throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+        if (! FieldVerifier.verifyImageFileName(newImageFileName))
+
+            throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
+
+
+        InputStream inputStream;
+
+        String result = "";
+
+        try {
+            HttpPost httppost=new HttpPost(server_address+"modifyobjectimage");
+            // check image with your test
+        	/* in final version : application\pictures\[pseudo]\[objectName].jpg */
+            File imageFile = new File(newImageFileName);
+
+            FileBody bin = new FileBody(imageFile);
+
+            HttpEntity reqEntity = MultipartEntityBuilder.create()
+                    .addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN))
+                    .addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN))
+                    .addPart("objectName", new StringBody(tag.getObjectName(), ContentType.TEXT_PLAIN))
+                    .addPart("file", bin)
+                    .build();
+
+            httppost.setEntity(reqEntity);
+
+            HttpResponse httpResponse = client.execute(httppost);
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returnCode");
+
+                        if (returnCode == NO_ERROR) {
+
+
+
+                        }
+
+                        // Else display error message
+
+                        else if (returnCode == DATABASE_ACCESS_ISSUE) {
+
+                            throw new NetworkServiceException("Problem of access to the DB");
+
+                        } else {
+
+                            throw new NotAuthenticatedException();
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occurred [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
+
+                }
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+
+        }
+
         return null;
     }
 
@@ -746,9 +926,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Profile createProfile(String profileName)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
+    public Profile createProfile(String profileName)throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if (!FieldVerifier.verifyName(profileName))
             throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
 
@@ -814,102 +992,578 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-    if (!FieldVerifier.verifyName(profileName))
+    Profile profile = createProfile(profileName);
+    profile = addTagsToProfile(profile, tagList);
+    return profile;
+}
+
+    @Override
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException,NetworkServiceException {
+
+        String profileName = profile.getName();
+
+        Profile newProfile = new Profile(newProfileName);
+
+        // We first check the validity of the arguments to create the parameters
+
+        if (! FieldVerifier.verifyName(profileName))
+
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
+
+        if (! FieldVerifier.verifyName(newProfileName))
+
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, newProfileName);
+
+
+        InputStream inputStream;
+
+        String result = "";
+
+        try {
+
+            // make GET request to the given URL
+
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyprofilename?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName + "&new_profile_name=" + newProfileName));
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returncode");
+
+                        if (returnCode == 0) {
+
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
+
+                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
+
+                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
+
+                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
+
+                                newProfile.addTag(tag1);
+                            }
+                        }
+
+                        // Else display error message
+
+
+                        else {
+
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occured [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+
+                }
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+
+        }
+
+
+        return newProfile;
+    }
+
+    @Override
+    public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+        String profileName = profile.getName();
+
+        Profile newProfile = new Profile(profile.getName());
+
+        // We first check the validity of the arguments to create the parameters
+
+        if (! FieldVerifier.verifyTagUID(tag.getUid()))
+
+            throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+
+
+        if (! FieldVerifier.verifyName(profileName))
+
             throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
 
 
-    InputStream inputStream;
-    String result = "";
-    try {
-        // make GET request to the given URL
-        HttpResponse httpResponse = executeRequest(new HttpGet(server_address +"create?pseudo=" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
-        StatusLine statusLine = httpResponse.getStatusLine();
-        int statusCode = statusLine.getStatusCode();
-        if (statusCode == 200) {
-            // receive response as inputStream
-            HttpEntity entity = httpResponse.getEntity();
-            inputStream = entity.getContent();
-            // convert inputstream to string
-            if (inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-                try {
-                    // creation JSON Object
-                    JSONObject obj = new JSONObject(result);
-                    int returnCode = obj.getInt("returnCode");
-                    if (returnCode == NO_ERROR) {
-                            /* Everything went fine */
-                    }
-                    // Else display error message
-                    else if (returnCode == USER_ALREADY_REGISTERED) {
-                        currentPassword = null;
-                        throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_ALREADY_USED, newAccount.getPseudo());
+        InputStream inputStream;
 
-                    }else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
-                        currentPassword = null;
-                        throw new NetworkServiceException("Illegal use of special character");
+        String result = "";
 
-                    } else {
-                        currentPassword = null;
-                        throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, newAccount.getPseudo());
+        try {
+
+            // make GET request to the given URL
+
+            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/addtagtoprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName + "&id=" + tag.getUid()));
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    throw new NetworkServiceException("Server response might be invalid.");
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returncode");
+
+                        if (returnCode == 0) {
+
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
+
+                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
+
+                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
+
+                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
+
+                                newProfile.addTag(tag1);
+                            }
+                        }
+
+                        // Else display error message
+
+
+                        else {
+
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occured [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+
                 }
-            } else {
-                throw new NetworkServiceException("Connection issue with the server, null input stream");
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+
+        }
+
+
+
+
+        return newProfile;
+    }
+
+    @Override
+    public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+        String profileName = profile.getName();
+        Profile newProfile = new Profile(profileName);
+
+        if (! FieldVerifier.verifyName(profileName))
+
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
+
+
+        for(Tag tag : tags) {
+            if (! FieldVerifier.verifyTagUID(tag.getUid()))
+                throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+        }
+
+        InputStream inputStream;
+
+        String result = "";
+
+        JSONObject jsonUIDs = new JSONObject();
+
+        //on remplit le json avec les couples ("indice", UID)
+        for(int i=0; i<tags.size(); i++) {
+            try {
+                jsonUIDs.put(Integer.toString(i), tags.get(i).getUid());
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
 
-        // When Http response code is '404'
-        else if (statusCode == 404) {
-            throw new NetworkServiceException("Requested resource not found");
+        try {
+            // check URL with your test
+            HttpPost httppost = new HttpPost("http://92.222.33.38:8080/app_server/ns/addtagstoprofile");
+
+
+
+            HttpEntity reqEntity = MultipartEntityBuilder.create()
+                    .addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN))
+                    .addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN))
+                    .addPart("profileName", new StringBody(profileName, ContentType.TEXT_PLAIN))
+                    .addPart("jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN))
+                    .build();
+
+            httppost.setEntity(reqEntity);
+
+            HttpResponse httpResponse = client.execute(httppost);
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returnCode");
+
+                        if (returnCode == NO_ERROR) {
+
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
+
+                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
+
+                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
+
+                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
+
+                                newProfile.addTag(tag1);
+                            }
+                        }
+
+                        // Else display error message
+
+                        else if (returnCode == DATABASE_ACCESS_ISSUE) {
+
+                            throw new NetworkServiceException("Problem of access to the DB");
+
+                        } else {
+
+                            throw new NotAuthenticatedException();
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occurred [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
+
+                }
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+
         }
 
-        // When Http response code is '500'
-        else if (statusCode == 500) {
-            throw new NetworkServiceException("Something went wrong at server end");
+        return newProfile;
+    }
+
+    @Override
+    public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+        String id = tag.getUid();
+
+        String profileName = profile.getName();
+
+        Profile newProfile = new Profile(profileName);
+
+        // We first check the validity of the arguments to create the parameters
+
+        if (! FieldVerifier.verifyTagUID(tag.getUid()))
+
+            throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, id);
+
+
+        if (! FieldVerifier.verifyName(profileName))
+
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
+
+
+        InputStream inputStream;
+
+        String result = "";
+
+        try {
+
+            // make GET request to the given URL
+
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"emovetagfromprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&profile_name=" + profileName));
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returncode");
+
+                        if (returnCode == 0) {
+
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
+
+                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
+
+                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
+
+                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
+
+                                newProfile.addTag(tag1);
+                            }
+                        }
+
+                        // Else display error message
+
+
+                        else {
+
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occured [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+
+                }
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+
         }
 
-        // When Http response code other than 404, 500
-        else {
-            throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
-        }
-    } catch (IOException | IllegalStateException e) {
-        throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
-    } catch (InterruptedException e) {
-        throw new NetworkServiceException("error occurred while executing request.");
-    }
-    return null;
-}
 
-
-    @Override
-    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
-    }
-
-    @Override
-    public Profile addTagToProfile(Profile profile, Tag tag)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Profile addTagsToProfile(Profile profile, List<Tag> tags)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Profile removeTagFromProfile(Profile profile, Tag tag)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
-        return null;
+        return newProfile;
     }
 
     @Override
@@ -918,23 +1572,137 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Profile removeAllFromProfile(Profile profile)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
+    public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         return null;
     }
 
     @Override
-    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
-        return null;
+    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+        //flemme.
+        removeProfile(profile);
+
+        Profile newProfile = createProfile(profile.getName(), tagList);
+
+        return newProfile;
     }
 
     @Override
     public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+// changer aussi currentAccount ? -> changer visibilitÈ de l'attribut Profils
+
+        String profileName = profile.getName();
+
+        // We first check the validity of the arguments to create the parameters
+
+
+        if (! FieldVerifier.verifyName(profileName))
+
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
+
+
+        InputStream inputStream;
+
+        String result = "";
+
+        try {
+
+            // make GET request to the given URL
+
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"removeprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName));
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returncode");
+
+                        if (returnCode == 0) {
+
+                        }
+
+                        // Else display error message
+
+
+                        else {
+
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occured [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+
+                }
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+
+        }
 
     }
 
@@ -947,17 +1715,143 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Profile getProfile(String profileName)
-            throws NotAuthenticatedException {
-        // TODO Auto-generated method stub
-        return null;
+    public Profile getProfile(String profileName) throws NotAuthenticatedException, NetworkServiceException {
+
+        Profile newProfile = new Profile(profileName);
+
+        // We first check the validity of the arguments to create the parameters
+
+        if (! FieldVerifier.verifyName(profileName))
+
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
+
+        InputStream inputStream;
+
+        String result = "";
+
+        try {
+
+            // make GET request to the given URL
+
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"retrieveprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName));
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+
+            int statusCode = statusLine.getStatusCode();
+
+            if (statusCode == 200) {
+
+                // receive response as inputStream
+
+                HttpEntity entity = httpResponse.getEntity();
+
+                inputStream = entity.getContent();
+
+                // convert inputstream to string
+
+                if (inputStream != null) {
+
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        // creation JSON Object
+
+                        JSONObject obj = new JSONObject(result);
+
+                        int returnCode = obj.getInt("returnCode");
+
+                        if (returnCode == NO_ERROR) {
+
+                            org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
+
+                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
+
+                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
+
+                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
+
+                                newProfile.addTag(tag1);
+                            }
+                        }
+
+                        // Else display error message
+
+
+                        else {
+
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+
+                        }
+
+                    } catch (JSONException e) {
+
+                        // "Error Occured [Server's JSON response might be invalid]!"
+
+                        throw new NetworkServiceException("Server response might be invalid.");
+
+                    }
+
+                } else {
+
+                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+
+                }
+
+            }
+
+
+
+            // When Http response code is '404'
+
+            else if (statusCode == 404) {
+
+                throw new NetworkServiceException("Requested resource not found");
+
+            }
+
+
+            // When Http response code is '500'
+
+            else if (statusCode == 500) {
+
+                throw new NetworkServiceException("Something went wrong at server end");
+
+            }
+
+
+            // When Http response code other than 404, 500
+
+            else {
+
+                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+
+            }
+
+        } catch (IOException | IllegalStateException e) {
+
+            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+
+        }
+
+        return newProfile;
+
     }
 
     @Override
-    public List<Profile> getProfiles() throws NotAuthenticatedException,
-            NetworkServiceException {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException {
+
+        ArrayList<Profile> list = new ArrayList<Profile>(currentAccount.getProfiles());
+
+        for(int i=0; i<list.size();i++) {
+            list.set(i, getProfile(list.get(i).getName()));
+        }
+
+        return list;
     }
 
     @Override
