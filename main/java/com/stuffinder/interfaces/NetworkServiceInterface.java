@@ -388,10 +388,6 @@ public interface NetworkServiceInterface
      */
     public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
-    Profile replaceTagListOfProfile(Profile profile, Tag[] tagList)
-            throws NotAuthenticatedException, IllegalFieldException,
-            NetworkServiceException;
-
     /**
      * To get a profile by a name.
      * @param profileName The name of a profile
