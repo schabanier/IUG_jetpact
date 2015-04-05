@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
@@ -128,7 +129,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address +"register?pseudo=" + newAccount.getPseudo() + "&password=" + newPassword + "&first_name=" + newAccount.getFirstName() + "&last_name=" + newAccount.getLastName() + "&email=" + newAccount.getEMailAddress()));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address +"register?pseudo=" + URLEncoder.encode(newAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(newPassword, "UTF-8") + "&first_name=" + URLEncoder.encode(newAccount.getFirstName(), "UTF-8") + "&last_name=" + URLEncoder.encode(newAccount.getLastName(), "UTF-8") + "&email=" + URLEncoder.encode(newAccount.getEMailAddress(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -203,7 +204,7 @@ public class NetworkService implements NetworkServiceInterface {
 
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "login?pseudo=" + pseudo + "&password=" + password));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "login?pseudo=" + URLEncoder.encode(pseudo, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -335,7 +336,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result;
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyemail?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_email=" + emailAddress));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyemail?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&new_email=" + URLEncoder.encode(emailAddress, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -399,7 +400,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result;
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifypassword?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&new_password=" + newPassword));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifypassword?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&new_password=" + URLEncoder.encode(newPassword, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -466,7 +467,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "retrievetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "retrievetag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -541,7 +542,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "addtag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&object_name=" + tag.getObjectName() + "&picture_name=" + tag.getObjectImageName()));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "addtag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&object_name=" + URLEncoder.encode(tag.getObjectName(), "UTF-8") + "&picture_name=" + URLEncoder.encode(tag.getObjectImageName(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -610,7 +611,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyobjectname?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyobjectname?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -671,7 +672,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyobjectname?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&new_object_name=" + newObjectName));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyobjectname?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&new_object_name=" + URLEncoder.encode(newObjectName, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -867,7 +868,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "deletetag?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid()));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "deletetag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -935,7 +936,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address +"createprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address +"createprofile?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -1023,7 +1024,7 @@ public class NetworkService implements NetworkServiceInterface {
 
             // make GET request to the given URL
 
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/modifyprofilename?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName + "&new_profile_name=" + newProfileName));
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address + "modifyprofilename?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName, "UTF-8") + "&new_profile_name=" + URLEncoder.encode(newProfileName, "UTF-8")));
 
             StatusLine statusLine = httpResponse.getStatusLine();
 
@@ -1159,7 +1160,7 @@ public class NetworkService implements NetworkServiceInterface {
 
             // make GET request to the given URL
 
-            HttpResponse httpResponse = client.execute(new HttpGet("http://92.222.33.38:8080/app_server/ns/addtagtoprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName + "&id=" + tag.getUid()));
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address + "addtagtoprofile?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName, "UTF-8")+ "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
 
             StatusLine statusLine = httpResponse.getStatusLine();
 
@@ -1224,7 +1225,7 @@ public class NetworkService implements NetworkServiceInterface {
 
                 } else {
 
-                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
 
                 }
 
@@ -1254,19 +1255,15 @@ public class NetworkService implements NetworkServiceInterface {
 
             else {
 
-                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
 
             }
 
         } catch (IOException | IllegalStateException e) {
 
-            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
 
         }
-
-
-
-
         return newProfile;
     }
 
@@ -1304,7 +1301,7 @@ public class NetworkService implements NetworkServiceInterface {
 
         try {
             // check URL with your test
-            HttpPost httppost = new HttpPost("http://92.222.33.38:8080/app_server/ns/addtagstoprofile");
+            HttpPost httppost = new HttpPost(server_address + "addtagstoprofile");
 
 
 
@@ -1457,7 +1454,7 @@ public class NetworkService implements NetworkServiceInterface {
 
             // make GET request to the given URL
 
-            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"emovetagfromprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&id=" + tag.getUid() + "&profile_name=" + profileName));
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address + "emovetagfromprofile?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName,"UTF-8")));
 
             StatusLine statusLine = httpResponse.getStatusLine();
 
@@ -1522,7 +1519,7 @@ public class NetworkService implements NetworkServiceInterface {
 
                 } else {
 
-                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
 
                 }
 
@@ -1552,13 +1549,13 @@ public class NetworkService implements NetworkServiceInterface {
 
             else {
 
-                throw new NetworkServiceException("Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
 
             }
 
         } catch (IOException | IllegalStateException e) {
 
-            throw new NetworkServiceException("exception of type IOExcption or IllegalStateException catched.");
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
 
         }
 
@@ -1609,7 +1606,7 @@ public class NetworkService implements NetworkServiceInterface {
 
             // make GET request to the given URL
 
-            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"removeprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName));
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"removeprofile?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName, "UTF-8")));
 
             StatusLine statusLine = httpResponse.getStatusLine();
 
@@ -1664,7 +1661,7 @@ public class NetworkService implements NetworkServiceInterface {
 
                 } else {
 
-                    throw new NetworkServiceException("Connection issue with ther server, null imput stream");
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
 
                 }
 
@@ -1733,7 +1730,7 @@ public class NetworkService implements NetworkServiceInterface {
 
             // make GET request to the given URL
 
-            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"retrieveprofile?pseudo=" + currentAccount.getPseudo() + "&password=" + currentPassword + "&profile_name=" + profileName));
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address+"retrieveprofile?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName, "UTF-8")));
 
             StatusLine statusLine = httpResponse.getStatusLine();
 
