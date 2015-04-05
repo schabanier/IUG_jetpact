@@ -110,6 +110,7 @@ public class ProfileManagementPanel extends JPanel
 		return profilesListManagementPanel;
 	}
 	
+	@SuppressWarnings("serial")
 	private JPanel createProfileInformationsPanel()
 	{
 		JPanel profilesInformationsPanel = new JPanel(true);
@@ -123,14 +124,15 @@ public class ProfileManagementPanel extends JPanel
 		profileLabel.setDoubleBuffered(true);
 
 		
-		JList profilesList = new JList();
-		profilesListModel = new DefaultListModel();
+		JList<String> profilesList = new JList<>();
+		profilesListModel = new DefaultListModel<>();
 		profilesList.setModel(profilesListModel);
 		profilesList.setDoubleBuffered(true);
 		profilesList.setCellRenderer(new DefaultListCellRenderer(){ // set custom renderer to disable selection on graphical view.
 		
-			
-			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+			private static final long serialVersionUID = -5561167800506161082L;
+
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 			{
 				return super.getListCellRendererComponent(list, ((Tag) value).getObjectName(), index, false, cellHasFocus);
 			}
@@ -185,6 +187,7 @@ public class ProfileManagementPanel extends JPanel
 		profileLabel.setText("Profile Name");
 		
 	}
+	
 	
 	private void addProfile(Profile profile)
 	{
@@ -262,12 +265,10 @@ public class ProfileManagementPanel extends JPanel
 		Profile profile = null;
 		try {
 			profile = profileManagerDialog.modifyProfile(ProfilRenderer.getProfile());
-		} catch (NotAuthenticatedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}  catch (NotAuthenticatedException e) {// abnormal error.
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NetworkServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		}
 		
 		if(profile != null && ProfilRenderer.isSelected())

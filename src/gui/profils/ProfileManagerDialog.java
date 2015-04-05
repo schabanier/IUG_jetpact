@@ -316,24 +316,9 @@ public class ProfileManagerDialog extends JDialog
 			isProfileModified = true;
 
 		} catch (IllegalFieldException e) {
-			switch(e.getFieldId())
-			{
-			case IllegalFieldException.TAG_UID :
-				if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
-					JOptionPane.showMessageDialog(this, TagsManagement.MODIFICATION_TAG_NOT_FOUND_MESSAGE, TagsManagement.MODIFICATION_TAG_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
-				else
-					JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-				break;
-			case IllegalFieldException.TAG_OBJECT_NAME :
-				if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-					JOptionPane.showMessageDialog(this, TagsManagement.getObjectNameAlreadyUsedMessage(objectName), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.ERROR_MESSAGE);
-				else
-					JOptionPane.showMessageDialog(this, CommonErrorMessages.getDefaultFieldErrorMessage(Fields.TAG_OBJECT_NAME), CommonErrorMessages.getFieldErrorTitle(Fields.TAG_OBJECT_NAME), JOptionPane.ERROR_MESSAGE);
-				break;
-			default:
+			
 				JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-				break;
-			}
+				
 		} catch (NotAuthenticatedException e) {// abnormal error.
 			JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NetworkServiceException e) {
@@ -361,7 +346,17 @@ public class ProfileManagerDialog extends JDialog
 			isProfileModified = true;
 			setVisible(false);
 
-		} catch
+		}  catch (IllegalFieldException e) {
+			
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+			
+	} catch (NotAuthenticatedException e) {// abnormal error.
+		JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+	} catch (NetworkServiceException e) {
+		JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+	}
+	}
+		
 
 
 
@@ -401,13 +396,11 @@ public class ProfileManagerDialog extends JDialog
 
 
 
-		} catch (NotAuthenticatedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NetworkServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (NotAuthenticatedException e) {// abnormal error.
+		JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+	} catch (NetworkServiceException e) {
+		JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+	}
 
 
 		setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
@@ -446,9 +439,12 @@ public class ProfileManagerDialog extends JDialog
 		setTitle("Modification of Profile");
 		nomTextField.setText(profile.getName());
 		nomTextField.setEditable(true);
-
+      
+		
+		try {
 		
 			List<Tag> listTagsAvailable = NetworkServiceProvider.getNetworkService().getTags();
+		
 
 			for(Tag tag : listTagsAvailable)
 				listModelAvailable.addElement(tag);
@@ -457,6 +453,12 @@ public class ProfileManagerDialog extends JDialog
 				listModelAvailable.removeElement(tag);
 				listModelAdd.addElement(tag);
 			}
+			
+		} catch (NotAuthenticatedException e) {// abnormal error.
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+		} catch (NetworkServiceException e) {
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+		}
 
 
 
