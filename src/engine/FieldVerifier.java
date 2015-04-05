@@ -16,7 +16,7 @@ public class FieldVerifier
 
 	public static boolean verifyName(String value)
 	{
-		return value.length() > 0;
+		return (value.length() > 0)&&(value.length() < 20);
 	}
 	
 	public static boolean verifyEMailAddress(String email)
