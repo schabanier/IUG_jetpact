@@ -13,14 +13,6 @@ public class Account
 	private List<Tag> tags;
 	private List<Profile> profiles;
 	
-	public void removeTag(Tag tag) {
-		tags.remove(tag);
-	}
-	
-	public void removeProfile(Profile profile) {
-		profiles.remove(profile);
-	}
-	
 	public void addProfile(Profile profile) {
 		profiles.add(profile);
 	}
