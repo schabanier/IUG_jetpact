@@ -320,6 +320,7 @@ public class NetworkService implements NetworkServiceInterface {
 
         InputStream inputStream;
         String result;
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         try {
             // make GET request to the given URL
             HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyemail?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&new_email=" + URLEncoder.encode(emailAddress, "UTF-8")));
@@ -439,10 +440,7 @@ public class NetworkService implements NetworkServiceInterface {
     @Override
     public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException {
         List<Tag> res = new ArrayList<>();
-        // We first check the validity of the arguments to create the parameters
-        if (! FieldVerifier.verifyName(currentAccount.getPseudo()))
-            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, currentAccount.getPseudo());
-
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         InputStream inputStream;
         String result = "";
         try {
@@ -514,6 +512,7 @@ public class NetworkService implements NetworkServiceInterface {
             throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectName());
         InputStream inputStream;
         String result = "";
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         try {
             // make GET request to the given URL
             HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "addtag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&object_name=" + URLEncoder.encode(tag.getObjectName(), "UTF-8") + "&picture_name=" + URLEncoder.encode(tag.getObjectImageName(), "UTF-8")));
@@ -574,6 +573,7 @@ public class NetworkService implements NetworkServiceInterface {
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         InputStream inputStream = null;
         String destinationFile = tag.getObjectImageName()+".jpg";
         String result = "";
@@ -625,7 +625,7 @@ public class NetworkService implements NetworkServiceInterface {
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyName(newObjectName))
             throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, newObjectName);
-
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         InputStream inputStream = null;
         String result = "";
         try {
@@ -686,6 +686,7 @@ public class NetworkService implements NetworkServiceInterface {
     public Tag modifyObjectImage(Tag tag, String newImageFileName)throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if (! FieldVerifier.verifyImageFileName(newImageFileName))
             throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         InputStream inputStream;
         String result = "";
         try {
@@ -755,8 +756,8 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public void removeTag(Tag tag) throws NotAuthenticatedException,
-            IllegalFieldException, NetworkServiceException {
+    public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         InputStream inputStream;
         String result = "";
         try {
@@ -819,7 +820,7 @@ public class NetworkService implements NetworkServiceInterface {
     public Profile createProfile(String profileName)throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if (!FieldVerifier.verifyName(profileName))
             throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
-
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         Profile profile = createProfile(profileName);
         InputStream inputStream;
         String result = "";
@@ -882,6 +883,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+    if(currentAccount == null) { throw new NotAuthenticatedException(); }
     Profile profile = createProfile(profileName);
     profile = addTagsToProfile(profile, tagList);
     return profile;
@@ -889,6 +891,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException,NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
         Profile newProfile = new Profile(newProfileName);
         // We first check the validity of the arguments to create the parameters
@@ -958,6 +961,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
         Profile newProfile = new Profile(profile.getName());
         // We first check the validity of the arguments to create the parameters
@@ -1027,6 +1031,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
         Profile newProfile = new Profile(profileName);
         if (! FieldVerifier.verifyName(profileName))
@@ -1119,6 +1124,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String id = tag.getUid();
         String profileName = profile.getName();
         Profile newProfile = new Profile(profileName);
@@ -1189,6 +1195,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile removeTagsFromProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
         Profile newProfile = new Profile(profileName);
         if (! FieldVerifier.verifyName(profileName))
@@ -1285,6 +1292,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         //flemme.
         removeProfile(profile);
         Profile newProfile = createProfile(profile.getName(), tagList);
@@ -1293,6 +1301,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         // changer aussi currentAccount ? -> changer visibilitÈ de l'attribut Profils
         String profileName = profile.getName();
         // We first check the validity of the arguments to create the parameters
@@ -1355,6 +1364,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile getProfile(String profileName) throws NotAuthenticatedException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         Profile newProfile = new Profile(profileName);
         // We first check the validity of the arguments to create the parameters
         if (! FieldVerifier.verifyName(profileName))
@@ -1421,6 +1431,7 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         ArrayList<Profile> list = new ArrayList<>(currentAccount.getProfiles());
         for(int i=0; i<list.size();i++) {
             list.set(i, getProfile(list.get(i).getName()));
