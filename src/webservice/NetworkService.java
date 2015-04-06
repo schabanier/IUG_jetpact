@@ -370,7 +370,8 @@ public class NetworkService implements NetworkServiceInterface {
  
     public Account getCurrentAccount() throws NotAuthenticatedException {
  
-        if (currentAccount != null) {
+    	
+    	if (currentAccount != null) {
  
             return currentAccount;
  
@@ -390,7 +391,9 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        // We first check the validity of the arguments to create the parameters
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	// We first check the validity of the arguments to create the parameters
  
         if (! FieldVerifier.verifyEMailAddress(emailAddress))
  
@@ -512,7 +515,9 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        // We first check the validity of the arguments to create the parameters
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	// We first check the validity of the arguments to create the parameters
  
         if (! FieldVerifier.verifyPassword(newPassword))
  
@@ -631,14 +636,10 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        List<Tag> res = new ArrayList<Tag>();
- 
-        // We first check the validity of the arguments to create the parameters
- 
-        if (! FieldVerifier.verifyName(currentAccount.getPseudo()))
- 
-            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, currentAccount.getPseudo());
- 
+       
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	List<Tag> res = new ArrayList<Tag>();
  
         InputStream inputStream;
  
@@ -764,7 +765,9 @@ public class NetworkService implements NetworkServiceInterface {
  
         // We first check the validity of the arguments to create the parameters
  
-        if (! FieldVerifier.verifyTagUID(tag.getUid()))
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	if (! FieldVerifier.verifyTagUID(tag.getUid()))
  
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
  
@@ -886,7 +889,9 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        // We first check the validity of the arguments to create the parameters
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	// We first check the validity of the arguments to create the parameters
  
         if (! FieldVerifier.verifyName(newObjectName))
  
@@ -1010,7 +1015,9 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-    	 if (! FieldVerifier.verifyImageFileName(newImageFileName))
+    	if(currentAccount == null) throw new NotAuthenticatedException(); 
+    	
+    	if (! FieldVerifier.verifyImageFileName(newImageFileName))
     		 
              throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
   
@@ -1031,7 +1038,8 @@ public class NetworkService implements NetworkServiceInterface {
             HttpEntity reqEntity = MultipartEntityBuilder.create()
                     .addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN))
                     .addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN))
-                    .addPart("objectName", new StringBody(tag.getObjectName(), ContentType.TEXT_PLAIN))
+                    .addPart("tagUID", new StringBody(tag.getUid(), ContentType.TEXT_PLAIN))
+                    .addPart("object_name", new StringBody(tag.getObjectName(), ContentType.TEXT_PLAIN))
                     .addPart("file", bin)
                     .build();
 
@@ -1067,8 +1075,7 @@ public class NetworkService implements NetworkServiceInterface {
   
                          if (returnCode == 0) {
   
-                             currentAccount.setMailAddress(obj.getString("email"));
-  
+//  
                          }
   
                          // Else display error message
@@ -1143,7 +1150,9 @@ public class NetworkService implements NetworkServiceInterface {
  
             IllegalFieldException, NetworkServiceException {
  
-        InputStream inputStream;
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	InputStream inputStream;
  
         String result = "";
  
@@ -1181,6 +1190,13 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
+                        	for(Profile profile : currentAccount.getProfiles()) {
+                        		profile.removeTag(tag);
+                        	}
+                        	
+                        	currentAccount.removeTag(tag);
+                        	
+                        	
                         }
  
                         // Else display error message
@@ -1256,6 +1272,8 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
     	Profile newProfile = new Profile(profileName);
     	 
    	 // We first check the validity of the arguments to create the parameters
@@ -1302,16 +1320,8 @@ public class NetworkService implements NetworkServiceInterface {
 
                        if (returnCode == 0) {
 
-                       	org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
-                       	 
-                           for (int i = 0; i < arrayOfJsonTag.length(); i++) {
-
-                               JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
-
-                               Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
-
-                               newProfile.addTag(tag1);
-                           }
+                    	   Profile profile = new Profile(profileName);
+                       	currentAccount.addProfile(profile);
                        }
 
                        // Else display error message
@@ -1385,10 +1395,10 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
     	
-    	String profileName = profile.getName();
+    	if(currentAccount == null) throw new NotAuthenticatedException();
     	
-    	Profile newProfile = new Profile(profile.getName());
- 
+    	String profileName = profile.getName();
+    	 
     	 // We first check the validity of the arguments to create the parameters
     	 
         if (! FieldVerifier.verifyTagUID(tag.getUid()))
@@ -1439,16 +1449,7 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                        	org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
-                        	 
-                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
- 
-                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
- 
-                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
- 
-                                newProfile.addTag(tag1);
-                            }
+                        	profile.addTag(tag);
                         }
  
                         // Else display error message
@@ -1513,7 +1514,7 @@ public class NetworkService implements NetworkServiceInterface {
  
 
  
-        return newProfile;
+        return profile;
 }
  
  
@@ -1525,8 +1526,10 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
 
+    	
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
     	String profileName = profile.getName();
-    	Profile newProfile = new Profile(profileName);
     	
    	 if (! FieldVerifier.verifyName(profileName))
    		 
@@ -1549,8 +1552,7 @@ public class NetworkService implements NetworkServiceInterface {
 			try {
 				jsonUIDs.put(Integer.toString(i), tags.get(i).getUid());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new NetworkServiceException("Problem constructing jsonUIDs for POST");
 			}
         }
  
@@ -1598,16 +1600,10 @@ public class NetworkService implements NetworkServiceInterface {
                         int returnCode = obj.getInt("returncode");
  
                         if (returnCode == 0) {
+                        	 
+                            for (Tag tag : tags) {
  
-                        	org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
-                       	 
-                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
- 
-                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
- 
-                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
- 
-                                newProfile.addTag(tag1);
+                            	profile.addTag(tag);
                             } 
                         }
  
@@ -1673,7 +1669,7 @@ public class NetworkService implements NetworkServiceInterface {
  
         }
         
-       return newProfile;
+       return profile;
 }
  
  
@@ -1685,12 +1681,13 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
+    	
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
     	String id = tag.getUid();
     	
     	String profileName = profile.getName();
-    	
-    	Profile newProfile = new Profile(profileName);
-    	
+    	    	
     	// We first check the validity of the arguments to create the parameters
     	 
         if (! FieldVerifier.verifyTagUID(tag.getUid()))
@@ -1741,16 +1738,8 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                        	org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
-                       	 
-                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
- 
-                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
- 
-                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
- 
-                                newProfile.addTag(tag1);
-                            }
+                        	profile.removeTag(tag);
+                            
                         }
  
                         // Else display error message
@@ -1813,7 +1802,7 @@ public class NetworkService implements NetworkServiceInterface {
         }
  
   
-        return newProfile;
+        return profile;
 }
  
  
@@ -1826,6 +1815,8 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
     	//flemme.
     	removeProfile(profile);
     	
@@ -1841,6 +1832,8 @@ public class NetworkService implements NetworkServiceInterface {
  
             throws NotAuthenticatedException, NetworkServiceException {
      	
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
     	Profile newProfile = new Profile(profileName);
  
     	 // We first check the validity of the arguments to create the parameters
@@ -1969,7 +1962,10 @@ public class NetworkService implements NetworkServiceInterface {
  
             NetworkServiceException {
  
-        ArrayList<Profile> list = new ArrayList<Profile>(currentAccount.getProfiles());
+       
+    	if(currentAccount == null) throw new NotAuthenticatedException();
+    	
+    	ArrayList<Profile> list = new ArrayList<Profile>(currentAccount.getProfiles());
         
         for(int i=0; i<list.size();i++) {
         	list.set(i, getProfile(list.get(i).getName()));
@@ -1997,6 +1993,9 @@ public class NetworkService implements NetworkServiceInterface {
 	public String downloadObjectImage(Tag tag)
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException {
+	
+		if(currentAccount == null) throw new NotAuthenticatedException();
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -2008,6 +2007,8 @@ public class NetworkService implements NetworkServiceInterface {
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException {
 
+		if(currentAccount == null) throw new NotAuthenticatedException();
+		
 		//flemme.
 		Profile newProfile = createProfile(profileName);
 		
@@ -2023,10 +2024,10 @@ public class NetworkService implements NetworkServiceInterface {
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException {
     	
-    	String profileName = profile.getName();
-    	
-    	Profile newProfile = new Profile(newProfileName);
-    	
+		if(currentAccount == null) throw new NotAuthenticatedException();
+		
+		String profileName = profile.getName();
+    	    	
     	// We first check the validity of the arguments to create the parameters
  
         if (! FieldVerifier.verifyName(profileName))
@@ -2076,19 +2077,9 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                        	org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
-                       	 
-                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
- 
-                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
- 
-                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
- 
-                                newProfile.addTag(tag1);
-                            }
+                        	profile.setName(newProfileName);
+                        	
                         }
- 
-                        // Else display error message
  
  
                         else {
@@ -2148,7 +2139,7 @@ public class NetworkService implements NetworkServiceInterface {
         }
  
 		
-		return newProfile;
+		return profile;
 	}
 
 
@@ -2158,8 +2149,9 @@ public class NetworkService implements NetworkServiceInterface {
 			throws NotAuthenticatedException, IllegalFieldException,
 			NetworkServiceException {
 
+		if(currentAccount == null) throw new NotAuthenticatedException();
+		
 		String profileName = profile.getName();
-    	Profile newProfile = new Profile(profileName);
     	
    	 if (! FieldVerifier.verifyName(profileName))
    		 
@@ -2232,16 +2224,9 @@ public class NetworkService implements NetworkServiceInterface {
  
                         if (returnCode == 0) {
  
-                        	org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
-                       	 
-                            for (int i = 0; i < arrayOfJsonTag.length(); i++) {
- 
-                                JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
- 
-                                Tag tag1 = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture"));
- 
-                                newProfile.addTag(tag1);
-                            } 
+                        	for(Tag tag : tagList) {
+                        			profile.removeTag(tag);
+                        	}
                         }
  
                         // Else display error message
@@ -2306,7 +2291,7 @@ public class NetworkService implements NetworkServiceInterface {
  
         }
         
-       return newProfile;
+       return profile;
 
 	}
 
@@ -2318,7 +2303,9 @@ public class NetworkService implements NetworkServiceInterface {
 			NetworkServiceException {
     	// changer aussi currentAccount ? -> changer visibilité de l'attribut Profils
 		
-    	String profileName = profile.getName();
+		if(currentAccount == null) throw new NotAuthenticatedException();
+		
+		String profileName = profile.getName();
     	    	
     	// We first check the validity of the arguments to create the parameters
     	 
@@ -2365,6 +2352,8 @@ public class NetworkService implements NetworkServiceInterface {
                         int returnCode = obj.getInt("returncode");
  
                         if (returnCode == 0) {
+                        	
+                        	currentAccount.removeProfile(profile);
  
                         }
  
@@ -2434,7 +2423,9 @@ public class NetworkService implements NetworkServiceInterface {
 	@Override
 	public int getLastTagsUpdateTime() throws NetworkServiceException,
 			NotAuthenticatedException {
-		// TODO Auto-generated method stub
+		
+		if(currentAccount == null) throw new NotAuthenticatedException();
+
 		return 0;
 	}
 
@@ -2443,7 +2434,9 @@ public class NetworkService implements NetworkServiceInterface {
 	@Override
 	public int getLastProfilesUpdateTime() throws NetworkServiceException,
 			NotAuthenticatedException {
-		// TODO Auto-generated method stub
+	
+		if(currentAccount == null) throw new NotAuthenticatedException();
+
 		return 0;
 	}
     

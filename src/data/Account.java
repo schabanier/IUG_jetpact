@@ -11,7 +11,19 @@ public class Account
 	private String emailAddress;
 	
 	private List<Tag> tags;
-	private List<Profile> profils;
+	private List<Profile> profiles;
+	
+	public void removeTag(Tag tag) {
+		tags.remove(tag);
+	}
+	
+	public void removeProfile(Profile profile) {
+		profiles.remove(profile);
+	}
+	
+	public void addProfile(Profile profile) {
+		profiles.add(profile);
+	}
 	
 	public Account(String pseudo, String firstName, String lastName, String emailAddress)
 	{
@@ -25,7 +37,7 @@ public class Account
 		setMailAddress(emailAddress);
 		
 		tags = new ArrayList<>();
-		profils = new ArrayList<>();
+		profiles = new ArrayList<>();
 	}
 
 	public List<Tag> getTags()
@@ -35,7 +47,7 @@ public class Account
 
 	public List<Profile> getProfiles()
 	{
-		return profils;
+		return profiles;
 	}
 
 	public String getPseudo()
