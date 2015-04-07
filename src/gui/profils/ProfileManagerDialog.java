@@ -2,13 +2,11 @@ package gui.profils;
 
 
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,30 +18,23 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import data.Tag;
 import data.Profile;
-import engine.FieldVerifier;
 import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.Constants.CommonErrorMessages;
-import gui.Constants.Fields;
 import gui.Constants.TagsManagement;
-import gui.profils.CreerProfil.MonList1SelectionListener;
 
 public class ProfileManagerDialog extends JDialog
 {
@@ -285,14 +276,35 @@ public class ProfileManagerDialog extends JDialog
 
 			//addTagFromProfile
 		} catch (NotAuthenticatedException e1) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(null, "Vous n'êtes pas correctement authentifié", "Erreur", JOptionPane.ERROR_MESSAGE);
-		} catch (IllegalFieldException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NetworkServiceException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+			
+		
+		}catch (IllegalFieldException e) {
+			switch(e.getFieldId())
+			{
+				case IllegalFieldException.TAG_UID :
+					
+						JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+				break;
+				case IllegalFieldException.PROFILE_NAME :
+					
+					if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
+					JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+					else 
+						JOptionPane.showMessageDialog(this, "there is no tag with this UID", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+					
+				break;
+				default:
+					JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+				break;
+			}
+		}
+		catch (NetworkServiceException e1) {
+			
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+		
+			
 		}
 
 	}
@@ -317,7 +329,19 @@ public class ProfileManagerDialog extends JDialog
 
 		} catch (IllegalFieldException e) {
 			
-				JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+					if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
+					JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+					else if (e.getReason()==IllegalFieldException.REASON_VALUE_ALREADY_USED)
+					{
+						JOptionPane.showMessageDialog(this, "there is no profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(this, "there is already a profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+					}
+						
+					
+				
 				
 		} catch (NotAuthenticatedException e) {// abnormal error.
 			JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
@@ -336,7 +360,9 @@ public class ProfileManagerDialog extends JDialog
 
 
 	if((currentProfile.getTags().containsAll(listTagsAdded) && listTagsAdded.containsAll(currentProfile.getTags())) ) //les deux listes sont identiques
+		{
 		fieldToBeModified = false;
+		}
 	else 
 	{ 
 		try {
@@ -348,22 +374,50 @@ public class ProfileManagerDialog extends JDialog
 
 		}  catch (IllegalFieldException e) {
 			
-			JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+			switch(e.getFieldId())
+			{
+			
+		case IllegalFieldException.TAG_UID :
+			if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
+			JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+			else if (e.getReason()==IllegalFieldException.REASON_VALUE_ALREADY_USED)
+			
+				JOptionPane.showMessageDialog(this, "there is no tag with this UID", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+			
+			else
+			
+				JOptionPane.showMessageDialog(this, "this tag is twice or more in the specified list", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+			
+				
+			break;
+			
+		case IllegalFieldException.PROFILE_NAME :
+			
+	   
+		if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
+		JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+		else
+			JOptionPane.showMessageDialog(this, "there is no profile which has this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+		
+	break;
+	default:
+		JOptionPane.showMessageDialog(this, CommonErrorMessages.UNKNOWN_ERROR_MESSAGE, CommonErrorMessages.UNKNOWN_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+	break;
+			}
+		
+			
 			
 	} catch (NotAuthenticatedException e) {// abnormal error.
 		JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 	} catch (NetworkServiceException e) {
 		JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 	}
-	}
+	
 		
 
 
 
-
-
-
-
+	}
 	}
 
 
@@ -496,7 +550,7 @@ public class ProfileManagerDialog extends JDialog
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+
 
 
 

@@ -297,13 +297,16 @@ public class ProfileManagementPanel extends JPanel
 			profilesListLabel.setText(profilesNumber +""+"profiles");
 			profilesListPanel.repaint(); // To refresh the graphical interface.
 		} catch (IllegalFieldException e) { // Abnormal exception in this case. Will not occur.
+
+			if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
+			JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+			else 
+				JOptionPane.showMessageDialog(this, "there is no profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 			
-		
-				JOptionPane.showMessageDialog(MainFrame.getInstance(), CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NotAuthenticatedException e) { // Abnormal exception in this case. Will not occur.
 			JOptionPane.showMessageDialog(MainFrame.getInstance(), CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		} catch (NetworkServiceException e) {
-			e.printStackTrace();
+		
 			JOptionPane.showMessageDialog(MainFrame.getInstance(), CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		}
 	}
