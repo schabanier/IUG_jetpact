@@ -39,6 +39,7 @@ import interfaces.NetworkServiceInterface;
 import static webservice.ConstantsWebService.server_address;
 import static webservice.ErrorCode.*;
 
+@SuppressWarnings("deprecation")
 public class NetworkService implements NetworkServiceInterface {
 
 	private static HttpClient client;
@@ -1334,7 +1335,6 @@ public class NetworkService implements NetworkServiceInterface {
 			try {
 				jsonUIDs.put(Integer.toString(i), tags.get(i).getUid());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1534,7 +1534,6 @@ public class NetworkService implements NetworkServiceInterface {
 			try {
 				jsonUIDs.put(Integer.toString(i), tagList.get(i).getUid());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1841,13 +1840,9 @@ public class NetworkService implements NetworkServiceInterface {
 						JSONObject obj = new JSONObject(result);
 						int returnCode = obj.getInt("returnCode");
 						if (returnCode == NO_ERROR) {
-							// { "intError" = ? ; "listProfiles" = { "profile1"
-							// = {"0" = tagID1 ; ...} ; ... } }
-							// JSONObject(.. ; "listProfiles" =
-							// JSONObject("profile1" = JSONArray( jsonTags) )
-							// ;.. )
-							// pour ne pas se reposer sur currentAccount, on
-							// transmet toutes les coordonnÈes des tags.
+				// { "intError" = ? ; "listProfiles" = { "profile1" = {tag1 ; ...} ; ... } }
+				// JSONObject(.. ; "listProfiles" = JSONObject("profile1" = JSONArray( jsonTags) );.. )
+				// pour ne pas se reposer sur currentAccount, on transmet toutes les coordonnÈes des tags.
 							org.json.JSONObject jsonProfiles = obj
 									.getJSONObject("listProfiles");
 							for (Iterator<?> iterator = jsonProfiles.keys(); iterator
