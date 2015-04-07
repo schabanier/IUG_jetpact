@@ -47,4 +47,8 @@ public class Profile
 		return (!(obj instanceof Profile)) ? false : 
 					name.equals(((Profile) obj).getName());
 	}
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
