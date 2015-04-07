@@ -27,7 +27,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 
-
 import data.Account;
 import data.Profile;
 import data.Tag;
@@ -37,7 +36,6 @@ import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import interfaces.NetworkServiceInterface;
-
 import static webservice.ConstantsWebService.server_address;
 import static webservice.ErrorCode.*;
 
