@@ -118,6 +118,7 @@ public class ProfileManagerDialog extends JDialog
 	            @SuppressWarnings("unused")
 	            public Component getListCellRendererComponent(JList<? extends String> list, Tag value, int index, boolean isSelected, boolean cellHasFocus)
 	            {
+	            	System.out.println("redessine" + value.getUid());
 	                return super.getListCellRendererComponent(list, value.getObjectName(), index, false, cellHasFocus);
 	            }
 	        });
@@ -141,6 +142,13 @@ public class ProfileManagerDialog extends JDialog
 	//
 //	        listAvailable.setDragEnabled(true);
 
+            
+	        buttonGauche.addActionListener(new ButtonGaucheListener(listAvailable,listModelAdd, listModelAvailable));
+			
+	        buttonDroite.addActionListener(new ButtonDroiteListener(listAdd,  listModelAdd, listModelAvailable));
+			
+	        
+	        
 	        JButton cancelButton = new JButton(TagsManagement.CANCEL_BUTTON_NAME);
 	        cancelButton.setDoubleBuffered(true);
 	        cancelButton.addActionListener(new ActionCancel());
@@ -272,7 +280,8 @@ public class ProfileManagerDialog extends JDialog
 		return;
 
 		try {
-			NetworkServiceProvider.getNetworkService().createProfile(nomProfile,listTags);
+			profileAdded =  NetworkServiceProvider.getNetworkService().createProfile(nomProfile,listTags);
+			setVisible(false);
 
 			//addTagFromProfile
 		} catch (NotAuthenticatedException e1) {
@@ -292,7 +301,7 @@ public class ProfileManagerDialog extends JDialog
 					if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
 					JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 					else 
-						JOptionPane.showMessageDialog(this, "there is no tag with this UID", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, "there is already a profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 					
 				break;
 				default:
@@ -326,6 +335,7 @@ public class ProfileManagerDialog extends JDialog
 		try {
 			currentProfile = NetworkServiceProvider.getNetworkService().modifyProfileName(currentProfile, profileName);
 			isProfileModified = true;
+			setVisible(false);
 
 		} catch (IllegalFieldException e) {
 			
@@ -333,11 +343,11 @@ public class ProfileManagerDialog extends JDialog
 					JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 					else if (e.getReason()==IllegalFieldException.REASON_VALUE_ALREADY_USED)
 					{
-						JOptionPane.showMessageDialog(this, "there is no profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, "there is already a profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(this, "there is already a profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, "there is no profile with this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 					}
 						
 					
@@ -448,6 +458,15 @@ public class ProfileManagerDialog extends JDialog
 				listModelAvailable.addElement(tag);
 
 
+			setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
+			// repositionnement de la fenêtre si elle sort de l'écran en haut ou à gauche.
+			if(getLocation().getX() < 0)
+				setLocation(0, (int) getLocation().getY());
+			if(getLocation().getY() < 0)
+				setLocation((int) getLocation().getX(), 0);
+
+			setVisible(true);
+
 
 
 		} catch (NotAuthenticatedException e) {// abnormal error.
@@ -456,15 +475,6 @@ public class ProfileManagerDialog extends JDialog
 		JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 	}
 
-
-		setLocation(getParent().getX() + (getParent().getWidth() - getWidth())/2, getParent().getY() + (getParent().getHeight() - getHeight())/2);
-		// repositionnement de la fenêtre si elle sort de l'écran en haut ou à gauche.
-		if(getLocation().getX() < 0)
-			setLocation(0, (int) getLocation().getY());
-		if(getLocation().getY() < 0)
-			setLocation((int) getLocation().getX(), 0);
-
-		setVisible(true);
 		return profileAdded;
 	}
 

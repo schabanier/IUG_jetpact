@@ -57,7 +57,7 @@ public class ProfileManagementPanel extends JPanel
 	// right panel elements
 	
 	private JLabel profileLabel;
-	private DefaultListModel<String> profilesListModel;
+	private DefaultListModel<Tag> tagsListModel;
 	
 	private ProfileManagerDialog profileManagerDialog;
 	
@@ -80,7 +80,7 @@ public class ProfileManagementPanel extends JPanel
 		profilesListManagementPanel.setLayout(new BoxLayout(profilesListManagementPanel, BoxLayout.PAGE_AXIS));
 		profilesListManagementPanel.setAlignmentX(CENTER_ALIGNMENT);
 		
-		profilesListLabel = new JLabel("X profiles linked with account");
+		profilesListLabel = new JLabel(profilesNumber+""+"profiles linked with account");
 		profilesListLabel.setDoubleBuffered(true);
 		
 		selectedProfile = null;
@@ -124,11 +124,11 @@ public class ProfileManagementPanel extends JPanel
 		profileLabel.setDoubleBuffered(true);
 
 		
-		JList<String> profilesList = new JList<>();
-		profilesListModel = new DefaultListModel<>();
-		profilesList.setModel(profilesListModel);
-		profilesList.setDoubleBuffered(true);
-		profilesList.setCellRenderer(new DefaultListCellRenderer(){ // set custom renderer to disable selection on graphical view.
+		JList<Tag> tagsList = new JList<>();
+		tagsListModel = new DefaultListModel<>();
+		tagsList.setModel(tagsListModel);
+		tagsList.setDoubleBuffered(true);
+		tagsList.setCellRenderer(new DefaultListCellRenderer(){ // set custom renderer to disable selection on graphical view.
 		
 			private static final long serialVersionUID = -5561167800506161082L;
 
@@ -138,9 +138,9 @@ public class ProfileManagementPanel extends JPanel
 			}
 		});
 		
-		JScrollPane scrollPane = new JScrollPane(profilesList, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollPane = new JScrollPane(tagsList, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setDoubleBuffered(true);
-		scrollPane.setBorder(new TitledBorder(TagsManagement.LINKED_PROFILES_LIST_TITLE));
+		scrollPane.setBorder(new TitledBorder("Linked tags"));
 		
 		
 		profilesInformationsPanel.add(Box.createVerticalStrut(15));
@@ -150,7 +150,7 @@ public class ProfileManagementPanel extends JPanel
 		profilesInformationsPanel.add(Box.createVerticalStrut(15));
 		profilesInformationsPanel.add(scrollPane);
 		
-		profilesInformationsPanel.setMaximumSize(new Dimension(120,profilesInformationsPanel.getMaximumSize().height));
+		profilesInformationsPanel.setMinimumSize(new Dimension(80,profilesInformationsPanel.getMaximumSize().height));
 		
 		return profilesInformationsPanel;
 	}
@@ -226,13 +226,18 @@ public class ProfileManagementPanel extends JPanel
 	
 	private void displayProfileDetails(Profile profile)
 	{
+		tagsListModel.clear();
 		
+		
+		List<Tag> tags = profile.getTags();
+		
+		for(Tag tag : tags)
+			tagsListModel.addElement(tag);
 		
 		
 		profileLabel.setText(profile.getName());
 		
 		
-		// profile list processing will be implemented later.
 	}
 	
 	private void removeProfileDetails()
@@ -241,7 +246,7 @@ public class ProfileManagementPanel extends JPanel
 		profileLabel.setText("");
 	
 		
-		profilesListModel.clear();
+		tagsListModel.clear();
 	}
 	
 	class ActionAddNewProfile implements ActionListener
