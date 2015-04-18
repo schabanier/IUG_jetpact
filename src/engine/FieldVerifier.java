@@ -38,14 +38,20 @@ public class FieldVerifier
     {
         return name.length() > 0;
     }
-	
+
 	public static boolean verifyImageFileName(String imageFileName)
 	{
+		return verifyImageFileName(new File(imageFileName));
+	}
+
+
+	public static boolean verifyImageFileName(File imageFile)
+	{
 		try {
-			if(imageFileName == null)
+			if(imageFile == null)
 				throw new NullPointerException();
 			
-			new ImageIcon(ImageIO.read(new File(imageFileName))); // to test if the file can be loaded as an image.
+			new ImageIcon(ImageIO.read(imageFile)); // to test if the file can be loaded as an image.
 			
 			return true;
 		} catch (IOException e) {
