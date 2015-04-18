@@ -20,7 +20,7 @@ import exceptions.NotAuthenticatedException;
  */
 public interface NetworkServiceInterface
 {
-	
+
 	/**
 	 * Initializes this service to rend it available for network communications.
 	 * @throws NetworkServiceException if an error has occurred during the initialization.
@@ -56,7 +56,15 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
-	
+
+    /**
+     * To update the used password if it became incorrect after the authentication was performed.
+     * @param password The password
+     * @throws NotAuthenticatedException If the authentication isn't done.
+     * @throws IllegalFieldException If the given password is syntactically incorrect.
+     */
+    public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException;
+
 	/**
 	 * To logout.
 	 */
@@ -87,9 +95,22 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
-	
-	/**
+
+    /**
+     * Modifies the password of the current account.
+     * @param braceletUID The new password
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If the specified bracelet UID is illegal (Field id is {@link com.stuffinder.exceptions.IllegalFieldException#BRACELET_UID BRACELET_UID}). Possible reasons are :
+     * <ul>
+     *     <li>{@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this bracelet is already used by another account.</li>
+     *     <li>{@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT} if the specified bracelet UID is syntactically incorrect.</li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+
+    /**
 	 * To get the tags list of the current account.
 	 * @return the tags list if the authentication is already done successfully.
 	 * @throws NotAuthenticatedException If the authentication is not done.
@@ -414,15 +435,22 @@ public interface NetworkServiceInterface
 
     /**
      *
+     * @return the last update time about account personnal information .
+     * @throws NetworkServiceException
+     */
+    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+
+    /**
+     *
      * @return the last update time about tags.
      * @throws NetworkServiceException
      */
-    public int getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+    public long getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 
     /**
      *
      * @return The last update time about profiles.
      * @throws NetworkServiceException
      */
-    public int getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+    public long getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 }
