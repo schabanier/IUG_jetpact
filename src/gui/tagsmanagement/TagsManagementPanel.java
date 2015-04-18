@@ -296,8 +296,8 @@ public class TagsManagementPanel extends JPanel
 	}
 
 	
-	public Tag runTagEditor(TagRenderer tagRenderer)
-	{
+	public Tag runTagEditor(TagRenderer tagRenderer) // 
+	{ //cest renderer modification qui appelle, on ouvre la jdialog qui modifie (on passe par management car il faut modifie le jpanelinfo)
 		Tag tag = tagManagerDialog.modifyTag(tagRenderer.getTag());
 		if(tag != null && tagRenderer.isSelected())
 			this.displayTagDetails(tag);

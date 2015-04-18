@@ -26,6 +26,7 @@ import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.authentification.Identification;
 import gui.infoperso.InfoPerso;
+import gui.profils.ProfileManagementPanel;
 import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
@@ -36,7 +37,7 @@ public class MainFrame extends JFrame
 	private JPanel centerPanel;
 	private InfoPerso userInformationsPanel;
 	private TagsManagementPanel tagsPanel;
-	private JPanel profilesPanel;
+	private ProfileManagementPanel profilesPanel;
 
 	private JList<String> panelList;
 
@@ -122,8 +123,7 @@ public class MainFrame extends JFrame
 		
 		tagsPanel = new TagsManagementPanel();
 		
-		profilesPanel = new JPanel(true); // will be replaced by the real version.
-		profilesPanel.setBorder(new TitledBorder("profiles panel"));
+		profilesPanel = new ProfileManagementPanel(); // will be replaced by the real version.
 		
 		
 		centerPanel.add(profilesPanel, Constants.MainFrame.PROFILES_PANEL_NAME);

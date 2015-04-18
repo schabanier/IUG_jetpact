@@ -187,13 +187,12 @@ public class Identification extends JPanel
 					MainFrame.getInstance().authenticationDone();
 					
 				} catch (AccountNotFoundException e1) {
-					// TODO Auto-generated catch block
-
+					
 					JOptionPane.showMessageDialog(frameContainer, Constants.Authentication.ACCOUNT_NOT_FOUND_MESSAGE, Constants.Authentication.ACCOUNT_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 
 
 				} catch (NetworkServiceException e1) {
-					// TODO Auto-generated catch block
+					
 
 					JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
