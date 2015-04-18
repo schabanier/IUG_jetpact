@@ -38,7 +38,8 @@ import gui.Constants.TagsManagement;
 
 public class ProfileManagerDialog extends JDialog
 {
-
+	private static final long serialVersionUID = -394655827398656445L;
+	
 	private JPanel  panelL, panelR;
 	private JDialog dialog1;
 	private JLabel labelAjout, labelDispo, labelNom ;

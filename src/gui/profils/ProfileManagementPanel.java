@@ -1,32 +1,22 @@
 package gui.profils;
 
-import gui.Constants;
 import gui.Constants.CommonErrorMessages;
-import gui.Constants.Fields;
-import gui.Constants.TagsManagement;
-import gui.IconsProvider;
 import gui.MainFrame;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -47,6 +37,8 @@ import exceptions.NotAuthenticatedException;
 
 public class ProfileManagementPanel extends JPanel
 {
+	private static final long serialVersionUID = 1849949611958795029L;
+	
 	// Left panel elements.
 	private JLabel profilesListLabel;
 //	private DefaultListModel<Tag> tagsListModel;
@@ -110,7 +102,6 @@ public class ProfileManagementPanel extends JPanel
 		return profilesListManagementPanel;
 	}
 	
-	@SuppressWarnings("serial")
 	private JPanel createProfileInformationsPanel()
 	{
 		JPanel profilesInformationsPanel = new JPanel(true);
