@@ -26,6 +26,12 @@ public class Constants
 		public static final String ACCOUNT_NOT_FOUND_TITLE = "Account not found";
 		
 	}
+	
+	public static final class AskPassword
+	{
+		public static final String CANCEL_BUTTON_NAME = "Cancel";
+		public static final String VALIDATE_BUTTON_NAME = "Validate";
+	}
 
 	
 	public static final class TagsManagement

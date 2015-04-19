@@ -9,7 +9,7 @@ import exceptions.EngineServiceException;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
-
+import gui.UserNotifier;
 import static engine.Requests.*;
 import static exceptions.IllegalFieldException.*;
 
@@ -75,12 +75,12 @@ public class EngineService {
     
     private void askPasswordAfterError()
     {
-    	
+    	UserNotifier.askPassword(currentAccount.getPseudo());
     }
     
     private void showErrorMessage(String message)
     {
-    	
+    	UserNotifier.showErrorMessage(message);
     }
 
 
