@@ -75,12 +75,12 @@ public class FileManager {
             cleanFolder(autoSyncImageFolder);
 
         tmpFilesFolder = new File(rootFolder, "tmp");
-        if(! autoSyncImageFolder.exists())
+        if(! tmpFilesFolder.exists())
         {
-            if(! autoSyncImageFolder.mkdirs())
+            if(! tmpFilesFolder.mkdirs())
                 throw new IOException("creation of folder tmp has failed.");
 
-            Logger.getLogger(FileManager.class.getName()).log(Level.INFO, "autoSync folder created.");
+            Logger.getLogger(FileManager.class.getName()).log(Level.INFO, "tmp folder created.");
         }
         else
             cleanFolder(tmpFilesFolder);
