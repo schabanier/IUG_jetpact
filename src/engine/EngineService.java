@@ -55,8 +55,11 @@ public class EngineService {
     }
 
     public void initEngineService() throws EngineServiceException {
-        File rootFolder = new File(System.getProperty("user.home"), "Stuffinder");
-
+        File rootFolder = new File(System.getProperty("user.home"), "Stuffinder_PC");
+        
+        if(! rootFolder.exists())
+        	rootFolder.mkdirs();
+        
         try {
             FileManager.initFileManager(rootFolder.getAbsolutePath());
         } catch (IOException e) {
