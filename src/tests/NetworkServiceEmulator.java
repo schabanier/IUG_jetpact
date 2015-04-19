@@ -46,13 +46,13 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		Account testAccount = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
 
-		Tag tag1 = new Tag("A9:1F:83:D3:1B:D4", "Home keys", "/data/data/com.stuffinder/files/default_images/keys.png");
-		Tag tag2 = new Tag("03:13:24:2F:1B:D4", "Car key", "/data/data/com.stuffinder/files/default_images/carkey.png");
-		Tag tag3 = new Tag("11:1F:24:D3:1B:D4", "Bag", "/data/data/com.stuffinder/files/default_images/bag.png");
-		Tag tag4 = new Tag("CC:DD:24:EE:1B:D4", "Wallet", "/data/data/com.stuffinder/files/default_images/wallet.png");
-		Tag tag5 = new Tag("75:3E:24:99:1B:D2", "Android tablet", "/data/data/com.stuffinder/files/default_images/tablet.png");
-		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag", "/data/data/com.stuffinder/files/default_images/tag.png");
-		Tag tag7 = new Tag("D8:4F:E1:13:1B:D4", "Android smartphone", "/data/data/com.stuffinder/files/default_images/smartphone.png");
+		Tag tag1 = new Tag("A9:1F:83:D3:1B:D4", "Home keys", null);
+		Tag tag2 = new Tag("03:13:24:2F:1B:D4", "Car key", null);
+		Tag tag3 = new Tag("11:1F:24:D3:1B:D4", "Bag", null);
+		Tag tag4 = new Tag("CC:DD:24:EE:1B:D4", "Wallet", null);
+		Tag tag5 = new Tag("75:3E:24:99:1B:D2", "Android tablet", null);
+		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag", null);
+		Tag tag7 = new Tag("D8:4F:E1:13:1B:D4", "Android smartphone", null);
 		
 		tags.add(tag1);
 		tags.add(tag2);
@@ -85,7 +85,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		profile2.addTag(tag6);
 		profile2.addTag(tag7);
 
-		Profile profile3 = new Profile("profile 2");
+		Profile profile3 = new Profile("profile 3");
 		profile3.addTag(tag1);
 		profile3.addTag(tag2);
 		profile3.addTag(tag3);
@@ -269,6 +269,18 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 
         tag.setImageVersion(0);
 
+        if(tag.getObjectImageName() != null)
+        {
+        	File file = new File(FileManager.getTmpFilesFolder(), tag.getUid().replaceAll("\\:", "_") + ".png");
+        	
+        	try {	
+				FileManager.copyFile(new File(tag.getObjectImageName()), file);
+				tag.setObjectImageName(file.getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				throw new NetworkServiceException("error while copying image file " + tag.getObjectImageName());
+			}
+        }
+        
 		authenticatedAccount.getTags().add(tag);
 		return tag;
 		
@@ -309,7 +321,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         if(filename == null || filename.length() == 0)
             throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, "");
 
-        File tmpFile = new File(FileManager.getTmpFilesFolder(), tag.getUid().replaceAll("\\:", "_") + ".png");
+        File tmpFile = new File(FileManager.getTmpFilesFolder(), tag.getUid().replaceAll("\\:", "_") + "_bis.png");
 
         try {
             FileManager.copyFile(new File(filename), tmpFile);
@@ -371,8 +383,21 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
         else
         {
+            if(tag.getObjectImageName() != null)
+            {
+            	File file = new File(FileManager.getTmpFilesFolder(), tag.getUid().replaceAll("\\:", "_") + ".png");
+            	
+            	try {	
+    				FileManager.copyFile(new File(tag.getObjectImageName()), file);
+    				newImageFileName = file.getAbsolutePath();
+    			} catch (FileNotFoundException e) {
+    				throw new NetworkServiceException("error while copying image file " + tag.getObjectImageName());
+    			}
+            }
+    			
+            
             authenticatedAccount.getTags().get(index).setImageVersion(authenticatedAccount.getTags().get(index).getImageVersion() + 1);
-            authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName == null ? "" : newImageFileName);
+            authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName);
             return authenticatedAccount.getTags().get(index);
         }
 	}

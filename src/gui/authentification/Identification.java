@@ -14,7 +14,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.AccountNotFoundException;
 import exceptions.NetworkServiceException;
 import gui.Constants;
@@ -149,9 +149,7 @@ public class Identification extends JPanel
 
 
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-
-
+			
 			// action si clic sur bouton "creer compte"
 
 			AccountCreation accountCreationFenetre = new AccountCreation(frameContainer, Constants.UserInformationsManagement.ACCOUNT_CREATION_WINDOW_TITLE);
@@ -178,7 +176,7 @@ public class Identification extends JPanel
 			else
 			{
 				try {
-					NetworkServiceProvider.getNetworkService().authenticate(pseudo, password);
+					EngineServiceProvider.getEngineService().authenticate(pseudo, password);
 					
 					// pour nettoyer les champs pseudo et mot de passe.
 					textFieldPseudo.setText("");

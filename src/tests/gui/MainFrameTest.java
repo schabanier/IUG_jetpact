@@ -17,6 +17,7 @@ public class MainFrameTest
 		try {
 			NetworkServiceProvider.getNetworkService().initNetworkService();
 			EngineServiceProvider.getEngineService().initEngineService();
+			
 			new MainFrame();
 		} catch (NetworkServiceException e) {
 			e.printStackTrace();

@@ -1,12 +1,13 @@
 package gui.infoperso;
 
 import data.Account;
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.Constants.CommonErrorMessages;
 import gui.Constants.Fields;
 import gui.Constants.UserInformationsManagement;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -210,9 +211,9 @@ public class InfoPerso extends JPanel {
 	  textfieldMail.setText("");
 	  textfieldMdp.setText("");
 	  
-	  Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
-	  int tagsNumber = NetworkServiceProvider.getNetworkService().getTags().size();
-	  int profilesNumber = NetworkServiceProvider.getNetworkService().getProfiles().size();
+	  Account account = EngineServiceProvider.getEngineService().getCurrentAccount();
+	  int tagsNumber = EngineServiceProvider.getEngineService().getTags().size();
+	  int profilesNumber = EngineServiceProvider.getEngineService().getProfiles().size();
 	  
 	  
 	  textfieldPseudo.setText(account.getPseudo());

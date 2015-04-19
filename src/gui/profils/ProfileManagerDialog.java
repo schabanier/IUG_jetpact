@@ -27,9 +27,10 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
 import data.Tag;
 import data.Profile;
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
@@ -281,7 +282,7 @@ public class ProfileManagerDialog extends JDialog
 		return;
 
 		try {
-			profileAdded =  NetworkServiceProvider.getNetworkService().createProfile(nomProfile,listTags);
+			profileAdded =  EngineServiceProvider.getEngineService().createProfile(nomProfile,listTags);
 			setVisible(false);
 
 			//addTagFromProfile
@@ -334,7 +335,7 @@ public class ProfileManagerDialog extends JDialog
 	{
 		fieldToBeModified = true;
 		try {
-			currentProfile = NetworkServiceProvider.getNetworkService().modifyProfileName(currentProfile, profileName);
+			currentProfile = EngineServiceProvider.getEngineService().modifyProfileName(currentProfile, profileName);
 			isProfileModified = true;
 			setVisible(false);
 
@@ -378,7 +379,7 @@ public class ProfileManagerDialog extends JDialog
 	{ 
 		try {
 
-			NetworkServiceProvider.getNetworkService().replaceTagListOfProfile(currentProfile,listTagsAdded);
+			EngineServiceProvider.getEngineService().replaceTagListOfProfile(currentProfile,listTagsAdded);
 			fieldToBeModified = true;
 			isProfileModified = true;
 			setVisible(false);
@@ -405,7 +406,7 @@ public class ProfileManagerDialog extends JDialog
 		case IllegalFieldException.PROFILE_NAME :
 			
 	   
-		if (e.getReason()== IllegalFieldException.REASON_VALUE_INCORRECT)
+		if (e.getReason() == IllegalFieldException.REASON_VALUE_INCORRECT)
 		JOptionPane.showMessageDialog(this, "this is syntactically incorrect", "ERROR on field", JOptionPane.ERROR_MESSAGE);
 		else
 			JOptionPane.showMessageDialog(this, "there is no profile which has this name", "ERROR on field", JOptionPane.ERROR_MESSAGE);
@@ -453,7 +454,7 @@ public class ProfileManagerDialog extends JDialog
 
 
 		try {
-			List<Tag> listTags = NetworkServiceProvider.getNetworkService().getTags();
+			List<Tag> listTags = EngineServiceProvider.getEngineService().getTags();
 
 			for(Tag tag : listTags)
 				listModelAvailable.addElement(tag);
@@ -488,7 +489,7 @@ public class ProfileManagerDialog extends JDialog
 	 * @throws NotAuthenticatedException 
 	 */
 	public Profile modifyProfile(Profile profile) throws NotAuthenticatedException, NetworkServiceException
-	{    
+	{
 
 		listModelAdd.clear();
 		listModelAvailable.clear();
@@ -508,7 +509,7 @@ public class ProfileManagerDialog extends JDialog
 		
 		try {
 		
-			List<Tag> listTagsAvailable = NetworkServiceProvider.getNetworkService().getTags();
+			List<Tag> listTagsAvailable = EngineServiceProvider.getEngineService().getTags();
 		
 
 			for(Tag tag : listTagsAvailable)
@@ -604,10 +605,7 @@ public class ProfileManagerDialog extends JDialog
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-
-
-
+			
 			int indices[] = listAvailable.getSelectedIndices();
 			int size = indices.length;
 			int i = size;

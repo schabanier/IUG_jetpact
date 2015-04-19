@@ -30,7 +30,7 @@ import javax.swing.border.TitledBorder;
 
 import data.Profile;
 import data.Tag;
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
@@ -156,7 +156,7 @@ public class ProfileManagementPanel extends JPanel
 		List<Profile> list;
 		
 		try {
-			list = NetworkServiceProvider.getNetworkService().getProfiles();
+			list = EngineServiceProvider.getEngineService().getProfiles();
 			
 			for(Profile profile : list)
 				addProfile(profile);
@@ -279,7 +279,7 @@ public class ProfileManagementPanel extends JPanel
 			throw new NullPointerException();
 		
 		try {
-			NetworkServiceProvider.getNetworkService().removeProfile(renderer.getProfile());
+			EngineServiceProvider.getEngineService().removeProfile(renderer.getProfile());
 
 			if(selectedProfile == renderer)
 			{

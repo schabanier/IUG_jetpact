@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.authentification.Identification;
@@ -98,7 +98,7 @@ public class MainFrame extends JFrame
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				NetworkServiceProvider.getNetworkService().logOut();
+				EngineServiceProvider.getEngineService().logOut();
 				setContentPane(authenticationPanel);
 				setResizable(false);
 				pack();

@@ -62,6 +62,7 @@ public class EngineService {
         
         try {
             FileManager.initFileManager(rootFolder.getAbsolutePath());
+            setAutoSynchronization(true);
         } catch (IOException e) {
             throw new EngineServiceException("File manager initialization failed.");
         }

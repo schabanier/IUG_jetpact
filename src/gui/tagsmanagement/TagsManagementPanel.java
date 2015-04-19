@@ -39,7 +39,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import data.Tag;
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
@@ -172,7 +172,7 @@ public class TagsManagementPanel extends JPanel
 		List<Tag> list;
 		
 		try {
-			list = NetworkServiceProvider.getNetworkService().getTags();
+			list = EngineServiceProvider.getEngineService().getTags();
 			for(Tag tag : list)
 				addTag(tag);
 			
@@ -311,7 +311,7 @@ public class TagsManagementPanel extends JPanel
 			throw new NullPointerException();
 		
 		try {
-			NetworkServiceProvider.getNetworkService().removeTag(renderer.getTag());
+			EngineServiceProvider.getEngineService().removeTag(renderer.getTag());
 
 			if(selectedTag == renderer)
 			{
