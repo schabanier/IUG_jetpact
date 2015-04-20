@@ -138,7 +138,22 @@ public class MainFrame extends JFrame
 	{
 		public void valueChanged(ListSelectionEvent e)
 		{
-			((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
+			String value = panelList.getSelectedValue();
+			
+				try {
+					if(value.equals(Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME))
+						userInformationsPanel.reloadDisplayedInformations();
+					else if(value.equals(Constants.MainFrame.TAGS_PANEL_NAME))
+						tagsPanel.reloadTagsList();
+					else if(value.equals(Constants.MainFrame.PROFILES_PANEL_NAME))
+						profilesPanel.reloadProfilesList();
+					
+					((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
+				} catch (NotAuthenticatedException e1) {
+					e1.printStackTrace();
+				} catch (NetworkServiceException e1) {
+					e1.printStackTrace();
+				}
 		}
 	}
 	

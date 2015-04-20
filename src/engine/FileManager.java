@@ -323,8 +323,8 @@ public class FileManager {
         return tag.getUid().replaceAll("\\:", "_") + ".png";
     }
 
-    public static final int LOW_IMAGE_WIDTH = 60;
-    public static final int LOW_IMAGE_HEIGHT = 60;
+    public static final int LOW_IMAGE_WIDTH = 40;
+    public static final int LOW_IMAGE_HEIGHT = 40;
 
     public static Image loadImageForList(File imageFile) throws FileNotFoundException {
 
@@ -351,15 +351,15 @@ public class FileManager {
 
         int newWidth = width, newHeight = height;
 
-        if(width < height && height > MAX_IMAGE_HEIGHT)
+        if(width < height && height > LOW_IMAGE_HEIGHT)
         {
-            newHeight = MAX_IMAGE_HEIGHT;
-            newWidth = width * MAX_IMAGE_HEIGHT / height;
+            newHeight = LOW_IMAGE_HEIGHT;
+            newWidth = width * LOW_IMAGE_HEIGHT / height;
         }
-        else if(height <= width && width > MAX_IMAGE_WIDTH)
+        else if(height <= width && width > LOW_IMAGE_WIDTH)
         {
-            newHeight = height * MAX_IMAGE_WIDTH / width;
-            newWidth = MAX_IMAGE_WIDTH;
+            newHeight = height * LOW_IMAGE_WIDTH / width;
+            newWidth = LOW_IMAGE_WIDTH;
         }
         
         Image finalImage = image;

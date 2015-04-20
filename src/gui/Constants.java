@@ -113,6 +113,7 @@ public class Constants
 		public static final String FIRSTNAME = "Firstname";
 		public static final String LASTNAME = "Lastname";
 		public static final String EMAIL_ADDRESS = "Email address";
+		public static final String BRACELET = "Bracelet";
 		
 		public static final String PASSWORD = "Password";
 		public static final String PASSWORD_LABEL = "Enter a password";

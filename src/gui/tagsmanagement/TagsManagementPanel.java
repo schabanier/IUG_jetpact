@@ -50,7 +50,6 @@ public class TagsManagementPanel extends JPanel
 	
 	// Left panel elements.
 	private JLabel tagsListLabel;
-//	private DefaultListModel<Tag> tagsListModel;
 	private JPanel tagsListPanel;
 	private TagRenderer selectedTag;
 	private int tagsNumber;

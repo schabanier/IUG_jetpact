@@ -31,8 +31,8 @@ public class InfoPerso extends JPanel {
 	private static final long serialVersionUID = -1176567312519132553L;
 	
 	private JPanel infoPersoPanel;
-	private JLabel labelPseudo, labelPrenom, labelNom, labelMail, labelMdp, labelNombreDePuces, labelNombreDeProfils;
-	private JTextField textfieldPseudo, textfieldPrenom, textfieldNom, textfieldMail, textfieldMdp;
+	private JLabel labelPseudo, labelPrenom, labelNom, labelMail, labelMdp, labelNombreDePuces, labelNombreDeProfils, labelBracelet;
+	private JTextField textfieldPseudo, textfieldPrenom, textfieldNom, textfieldMail, textfieldMdp, textfieldBracelet;
 	private JLabel labelNombreDePucesInfo, labelNombreDeProfilsInfo;
 	private JButton buttonModifier ;
 	private JFrame frameContainer;
@@ -48,6 +48,7 @@ public class InfoPerso extends JPanel {
 		labelPrenom = new JLabel();
 		labelNom = new JLabel();
 		labelMail = new JLabel(); 
+		labelBracelet = new JLabel(); 
 		labelMdp = new JLabel();
 		labelNombreDePuces = new JLabel();
 		labelNombreDeProfils = new JLabel();
@@ -65,6 +66,7 @@ public class InfoPerso extends JPanel {
 		labelPrenom.setText(Fields.FIRSTNAME);
 		labelNom.setText(Fields.LASTNAME);
 		labelMail.setText(Fields.EMAIL_ADDRESS);
+		labelBracelet.setText(Fields.BRACELET);
 		labelMdp.setText(Fields.PASSWORD);
 		labelNombreDePuces.setText(UserInformationsManagement.TAGS_NUMBER_LABEL);
 		labelNombreDeProfils.setText(UserInformationsManagement.PROFILES_NUMBER_LABEL);
@@ -88,7 +90,11 @@ public class InfoPerso extends JPanel {
 		textfieldMail = new JTextField();
 		textfieldMail.setEditable(false);
 		textfieldMail.setMaximumSize(maxDimension);
-		
+
+		textfieldBracelet = new JTextField();
+		textfieldBracelet.setEditable(false);
+		textfieldBracelet.setMaximumSize(maxDimension);
+
 		textfieldMdp = new JTextField();
 		textfieldMdp.setEditable(false);
 		textfieldMdp.setMaximumSize(maxDimension);
@@ -117,6 +123,7 @@ public class InfoPerso extends JPanel {
 						.addComponent(labelPrenom)
 						.addComponent(labelNom)
 						.addComponent(labelMail)
+						.addComponent(labelBracelet)
 						.addComponent(labelMdp)
 						.addComponent(labelNombreDePuces)
 						.addComponent(labelNombreDeProfils)
@@ -127,6 +134,7 @@ public class InfoPerso extends JPanel {
 						.addComponent(textfieldPrenom)
 						.addComponent(textfieldNom)
 						.addComponent(textfieldMail)
+						.addComponent(textfieldBracelet)
 						.addComponent(textfieldMdp)
 						.addComponent(labelNombreDePucesInfo)
 						.addComponent(labelNombreDeProfilsInfo)
@@ -156,9 +164,14 @@ public class InfoPerso extends JPanel {
 							.addComponent(textfieldMail)
 					)
 					.addGroup(
-						layout.createParallelGroup()
-							.addComponent(labelMdp)
-							.addComponent(textfieldMdp)
+							layout.createParallelGroup()
+								.addComponent(labelBracelet)
+								.addComponent(textfieldBracelet)
+					)
+					.addGroup(
+							layout.createParallelGroup()
+								.addComponent(labelMdp)
+								.addComponent(textfieldMdp)
 					)
 					.addGroup(
 						layout.createParallelGroup()
@@ -221,6 +234,7 @@ public class InfoPerso extends JPanel {
 	  textfieldNom.setText(account.getLastName());
 	  textfieldMail.setText(account.getEMailAddress());
 	  textfieldMdp.setText("********");
+	  textfieldBracelet.setText(account.getBraceletUID() == null ? "" : account.getBraceletUID());
 	  
 	  labelNombreDePucesInfo.setText("" + tagsNumber);
 	  labelNombreDeProfilsInfo.setText("" + profilesNumber);
