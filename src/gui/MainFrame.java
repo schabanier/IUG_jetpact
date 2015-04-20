@@ -17,15 +17,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.authentification.Identification;
 import gui.infoperso.InfoPerso;
+import gui.profils.ProfileManagementPanel;
 import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
@@ -36,7 +36,7 @@ public class MainFrame extends JFrame
 	private JPanel centerPanel;
 	private InfoPerso userInformationsPanel;
 	private TagsManagementPanel tagsPanel;
-	private JPanel profilesPanel;
+	private ProfileManagementPanel profilesPanel;
 
 	private JList<String> panelList;
 
@@ -98,7 +98,7 @@ public class MainFrame extends JFrame
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				NetworkServiceProvider.getNetworkService().logOut();
+				EngineServiceProvider.getEngineService().logOut();
 				setContentPane(authenticationPanel);
 				setResizable(false);
 				pack();
@@ -122,8 +122,7 @@ public class MainFrame extends JFrame
 		
 		tagsPanel = new TagsManagementPanel();
 		
-		profilesPanel = new JPanel(true); // will be replaced by the real version.
-		profilesPanel.setBorder(new TitledBorder("profiles panel"));
+		profilesPanel = new ProfileManagementPanel(); // will be replaced by the real version.
 		
 		
 		centerPanel.add(profilesPanel, Constants.MainFrame.PROFILES_PANEL_NAME);
@@ -139,7 +138,22 @@ public class MainFrame extends JFrame
 	{
 		public void valueChanged(ListSelectionEvent e)
 		{
-			((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
+			String value = panelList.getSelectedValue();
+			
+				try {
+					if(value.equals(Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME))
+						userInformationsPanel.reloadDisplayedInformations();
+					else if(value.equals(Constants.MainFrame.TAGS_PANEL_NAME))
+						tagsPanel.reloadTagsList();
+					else if(value.equals(Constants.MainFrame.PROFILES_PANEL_NAME))
+						profilesPanel.reloadProfilesList();
+					
+					((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
+				} catch (NotAuthenticatedException e1) {
+					e1.printStackTrace();
+				} catch (NetworkServiceException e1) {
+					e1.printStackTrace();
+				}
 		}
 	}
 	

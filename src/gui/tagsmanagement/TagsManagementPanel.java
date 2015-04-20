@@ -39,7 +39,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import data.Tag;
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
@@ -50,7 +50,6 @@ public class TagsManagementPanel extends JPanel
 	
 	// Left panel elements.
 	private JLabel tagsListLabel;
-//	private DefaultListModel<Tag> tagsListModel;
 	private JPanel tagsListPanel;
 	private TagRenderer selectedTag;
 	private int tagsNumber;
@@ -172,11 +171,16 @@ public class TagsManagementPanel extends JPanel
 		List<Tag> list;
 		
 		try {
-			list = NetworkServiceProvider.getNetworkService().getTags();
+			list = EngineServiceProvider.getEngineService().getTags();
 			for(Tag tag : list)
 				addTag(tag);
 			
 			tagsListPanel.add(Box.createVerticalGlue());
+
+			if(list.size() > 1)
+				tagsListLabel.setText(list.size() + " tags linked with account");
+			else
+				tagsListLabel.setText(list.size() + " tag linked with account");
 		} catch (NotAuthenticatedException e) {
 			tagsListPanel.removeAll();
 			tagsListLabel.setText("");
@@ -291,8 +295,8 @@ public class TagsManagementPanel extends JPanel
 	}
 
 	
-	public Tag runTagEditor(TagRenderer tagRenderer)
-	{
+	public Tag runTagEditor(TagRenderer tagRenderer) // 
+	{ //cest renderer modification qui appelle, on ouvre la jdialog qui modifie (on passe par management car il faut modifie le jpanelinfo)
 		Tag tag = tagManagerDialog.modifyTag(tagRenderer.getTag());
 		if(tag != null && tagRenderer.isSelected())
 			this.displayTagDetails(tag);
@@ -306,7 +310,7 @@ public class TagsManagementPanel extends JPanel
 			throw new NullPointerException();
 		
 		try {
-			NetworkServiceProvider.getNetworkService().removeTag(renderer.getTag());
+			EngineServiceProvider.getEngineService().removeTag(renderer.getTag());
 
 			if(selectedTag == renderer)
 			{

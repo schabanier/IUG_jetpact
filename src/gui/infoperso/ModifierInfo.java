@@ -1,11 +1,12 @@
 package gui.infoperso;
 
 import data.Account;
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.Constants.*;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -156,9 +157,8 @@ public class ModifierInfo extends JDialog {
 		
 
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			// action si clic bouton Confirmer
 			
+			// action si clic bouton Confirmer
 			
 			if ((passwordField2.getPassword().length > 0 || passwordField3.getPassword().length > 0) && !(new String(passwordField2.getPassword()).equals(new String(passwordField3.getPassword())))) // les mdp ne sont pas identiques
 				JOptionPane.showMessageDialog(ModifierInfo.this, UserInformationsManagement.PASSWORD_AND_CONFIRMATION_NOT_EQUAL_MESSAGE, CommonErrorMessages.getFieldErrorTitle(Fields.PASSWORD), JOptionPane.ERROR_MESSAGE);
@@ -170,7 +170,7 @@ public class ModifierInfo extends JDialog {
 				if(newPassword.length() > 0)
 				{
 					try {		
-						   NetworkServiceProvider.getNetworkService().modifyPassword(newPassword);
+						EngineServiceProvider.getEngineService().modifyPassword(newPassword);
 					} catch (NotAuthenticatedException e1)
 					{
 						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
@@ -186,7 +186,7 @@ public class ModifierInfo extends JDialog {
 				if(textFieldMail.getText().length() > 0)
 				{
 					try {
-						NetworkServiceProvider.getNetworkService().modifyEMailAddress(textFieldMail.getText());
+						EngineServiceProvider.getEngineService().modifyEMailAddress(textFieldMail.getText());
 					} catch (NotAuthenticatedException e1)
 					{
 						JOptionPane.showMessageDialog(ModifierInfo.this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
@@ -225,7 +225,7 @@ public class ModifierInfo extends JDialog {
 	
 	public void showEditor() throws NotAuthenticatedException
 	{
-		Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
+		Account account = EngineServiceProvider.getEngineService().getCurrentAccount();
 		
 		textFieldPseudo.setText(account.getPseudo());
 		textFieldPrenom.setText(account.getFirstName());

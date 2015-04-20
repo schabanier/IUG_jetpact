@@ -14,9 +14,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.AccountNotFoundException;
-import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import gui.Constants;
 import gui.MainFrame;
@@ -150,9 +149,7 @@ public class Identification extends JPanel
 
 
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-
-
+			
 			// action si clic sur bouton "creer compte"
 
 			AccountCreation accountCreationFenetre = new AccountCreation(frameContainer, Constants.UserInformationsManagement.ACCOUNT_CREATION_WINDOW_TITLE);
@@ -170,7 +167,6 @@ public class Identification extends JPanel
 			String pseudo = textFieldPseudo.getText();
 			String password = new String(passwordField1.getPassword());
 			
-			
 			if(pseudo.length() == 0) // il manque le pseudo
 				JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.getEmptyFieldErrorMessage(Constants.Fields.PSEUDO), Constants.CommonErrorMessages.getFieldErrorTitle(Constants.Fields.PSEUDO), JOptionPane.ERROR_MESSAGE);
 			
@@ -180,7 +176,7 @@ public class Identification extends JPanel
 			else
 			{
 				try {
-					NetworkServiceProvider.getNetworkService().authenticate(pseudo, password);
+					EngineServiceProvider.getEngineService().authenticate(pseudo, password);
 					
 					// pour nettoyer les champs pseudo et mot de passe.
 					textFieldPseudo.setText("");
@@ -189,14 +185,14 @@ public class Identification extends JPanel
 					MainFrame.getInstance().authenticationDone();
 					
 				} catch (AccountNotFoundException e1) {
-
+					
 					JOptionPane.showMessageDialog(frameContainer, Constants.Authentication.ACCOUNT_NOT_FOUND_MESSAGE, Constants.Authentication.ACCOUNT_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 
 
 				} catch (NetworkServiceException e1) {
+					
+
 					JOptionPane.showMessageDialog(frameContainer, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-				} catch(IllegalFieldException e1) {
-					JOptionPane.showMessageDialog(frameContainer, Constants.Authentication.ACCOUNT_NOT_FOUND_MESSAGE, Constants.Authentication.ACCOUNT_NOT_FOUND_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
