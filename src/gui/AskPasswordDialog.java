@@ -55,7 +55,9 @@ public class AskPasswordDialog extends JDialog
 	
 	private void init(String pseudo)
 	{
-
+		setTitle("Mot de passe incorrect");
+		
+		
 		labelPseudo = new JLabel();
 		labelPseudo.setText(Constants.Fields.PSEUDO);
 		textFieldPseudo = new JTextField();

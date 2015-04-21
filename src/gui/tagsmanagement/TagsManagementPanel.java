@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -38,6 +39,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import com.sun.istack.internal.logging.Logger;
+
+import data.Profile;
 import data.Tag;
 import engine.EngineServiceProvider;
 import exceptions.IllegalFieldException;
@@ -235,6 +239,19 @@ public class TagsManagementPanel extends JPanel
 	
 	private void displayTagDetails(Tag tag)
 	{
+		List<Profile> list;
+		
+		try {
+			list = EngineServiceProvider.getEngineService().getProfiles();
+			Logger.getLogger(getClass()).log(Level.INFO, "number of profiles : " + list.size());
+		} catch (NotAuthenticatedException e1) {
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.ABNORMAL_ERROR_MESSAGE, CommonErrorMessages.ABNORMAL_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+			return;
+		} catch (NetworkServiceException e1) {
+			JOptionPane.showMessageDialog(this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		Image image = null;
 		
 		// get the associated image or the default image if there is no one.
@@ -264,11 +281,17 @@ public class TagsManagementPanel extends JPanel
 		
 		objectImage.setIcon(new ImageIcon(image));
 		
-		
 		objectLabel.setText(tag.getObjectName());
 		tagIdLabel.setText(tag.getUid());
 		
-		// profile list processing will be implemented later.
+		if(list != null)
+			for(Profile profile : list)
+				if(profile.getTags().contains(tag))
+				{
+					profilesListModel.addElement(profile.getName());
+
+					Logger.getLogger(getClass()).log(Level.INFO, "profile added : " + profile.getName());
+				}
 	}
 	
 	private void removeTagDetails()
@@ -296,7 +319,7 @@ public class TagsManagementPanel extends JPanel
 
 	
 	public Tag runTagEditor(TagRenderer tagRenderer) // 
-	{ //cest renderer modification qui appelle, on ouvre la jdialog qui modifie (on passe par management car il faut modifie le jpanelinfo)
+	{ //c'est renderer modification qui appelle, on ouvre la jdialog qui modifie (on passe par management car il faut modifie le jpanelinfo)
 		Tag tag = tagManagerDialog.modifyTag(tagRenderer.getTag());
 		if(tag != null && tagRenderer.isSelected())
 			this.displayTagDetails(tag);

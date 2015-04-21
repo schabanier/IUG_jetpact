@@ -39,7 +39,6 @@ public class InfoPerso extends JPanel {
 	
 	public InfoPerso(JFrame frameContainer) {
 		
-		
 		super(true);
 		this.frameContainer = frameContainer;
 		infoPersoPanel = this;
