@@ -6,13 +6,11 @@ import gui.MainFrame;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -27,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import data.Tag;
+import engine.ImageLoader;
 
 public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 {
@@ -84,7 +83,7 @@ public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 		{
 			
 			try {
-				tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(IconsProvider.OBJECT_LITTLE_IMAGE_WIDTH, IconsProvider.OBJECT_LITTLE_IMAGE_HEIGHT, Image.SCALE_FAST)));
+				tagLabel.setIcon(new ImageIcon(ImageLoader.getInstance().getImageAtLowSize(new File(currentTag.getObjectImageName()))));
 			} catch (IOException e) { // an error occured while reading the image file. the default object image will be displayed.
 				tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
 			}
@@ -115,7 +114,7 @@ public class TagRenderer extends JPanel //implements ListCellRenderer<Tag>
 				{
 					
 					try {
-						tagLabel.setIcon(new ImageIcon(ImageIO.read(new File(currentTag.getObjectImageName())).getScaledInstance(IconsProvider.OBJECT_LITTLE_IMAGE_WIDTH, IconsProvider.OBJECT_LITTLE_IMAGE_HEIGHT, Image.SCALE_FAST)));
+						tagLabel.setIcon(new ImageIcon(ImageLoader.getInstance().getImageAtLowSize(new File(currentTag.getObjectImageName()))));
 					} catch (IOException e1) { // an error occured while reading the image file. the default object image will be displayed.
 						tagLabel.setIcon(new ImageIcon(IconsProvider.defaultObjectImageLittle));
 					}

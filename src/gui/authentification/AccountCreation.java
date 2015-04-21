@@ -18,8 +18,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import data.Account;
+import engine.EngineServiceProvider;
 import engine.FieldVerifier;
-import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import static gui.Constants.*;
@@ -154,14 +154,12 @@ public class AccountCreation extends JDialog
 	
 	class Button3Listener implements ActionListener {
 
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		public void actionPerformed(ActionEvent e) {
 		
-	
 			//action si clic sur bouton "annuler"
 			AccountCreation.this.setVisible(false);
 		
-	}		
+		}
 	
 	}
 	
@@ -213,7 +211,7 @@ public class AccountCreation extends JDialog
 				try {
 					
 					String passwordString = new String (passwordField2.getPassword());
-					NetworkServiceProvider.getNetworkService().createAccount(account,passwordString);
+					EngineServiceProvider.getEngineService().createAccount(account,passwordString);
 
 					AccountCreation.this.setVisible(false); //ferme la fenetre
 					
@@ -246,17 +244,8 @@ public class AccountCreation extends JDialog
 					// TODO Auto-generated catch block
 			
 					JOptionPane.showMessageDialog(AccountCreation.this, CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-				} 
-				
-			}
-			
-			
-		}
-	
-		
-			
-		
+				}				
+			}	
+		}		
 	}
-
-
 }

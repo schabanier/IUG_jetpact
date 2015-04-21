@@ -20,8 +20,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import data.Tag;
+import engine.EngineServiceProvider;
 import engine.FieldVerifier;
-import engine.NetworkServiceProvider;
 import exceptions.IllegalFieldException;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
@@ -233,7 +233,7 @@ public class TagManagerDialog extends JDialog
 			Tag tag = new Tag(id, objectName, objectImageFileName);
 			
 			try {
-				NetworkServiceProvider.getNetworkService().addTag(tag);
+				EngineServiceProvider.getEngineService().addTag(tag);
 				tagAdded = tag;
 				setVisible(false);
 			} catch (IllegalFieldException e) {
@@ -287,7 +287,7 @@ public class TagManagerDialog extends JDialog
 			{
 				fieldToBeModified = true;
 				try {
-					currentTag = NetworkServiceProvider.getNetworkService().modifyObjectName(currentTag, objectName);
+					currentTag = EngineServiceProvider.getEngineService().modifyObjectName(currentTag, objectName);
 					isTagModified = true;
 					setVisible(false);
 				} catch (IllegalFieldException e) {
@@ -320,7 +320,7 @@ public class TagManagerDialog extends JDialog
 			{
 				fieldToBeModified = true;
 				try {
-					currentTag = NetworkServiceProvider.getNetworkService().modifyObjectImage(currentTag, objectImageFileName);
+					currentTag = EngineServiceProvider.getEngineService().modifyObjectImage(currentTag, objectImageFileName);
 					isTagModified = true;
 					setVisible(false);
 					return;

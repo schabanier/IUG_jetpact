@@ -5,6 +5,10 @@ import java.awt.CardLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,15 +21,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import engine.NetworkServiceProvider;
+import engine.EngineServiceProvider;
 import exceptions.NetworkServiceException;
 import exceptions.NotAuthenticatedException;
 import gui.authentification.Identification;
 import gui.infoperso.InfoPerso;
+import gui.profils.ProfileManagementPanel;
 import gui.tagsmanagement.TagsManagementPanel;
 
 public class MainFrame extends JFrame
@@ -36,7 +40,7 @@ public class MainFrame extends JFrame
 	private JPanel centerPanel;
 	private InfoPerso userInformationsPanel;
 	private TagsManagementPanel tagsPanel;
-	private JPanel profilesPanel;
+	private ProfileManagementPanel profilesPanel;
 
 	private JList<String> panelList;
 
@@ -47,7 +51,46 @@ public class MainFrame extends JFrame
 	public MainFrame() throws HeadlessException
 	{
 		super(Constants.MainFrame.WINDOW_TITLE);
-		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		super.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		
+		addWindowListener(new WindowListener() {
+			
+			public void windowOpened(WindowEvent e)
+			{
+			}
+			
+			public void windowIconified(WindowEvent e)
+			{
+			}
+			
+			public void windowDeiconified(WindowEvent e)
+			{
+			}
+			
+			public void windowDeactivated(WindowEvent e)
+			{
+			}
+			
+			public void windowClosing(WindowEvent e)
+			{
+				Logger.getLogger(getClass().getName()).log(Level.INFO, "window will be closed");
+				int returnValue = JOptionPane.showConfirmDialog(MainFrame.getInstance(), "Do you really want to quit ?", "Exit", JOptionPane.YES_NO_OPTION);
+				
+				if(returnValue == JOptionPane.YES_OPTION)
+				{
+					EngineServiceProvider.getEngineService().logOut();
+					setVisible(false);
+				}
+			}
+			
+			public void windowClosed(WindowEvent e)
+			{
+			}
+			
+			public void windowActivated(WindowEvent e)
+			{
+			}
+		});
 		
 		instance = this;
 		
@@ -98,7 +141,7 @@ public class MainFrame extends JFrame
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				NetworkServiceProvider.getNetworkService().logOut();
+				EngineServiceProvider.getEngineService().logOut();
 				setContentPane(authenticationPanel);
 				setResizable(false);
 				pack();
@@ -122,8 +165,7 @@ public class MainFrame extends JFrame
 		
 		tagsPanel = new TagsManagementPanel();
 		
-		profilesPanel = new JPanel(true); // will be replaced by the real version.
-		profilesPanel.setBorder(new TitledBorder("profiles panel"));
+		profilesPanel = new ProfileManagementPanel(); // will be replaced by the real version.
 		
 		
 		centerPanel.add(profilesPanel, Constants.MainFrame.PROFILES_PANEL_NAME);
@@ -139,7 +181,22 @@ public class MainFrame extends JFrame
 	{
 		public void valueChanged(ListSelectionEvent e)
 		{
-			((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
+			String value = panelList.getSelectedValue();
+			
+				try {
+					if(value.equals(Constants.MainFrame.USER_INFORMATIONS_PANEL_NAME))
+						userInformationsPanel.reloadDisplayedInformations();
+					else if(value.equals(Constants.MainFrame.TAGS_PANEL_NAME))
+						tagsPanel.reloadTagsList();
+					else if(value.equals(Constants.MainFrame.PROFILES_PANEL_NAME))
+						profilesPanel.reloadProfilesList();
+					
+					((CardLayout) centerPanel.getLayout()).show(centerPanel, panelList.getSelectedValue());
+				} catch (NotAuthenticatedException e1) {
+					e1.printStackTrace();
+				} catch (NetworkServiceException e1) {
+					e1.printStackTrace();
+				}
 		}
 	}
 	
@@ -172,4 +229,5 @@ public class MainFrame extends JFrame
 			JOptionPane.showMessageDialog(getInstance(), Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_MESSAGE, Constants.CommonErrorMessages.NETWORK_SERVICE_ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
 }
